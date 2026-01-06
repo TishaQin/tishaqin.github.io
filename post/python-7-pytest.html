@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+  <meta name="baidu-site-verification" content="true">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"tishaqin.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="pytest 文件命名（也可以修改默认的搜索规则）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pytest框架与自动化测试应用">
+<meta property="og:url" content="https://tishaqin.github.io/post/python-7-pytest.html">
+<meta property="og:site_name" content="测试与时光手札">
+<meta property="og:description" content="pytest 文件命名（也可以修改默认的搜索规则）">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://tishaqin.github.io/images/python71.png">
+<meta property="og:image" content="https://tishaqin.github.io/images/python72.png">
+<meta property="og:image" content="https://tishaqin.github.io/images/python73.png">
+<meta property="og:image" content="https://tishaqin.github.io/images/python74.png">
+<meta property="og:image" content="https://tishaqin.github.io/images/python75.png">
+<meta property="og:image" content="https://tishaqin.github.io/images/python76.png">
+<meta property="og:image" content="https://tishaqin.github.io/images/python77.png">
+<meta property="og:image" content="https://tishaqin.github.io/images/python78.png">
+<meta property="og:image" content="https://tishaqin.github.io/images/python79.png">
+<meta property="og:image" content="https://tishaqin.github.io/images/python710.png">
+<meta property="og:image" content="https://tishaqin.github.io/images/python711.png">
+<meta property="og:image" content="https://tishaqin.github.io/images/python712.png">
+<meta property="og:image" content="https://tishaqin.github.io/images/python713.png">
+<meta property="article:published_time" content="2022-09-05T00:00:00.000Z">
+<meta property="article:modified_time" content="2022-09-05T00:00:00.000Z">
+<meta property="article:tag" content="pytest">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://tishaqin.github.io/images/python71.png">
+
+<link rel="canonical" href="https://tishaqin.github.io/post/python-7-pytest.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>pytest框架与自动化测试应用 | 测试与时光手札</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-46H282EQWZ"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-46H282EQWZ');
+      }
+    </script>
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?ed024ed44db96475c9bbd0aa42047d02";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">测试与时光手札</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">测试 ｜ 探索 </p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/archives/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">13</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">5</span></a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/TishaQin" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://tishaqin.github.io/post/python-7-pytest.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="Fake it till you make it!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="测试与时光手札">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          pytest框架与自动化测试应用
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-09-05 00:00:00" itemprop="dateCreated datePublished" datetime="2022-09-05T00:00:00+00:00">2022-09-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B5%8B%E8%AF%95%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">测试库</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/post/python-7-pytest.html" class="post-meta-item leancloud_visitors" data-flag-title="pytest框架与自动化测试应用" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/post/python-7-pytest.html#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/post/python-7-pytest.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>20k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>18 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="pytest-文件命名（也可以修改默认的搜索规则）"><a href="#pytest-文件命名（也可以修改默认的搜索规则）" class="headerlink" title="pytest 文件命名（也可以修改默认的搜索规则）"></a>pytest 文件命名（也可以修改默认的搜索规则）</h2><ol>
+<li><p>测试文件命名为**<font style="color:#E8323C;">test_XXX.py</font><strong>或者</strong><font style="color:#E8323C;">XXX_test.py</font>**</p>
+</li>
+<li><p>测试函数，测试方法命名为**<font style="color:#F5222D;">test_XXX</font>**</p>
+</li>
+<li><p>测试类命名为**<font style="color:#F5222D;">TestXXX</font>**</p>
+</li>
+<li><p>测试搜索规则：</p>
+<ul>
+<li>从一个或多个目录开始查找，在命令行中指定文件名或者目录名，未指定就是用当前目录</li>
+<li>在该目录和所有子目录下递归查找测试模块</li>
+<li>测试模块是指文件名为 test_<em>.py 或者</em>_test.py 的文件</li>
+<li>在测试模块中查找以 test_开头的函数名</li>
+<li>查找名字以 Test 开头的类，首先筛选掉包含<strong>init</strong>函数的类，再查找以 Test_开头的类方法</li>
+</ul>
+</li>
+</ol>
+<h2 id="pytest-框架结构"><a href="#pytest-框架结构" class="headerlink" title="pytest 框架结构"></a>pytest 框架结构</h2><ul>
+<li>模块级 -模块始末运行：setup_module&#x2F;teardown_module，</li>
+<li>函数级别-函数始末运行（在类外部）：setup_function&#x2F;teardown_function</li>
+<li>类级 -类始末运行（在类中）：setup_class&#x2F;teardown_class，必须以@classmethod 装饰</li>
+<li>方法级 -方法始末运行（在类中）：setup_method&#x2F;teardown_method</li>
+<li>方法级 -方法始末运行（在类中）：setup&#x2F;teardown</li>
+</ul>
+<h2 id="pytest-运行结果"><a href="#pytest-运行结果" class="headerlink" title="pytest 运行结果"></a>pytest 运行结果</h2><ol>
+<li>passed-.，测试通过</li>
+<li>failed-F， 测试失败，（也可能是由 xpass 状态与 strict 选项冲突造成的失败）</li>
+<li>skipped-s，测试未被执行（标记为@pytest.mark.skip() 或者@pytest.mark.skipif() ）</li>
+<li>xfail-x，预期测试失败，并且确实失败 (标记为@pytest.mark.xfail() )</li>
+<li>xpass-X，预期测试失败，但实际上运行通过，不符合预期</li>
+<li>error-E，测试用例之外的代码触发了异常，可能由 fixture 或者 hook 函数引起</li>
+</ol>
+<h2 id="pytest-运行选项"><a href="#pytest-运行选项" class="headerlink" title="pytest 运行选项"></a>pytest 运行选项</h2><h3 id="pytest-静态挑选测试用例"><a href="#pytest-静态挑选测试用例" class="headerlink" title="pytest 静态挑选测试用例"></a>pytest 静态挑选测试用例</h3><pre><code>pytest tests/func/test_add.py (运行单个文件里的全部测试)
+pytest tests/func::TestUpdate (运行单个测试类)
+pytest tests/func/test_add.py::test_add_return_valid_id (运行单个测试函数)
+pytest tests/func::TestUpdate::test_bad_id (运行单个测试类中的测试方法)
+</code></pre>
+<h3 id="pytest-动态挑选测试用例"><a href="#pytest-动态挑选测试用例" class="headerlink" title="pytest 动态挑选测试用例"></a>pytest 动态挑选测试用例</h3><h4 id="1-pytest-k-“asdict-or-defaults”-–collect-only-加上-k-指定特定运行的用例，用测试名划分测试集合，可以指定测试文件名，目录，类名，函数名"><a href="#1-pytest-k-“asdict-or-defaults”-–collect-only-加上-k-指定特定运行的用例，用测试名划分测试集合，可以指定测试文件名，目录，类名，函数名" class="headerlink" title="1 pytest -k “asdict or defaults” –collect-only (加上-k 指定特定运行的用例，用测试名划分测试集合，可以指定测试文件名，目录，类名，函数名)"></a>1 pytest -k “asdict or defaults” –collect-only (加上-k 指定特定运行的用例，用测试名划分测试集合，可以指定测试文件名，目录，类名，函数名)</h4><blockquote>
+<p>-k 允许用一个表达式指定需要运行的是测试，该表达式可以匹配测试名（或其字串）模糊匹配，表达式中可以包含 and，or，not<br>pytest -v -k _raises (测试方法为 test_add_raises,test_get_raises,test_delete_raises)<br>pytest -v -k “_raises and not delete”，就会跳过 test_delete_raises 的执行</p>
+</blockquote>
+<p>pytest -k ‘test_laugou.py’ 按照文件名全匹配，运行 test_laugou.py 下所有用例<br>pytest -k ‘laugou’ 按照文件名部分匹配，运行 test_laugou.py 下所有用例<br>ptest -k ‘Baidu’ 按照类名匹配，运行下 Baidu 测试类下所有用例<br>pytest -k ‘message’ 按照方法名匹配，test_message 这个测试方法会被执行</p>
+<p><img src="/images/python71.png"></p>
+<h4 id="2-pytest-m-run-please（用于标记测试类-测试方法并分组，以便快速选中并允许）-使用-m-选项可以用表达式指定多个标记名："><a href="#2-pytest-m-run-please（用于标记测试类-测试方法并分组，以便快速选中并允许）-使用-m-选项可以用表达式指定多个标记名：" class="headerlink" title="2 pytest -m run_please（用于标记测试类&#x2F;测试方法并分组，以便快速选中并允许）,使用-m 选项可以用表达式指定多个标记名："></a>2 pytest -m run_please（用于标记测试类&#x2F;测试方法并分组，以便快速选中并允许）,使用-m 选项可以用表达式指定多个标记名：</h4><pre><code>1. -m &quot;mark1 and mark2&quot; （选中带有这两个标记的所有测试用例）
+2. -m &quot;mark1 or mark2&quot;    （选中带有mark1或者mark2的所有测试用例）
+3. -m &quot;mark1 and not mark2&quot;    （选中带有mark1的所有测试用例，过滤掉带有mark2的）
+</code></pre>
+<p><img src="/images/python72.png"> <img src="/images/python73.png"></p>
+<h3 id="pytest-忽略测试用例"><a href="#pytest-忽略测试用例" class="headerlink" title="pytest 忽略测试用例"></a>pytest 忽略测试用例</h3><h4 id="1-忽略某一个测试文件-–ignore"><a href="#1-忽略某一个测试文件-–ignore" class="headerlink" title="1 忽略某一个测试文件 –ignore"></a>1 忽略某一个测试文件 –ignore</h4><p>pytest -m pytest –ignore&#x3D;test&#x2F;test_itesting.py</p>
+<h4 id="2-忽略某一个测试方法-–deselect"><a href="#2-忽略某一个测试方法-–deselect" class="headerlink" title="2 忽略某一个测试方法 –deselect"></a>2 忽略某一个测试方法 –deselect</h4><p>pytest -m pytest –deselect&#x3D;test&#x2F;test_itesting.py::test_a</p>
+<h4 id="3-使用-pytest-mark-skip-装饰器忽略"><a href="#3-使用-pytest-mark-skip-装饰器忽略" class="headerlink" title="3 使用 @pytest.mark.skip 装饰器忽略"></a>3 使用 @pytest.mark.skip 装饰器忽略</h4><p>@pytest.mark.skip(reason&#x3D;’misunderstood the API’)</p>
+<h4 id="4-使用-pytest-mark-skipif-装饰器忽略"><a href="#4-使用-pytest-mark-skipif-装饰器忽略" class="headerlink" title="4 使用 @pytest.mark.skipif 装饰器忽略"></a>4 使用 @pytest.mark.skipif 装饰器忽略</h4><p>@pytest.mark.skipif(tasks.version &lt; ‘0.2.0’, reason&#x3D;‘not supported until version 0.2.0’) 条件成立就跳过测试用例</p>
+<h4 id="5-使用-m-或者-k-参数忽略"><a href="#5-使用-m-或者-k-参数忽略" class="headerlink" title="5 使用-m 或者-k 参数忽略"></a>5 使用-m 或者-k 参数忽略</h4><h3 id="pytest-命令行参数"><a href="#pytest-命令行参数" class="headerlink" title="pytest 命令行参数"></a>pytest 命令行参数</h3><h4 id="1-pytest-v-（详细展示结果，每个文件中的每个测试用例占一行，文件名函数名结果都会显示出来）"><a href="#1-pytest-v-（详细展示结果，每个文件中的每个测试用例占一行，文件名函数名结果都会显示出来）" class="headerlink" title="1 pytest -v （详细展示结果，每个文件中的每个测试用例占一行，文件名函数名结果都会显示出来）"></a>1 pytest -v （详细展示结果，每个文件中的每个测试用例占一行，文件名函数名结果都会显示出来）</h4><p>（没用-v 之前是每个测试文件占一行，测试结果是.或者 F 这种单个字符）</p>
+<h4 id="2-pytest-q-和-v-相反，回简化输出信息"><a href="#2-pytest-q-和-v-相反，回简化输出信息" class="headerlink" title="2 pytest -q (和-v 相反，回简化输出信息)"></a>2 pytest -q (和-v 相反，回简化输出信息)</h4><p>pytest -q –tb&#x3D;line（仅打印异常的代码位置）结合使用</p>
+<h4 id="3-pytest-s-（允许终端输出-print-结果）"><a href="#3-pytest-s-（允许终端输出-print-结果）" class="headerlink" title="3 pytest -s （允许终端输出 print 结果）"></a>3 pytest -s （允许终端输出 print 结果）</h4><h4 id="4-pytest-–collect-only-（展示当前目录下哪些测试用例会被运行，非常方便的在测试运行之前，检查选中的测试用例是否符合预期）"><a href="#4-pytest-–collect-only-（展示当前目录下哪些测试用例会被运行，非常方便的在测试运行之前，检查选中的测试用例是否符合预期）" class="headerlink" title="4 pytest –collect-only （展示当前目录下哪些测试用例会被运行，非常方便的在测试运行之前，检查选中的测试用例是否符合预期）"></a>4 pytest –collect-only （展示当前目录下哪些测试用例会被运行，非常方便的在测试运行之前，检查选中的测试用例是否符合预期）</h4><p><img src="/images/python74.png"></p>
+<h4 id="5-pytest-x-用于-debug-时候，遇到失败时立即停止整个会话-（正常情况下，不使用-x-遇到测试失败的用例，并不会停止执行后面的测试用例）"><a href="#5-pytest-x-用于-debug-时候，遇到失败时立即停止整个会话-（正常情况下，不使用-x-遇到测试失败的用例，并不会停止执行后面的测试用例）" class="headerlink" title="5 pytest -x (用于 debug 时候，遇到失败时立即停止整个会话)（正常情况下，不使用-x 遇到测试失败的用例，并不会停止执行后面的测试用例）"></a>5 pytest -x (用于 debug 时候，遇到失败时立即停止整个会话)（正常情况下，不使用-x 遇到测试失败的用例，并不会停止执行后面的测试用例）</h4><h4 id="56-pytest-–maxfail-2-x-时遇到测试失败就立即停止，–maxfail-是允许-pytest-失败几个后停止，明确指出可以失败几次"><a href="#56-pytest-–maxfail-2-x-时遇到测试失败就立即停止，–maxfail-是允许-pytest-失败几个后停止，明确指出可以失败几次" class="headerlink" title="56 pytest –maxfail&#x3D;2 (-x 时遇到测试失败就立即停止，–maxfail 是允许 pytest 失败几个后停止，明确指出可以失败几次)"></a>56 pytest –maxfail&#x3D;2 (-x 时遇到测试失败就立即停止，–maxfail 是允许 pytest 失败几个后停止，明确指出可以失败几次)</h4><p>pytest –max-fail&#x3D;1 &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&gt; pytest -x (这两个作用一样的)</p>
+<h4 id="7-pytest-v-lf-–last-failed-当一个或者多个测试失败时，再次运行并使用–lf-时，仅运行上次未通过的测试用例"><a href="#7-pytest-v-lf-–last-failed-当一个或者多个测试失败时，再次运行并使用–lf-时，仅运行上次未通过的测试用例" class="headerlink" title="7 pytest -v -lf –last-failed (当一个或者多个测试失败时，再次运行并使用–lf 时，仅运行上次未通过的测试用例)"></a>7 pytest -v -lf –last-failed (当一个或者多个测试失败时，再次运行并使用–lf 时，仅运行上次未通过的测试用例)</h4><h4 id="8-pytest-v-ff-–failed-first-当一个或者多个测试失败时，再次运行并使用–ff-时，之前运行未通过的用例会首先执行，然后才是其他用例"><a href="#8-pytest-v-ff-–failed-first-当一个或者多个测试失败时，再次运行并使用–ff-时，之前运行未通过的用例会首先执行，然后才是其他用例" class="headerlink" title="8 pytest -v -ff –failed-first (当一个或者多个测试失败时，再次运行并使用–ff 时，之前运行未通过的用例会首先执行，然后才是其他用例)"></a>8 pytest -v -ff –failed-first (当一个或者多个测试失败时，再次运行并使用–ff 时，之前运行未通过的用例会首先执行，然后才是其他用例)</h4><h4 id="9-pytest-l-–showlocals（失败测试用例由于被堆栈跟踪，所以局部变量以及值都会显示出来）"><a href="#9-pytest-l-–showlocals（失败测试用例由于被堆栈跟踪，所以局部变量以及值都会显示出来）" class="headerlink" title="9 pytest -l &#x2F; –showlocals（失败测试用例由于被堆栈跟踪，所以局部变量以及值都会显示出来）"></a>9 pytest -l &#x2F; –showlocals（失败测试用例由于被堆栈跟踪，所以局部变量以及值都会显示出来）</h4><h4 id="10-pytest-–tb-XXX-（决定捕捉到失败时输出信息的展示方式）"><a href="#10-pytest-–tb-XXX-（决定捕捉到失败时输出信息的展示方式）" class="headerlink" title="10 pytest –tb&#x3D;XXX （决定捕捉到失败时输出信息的展示方式）"></a>10 pytest –tb&#x3D;XXX （决定捕捉到失败时输出信息的展示方式）</h4><pre><code>1. short 模式仅输出assert的一行（不显示上下文）
+2. line模式值使用一行输出所有的错误信息
+3. no模式直接屏蔽全部回溯信息
+4. long模式输出最为详尽的回溯信息
+5. auto默认值，如果多个测试用例失败，只打印第一个和最后一个的回溯信息
+6. native模式只输出python标准库的回溯信息
+</code></pre>
+<h4 id="11-pytest-–durations-N-vv-（统计测试过程中那几个阶段是最慢的，会显示最慢的-N-个阶段，耗时越长越靠前）"><a href="#11-pytest-–durations-N-vv-（统计测试过程中那几个阶段是最慢的，会显示最慢的-N-个阶段，耗时越长越靠前）" class="headerlink" title="11 pytest –durations&#x3D;N -vv （统计测试过程中那几个阶段是最慢的，会显示最慢的 N 个阶段，耗时越长越靠前）"></a>11 pytest –durations&#x3D;N -vv （统计测试过程中那几个阶段是最慢的，会显示最慢的 N 个阶段，耗时越长越靠前）</h4><p>pytest –durations&#x3D;0 （将所有结算按照耗时从长到短排序后显示）</p>
+<p><img src="/images/python75.png"></p>
+<p><strong><font style="color:#F5222D;">每个测试用例大体上都包含三个阶段：setup，call， teardown</font></strong></p>
+<h4 id="12-pytest-h-（展示-pytest-的用法和新添加插件的选项）"><a href="#12-pytest-h-（展示-pytest-的用法和新添加插件的选项）" class="headerlink" title="12 pytest -h （展示 pytest 的用法和新添加插件的选项）"></a>12 pytest -h （展示 pytest 的用法和新添加插件的选项）</h4><h3 id="pytest-程序中执行-pytest-main"><a href="#pytest-程序中执行-pytest-main" class="headerlink" title="pytest 程序中执行 pytest.main()"></a>pytest 程序中执行 pytest.main()</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    pytest.main()   无参构造-运行目录及子目录下的所有用例</span><br><span class="line">    pytest.main([<span class="string">&#x27;testcsv.py&#x27;</span>]) 有参构造，运行指定模块所有用例</span><br><span class="line">    pytest.main([<span class="string">&#x27;testcsv.py::TestClass::testMethod&#x27;</span>]) 有参构造，运行指定模块指定用例</span><br><span class="line">    pytest.main([<span class="string">&#x27;testcsv.py&#x27;</span>, <span class="string">&#x27;-q&#x27;</span>])    -q:安静模式, 不输出环境信息</span><br><span class="line">    pytest.main([<span class="string">&#x27;testcsv.py&#x27;</span>, <span class="string">&#x27;-v&#x27;</span>])</span><br><span class="line">    pytest.main([<span class="string">&#x27;testcsv.py&#x27;</span>, <span class="string">&#x27;-s&#x27;</span>])     -s: 显示程序中的<span class="built_in">print</span>/logging输出:安静模式, 不输出环境信息</span><br><span class="line">    pytest.main([<span class="string">&#x27;testcsv.py&#x27;</span>, <span class="string">&#x27;-x&#x27;</span>])     -x:出现一条测试用例失败就退出测试。</span><br><span class="line">    pytest.main([<span class="string">&#x27;testcsv.py&#x27;</span>, <span class="string">&#x27;--lf&#x27;</span>])   --lf:定位失败的用例</span><br><span class="line">    pytest.main([<span class="string">&#x27;testcsv.py&#x27;</span>, <span class="string">&#x27;-l&#x27;</span>])     -l 打印失败用例的变量值</span><br><span class="line"></span><br><span class="line">    <span class="comment">#使用allure生成 Html 格式的测试报告</span></span><br><span class="line">    pytest.main([<span class="string">&#x27;-x&#x27;</span>, <span class="string">&#x27;--alluredir&#x27;</span>, <span class="string">&#x27;report/result&#x27;</span>, <span class="string">&#x27;testcsv.py&#x27;</span>])</span><br><span class="line">    split = <span class="string">&#x27;allure ’ + &#x27;</span>generate ’ + <span class="string">&#x27;./report/result ’ + &#x27;</span>-o ’ + <span class="string">&#x27;./report/html ’ + ‘–clean’</span></span><br><span class="line"><span class="string">    os.system(split)</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="pytest-参数化-parametrize"><a href="#pytest-参数化-parametrize" class="headerlink" title="pytest 参数化 parametrize"></a>pytest 参数化 parametrize</h2><blockquote>
+<p>pytest 实现参数化的三种方式</p>
+<ol>
+<li>pytest.fixture() 使用 fixture 传 params 参数实现参数化</li>
+<li>@pytest.mark.parametrize 允许在测试函数或类中定义多组参数</li>
+<li>pytest_generate_tests 钩子函数允许定义自定义参数方案或扩展 P174</li>
+</ol>
+</blockquote>
+<h3 id="parametrize-源码分析"><a href="#parametrize-源码分析" class="headerlink" title="parametrize 源码分析"></a>parametrize 源码分析</h3><p><font style="color:#bbb529;">@pytest.mark.parametrize(</font><font style="color:#F5222D;">argnames, argvalues，indirect&#x3D;False，ids&#x3D;None, scope&#x3D;None</font><font style="color:#bbb529;">) </font></p>
+<ul>
+<li><font style="color:#F5222D;">argnames</font> 参数名，是个字符串，如中间用逗号分隔则表示为多个参数名</li>
+<li><font style="color:#F5222D;">argvalues </font>参数值，参数组成的列表，列表中有几个元素，就会生成几条用例（可用于函数，类，<font style="color:#F5222D;">用在类上，该数据集会被传递给该类的所有类方法</font>）</li>
+<li><font style="color:#F5222D;">indirect ，</font>设置为 True，pytest 会把 argnames 当作函数执行，将 argvalues 作为参数传入到 argnames 这个函数里（见 2.4）</li>
+</ul>
+<h3 id="parametrize-使用方法"><a href="#parametrize-使用方法" class="headerlink" title="parametrize 使用方法"></a>parametrize 使用方法</h3><h4 id="parametrize-自动生成的用例标识"><a href="#parametrize-自动生成的用例标识" class="headerlink" title="parametrize 自动生成的用例标识"></a>parametrize 自动生成的用例标识</h4><ol>
+<li><font style="color:#bbb529;">@pytest.mark.parametrize</font>(<font style="color:#6a8759;">‘task’</font><font style="color:#cc7832;">, </font>[Task(<font style="color:#6a8759;">‘sleep’</font><font style="color:#cc7832;">, </font><font style="color:#aa4926;">done</font>&#x3D;<font style="color:#cc7832;">True</font>)<font style="color:#cc7832;">,</font>Task(<font style="color:#6a8759;">‘wake’</font><font style="color:#cc7832;">, </font><font style="color:#6a8759;">‘brian’</font>)<font style="color:#cc7832;">,</font>Task(<font style="color:#6a8759;">‘breathe’</font><font style="color:#cc7832;">, </font><font style="color:#6a8759;">‘BRIAN’</font><font style="color:#cc7832;">, True</font>)<font style="color:#cc7832;">, </font>Task(<font style="color:#6a8759;">‘exercise’</font><font style="color:#cc7832;">, </font><font style="color:#6a8759;">‘BrIaN’</font><font style="color:#cc7832;">, False</font>)])</li>
+</ol>
+<p>没有指定 id，pytest 默认的用参数加数字作为 task 标识，task0,rask1,task2 这样。<br><img src="/images/python76.png"></p>
+<ol start="2">
+<li><font style="color:#bbb529;">@pytest.mark.parametrize</font>(<font style="color:#6a8759;">‘summary, owner, done’</font><font style="color:#cc7832;">, </font>[(<font style="color:#6a8759;">‘sleep’</font><font style="color:#cc7832;">, None, False</font>)<font style="color:#cc7832;">,</font>(<font style="color:#6a8759;">‘wake’</font><font style="color:#cc7832;">, </font><font style="color:#6a8759;">‘brian’</font><font style="color:#cc7832;">, False</font>)<font style="color:#cc7832;">,</font>(<font style="color:#6a8759;">‘breathe’</font><font style="color:#cc7832;">, </font><font style="color:#6a8759;">‘BRIAN’</font><font style="color:#cc7832;">, True</font>)<font style="color:#cc7832;">, </font>(<font style="color:#6a8759;">‘eat eggs’</font><font style="color:#cc7832;">, </font><font style="color:#6a8759;">‘BrIaN’</font><font style="color:#cc7832;">, False</font>)<font style="color:#cc7832;">,</font>])</li>
+</ol>
+<p>将 task 替换成几组键值对，易于被 pytest 装换成字符串的数据对象，则输出结果中的测试标识会使用组合后的参数值以增强可读性。</p>
+<p><img src="/images/python77.png"></p>
+<p>还可以直接使用完整的测试标识来指定需要运行的测试：</p>
+<p>pytest -v test_add_variety.py::test_add_3[sleep-None-False]或者</p>
+<p>参数有空格的就得加引号 pytest -v “test_add_variety.py::test_add_3[eat eggs-None-False]”</p>
+<h4 id="ids-参数用法"><a href="#ids-参数用法" class="headerlink" title="ids 参数用法"></a>ids 参数用法</h4><ol>
+<li><font style="color:#bbb529;">@pytest.mark.parametrize</font>(<font style="color:#6a8759;">‘task’</font><font style="color:#cc7832;">, </font>tasks_to_try<font style="color:#cc7832;">, </font><font style="color:#aa4926;">ids</font>&#x3D;task_ids)</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">tasks_to_try = (Task(<span class="string">&#x27;sleep&#x27;</span>, done=<span class="literal">True</span>),</span><br><span class="line">                Task(<span class="string">&#x27;wake&#x27;</span>, <span class="string">&#x27;brian&#x27;</span>),</span><br><span class="line">                Task(<span class="string">&#x27;wake&#x27;</span>, <span class="string">&#x27;brian&#x27;</span>),</span><br><span class="line">                Task(<span class="string">&#x27;breathe&#x27;</span>, <span class="string">&#x27;BRIAN&#x27;</span>, <span class="literal">True</span>),</span><br><span class="line">                Task(<span class="string">&#x27;exercise&#x27;</span>, <span class="string">&#x27;BrIaN&#x27;</span>, <span class="literal">False</span>))</span><br><span class="line"></span><br><span class="line">task_ids = [<span class="string">&#x27;Task(&#123;&#125;,&#123;&#125;,&#123;&#125;)&#x27;</span>.<span class="built_in">format</span>(t.summary, t.owner, t.done) <span class="keyword">for</span> t <span class="keyword">in</span> tasks_to_try]  <span class="comment">#由于给数据集分配了一个变量tasks_to_try，所以通过它生成ids</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#引入parametrize（）一个额外参数ids，使列表中的每一个元素被标识</span></span><br><span class="line"><span class="comment">#ids是一个字符串列表，它和数据对象列表的长度保持一致(这里的ids是列表，也可以指定是一个函数）</span></span><br><span class="line"><span class="meta">@pytest.mark.parametrize(<span class="params"><span class="string">&#x27;task&#x27;</span>, tasks_to_try, ids=task_ids</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_add_5</span>(<span class="params">task</span>):</span><br><span class="line">    task_id = tasks.add(task)</span><br><span class="line">    t_from_db = tasks.get(task_id)</span><br><span class="line">    <span class="keyword">assert</span> equivalent(t_from_db, task)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/python78.png"></p>
+<ol start="2">
+<li><font style="color:#bbb529;">@pytest.mark.parametrize</font>(<font style="color:#6a8759;">‘task’</font><font style="color:#cc7832;">, </font>[<br>pytest.param(Task(<font style="color:#6a8759;">‘create’</font>)<font style="color:#cc7832;">, </font><font style="color:#aa4926;">id</font>&#x3D;<font style="color:#6a8759;">‘just summary’</font>)<font style="color:#cc7832;">,<br></font><font style="color:#cc7832;"> </font>pytest.param(Task(<font style="color:#6a8759;">‘inspire’</font><font style="color:#cc7832;">, </font><font style="color:#6a8759;">‘Michelle’</font>)<font style="color:#cc7832;">, </font><font style="color:#aa4926;">id</font>&#x3D;<font style="color:#6a8759;">‘summary&#x2F;owner’</font>)<font style="color:#cc7832;">,<br></font><font style="color:#cc7832;"> </font>pytest.param(Task(<font style="color:#6a8759;">‘encourage’</font><font style="color:#cc7832;">, </font><font style="color:#6a8759;">‘Michelle’</font><font style="color:#cc7832;">, True</font>)<font style="color:#cc7832;">, </font><font style="color:#aa4926;">id</font>&#x3D;<font style="color:#6a8759;">‘summary&#x2F;owner&#x2F;done’</font>)])</li>
+</ol>
+<p>在给@pytest.mark.parametrize() 装饰器传入列表参数时，还可以在参数值旁边定义一个 id 来做标识，语法是<font style="color:#F5222D;">pytest.param(<value>，id&#x3D;”XX”)</font></p>
+<p><font style="color:#F5222D;">在 id 不能被参数化批量生成，需要自定义的时候，这个方法很管用</font></p>
+<h4 id="多次使用-paramtrize"><a href="#多次使用-paramtrize" class="headerlink" title="多次使用 paramtrize"></a>多次使用 paramtrize</h4><p>同一个测试用例还可以同时添加多个<font style="color:#bbb529;">@pytest.mark.parametrize</font>装饰器，多个 parametrize 的所有元素互相组合（类似笛卡尔积），生成大量测试用例</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@pytest.mark.parametrize(<span class="params"><span class="string">&quot;x&quot;</span>, [<span class="number">1</span>, <span class="number">2</span>]</span>)</span></span><br><span class="line"><span class="meta">@pytest.mark.parametrize(<span class="params"><span class="string">&quot;y&quot;</span>, [<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_search2</span>(<span class="params">x, y</span>):</span><br><span class="line">    <span class="built_in">print</span>(x, y)</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># test_fixture_scope.py::test_search2[3-1]</span></span><br><span class="line"><span class="comment"># test_fixture_scope.py::test_search2[3-2]</span></span><br><span class="line"><span class="comment"># test_fixture_scope.py::test_search2[4-1]</span></span><br><span class="line"><span class="comment"># test_fixture_scope.py::test_search2[4-2]</span></span><br><span class="line"><span class="comment"># test_fixture_scope.py::test_search2[5-1]</span></span><br><span class="line"><span class="comment"># test_fixture_scope.py::test_search2[5-2]</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="pytest-fixture-与-pytest-mark-parametrize-结合实现参数化（indirect-参数用法）"><a href="#pytest-fixture-与-pytest-mark-parametrize-结合实现参数化（indirect-参数用法）" class="headerlink" title="@pytest.fixture 与@pytest.mark.parametrize 结合实现参数化（indirect 参数用法）"></a><font style="color:#1DC0C9;background-color:rgba(255, 255, 255, 0);">@pytest.fixture 与@pytest.mark.parametrize 结合实现参数化（indirect 参数用法）</font></h4><blockquote>
+<p>如果测试数据需要在 fixture 方法中使用，同时也需要在测试用例中使用，可以在使用 parametrize 的时候添加一个参数 indirect&#x3D;True，pytest 可以实现将参数传入到 fixture 方法中，也可以在当前测试用例中使用</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@pytest.fixture(<span class="params">scope=<span class="string">&quot;module&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">login</span>(<span class="params">request</span>):</span><br><span class="line">    user = request.param</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;登录用户<span class="subst">&#123;user&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> user</span><br><span class="line"></span><br><span class="line"><span class="meta">@pytest.mark.parametrize(<span class="params"><span class="string">&quot;login&quot;</span>, [<span class="string">&#x27;tom&#x27;</span>,<span class="string">&#x27;jerry&#x27;</span>],indirect=<span class="literal">True</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_indirect</span>(<span class="params">login</span>):</span><br><span class="line">    a = login</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;测试用例中login的返回值:<span class="subst">&#123;a&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 登录用户tom</span></span><br><span class="line"><span class="comment"># PASSED                   [ 50%]测试用例中login的返回值:tom</span></span><br><span class="line"><span class="comment"># 登录用户jerry</span></span><br><span class="line"><span class="comment"># PASSED                 [100%]测试用例中login的返回值:jerry</span></span><br></pre></td></tr></table></figure>
+
+<p>代码的结果可以看到，当 indirect&#x3D;True 时，会将 login 作为参数，[‘tom’,’jerry’]作为参数传入 login 的 fixture 中，生成多条用例。通过 return 将结果返回，当调用 login 可以获取到 login 这个方法的返回数据。</p>
+<h4 id="argnames-的用法-其他参数详细用法见书-P165"><a href="#argnames-的用法-其他参数详细用法见书-P165" class="headerlink" title="argnames 的用法 [其他参数详细用法见书 P165]"></a>argnames 的用法 <font style="color:#F1A2AB;">[其他参数详细用法见书 P165]</font></h4><p>parametrize 方法中的第一个参数 argnames 是一个被逗号分隔的字符串&#x2F;列表&#x2F;元组,表明指定的参数, argnames 通常是与被标记测试方法入参的参数名对应的,但实际上有一些限制,它只能是被标记测试方法入参的子集</p>
+<ol>
+<li>测试方法中未声明, mark.parametrize 中声明</li>
+</ol>
+<p>test_sample 测试方法中未声明 expected, 如果在标记中强行声明,会报错</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@pytest.mark.parametrize(<span class="params"><span class="string">&#x27;input, expected&#x27;</span>, [(<span class="params"><span class="number">1</span>,<span class="number">2</span></span>)]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_sample</span>(<span class="params"><span class="built_in">input</span></span>):</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>测试方法参数声明范围小于 mark.parametrize 声明范围, 即不能是被标记测试方法入参中定义了默认值的参数</li>
+</ol>
+<p>test_sample 测试方法中声明 expected 参数但同时赋予了默认值, 如果在标记中强行声明,会报错</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@pytest.mark.parametrize(<span class="params"><span class="string">&#x27;input, expected&#x27;</span>, [(<span class="params"><span class="number">1</span>,<span class="number">2</span></span>)]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_sample</span>(<span class="params"><span class="built_in">input</span>, expected=<span class="number">2</span></span>):</span><br></pre></td></tr></table></figure>
+
+<h2 id="pytest-自定义-Fixture"><a href="#pytest-自定义-Fixture" class="headerlink" title="pytest 自定义 Fixture"></a>pytest 自定义 Fixture</h2><blockquote>
+<p>fixture 是在测试函数运行前后，由 pytest 执行的外壳函数</p>
+<p>fixture 中的代码可以定制，满足多变的测试需求，包括定义传入测试中的数据集，配置测试前系统的初始状态，为批量测试提供数据源</p>
+<p><font style="background-color:rgba(255, 255, 255, 0);">pytest.fixture(scope&#x3D;”function”, params&#x3D;None, autouse&#x3D;False, ids&#x3D;None, name&#x3D;None)</font></p>
+</blockquote>
+<h3 id="fixture-的-scope-作用范围哪几种值？"><a href="#fixture-的-scope-作用范围哪几种值？" class="headerlink" title="fixture 的 scope 作用范围哪几种值？"></a>fixture 的 scope 作用范围哪几种值？</h3><blockquote>
+<p>scope 控制该 fixture 的作用范围<br>作用范围@pytest.fixture(scope&#x3D;’function’)，作用范围由小到大：function、&gt; class、module、package、session</p>
+</blockquote>
+<blockquote>
+<p>scope&#x3D;function（fixture 默认值）,所以我们不传的时候，（function 函数或者方法级&gt;别）都会被调用，<br>scope&#x3D;class 可以实现每个测试类（class 类级别）前执行一次，<br>scope&#x3D;module 在每个 py 文件（module 模块级别）执行前执行一次，<br>scope&#x3D;session 即 pytest 的会话，即所有的测试执行开始到结束，只会执行一次的操作（多个文件调用一次，可以跨.py 文件调用，每个.py 文件就是 module）</p>
+</blockquote>
+<p>使用 <font style="color:#F5222D;">–setup-show 参数 </font>回溯 fixture 的执行过程</p>
+<p><img src="/images/python79.png"></p>
+<h3 id="fixture-参数化-params"><a href="#fixture-参数化-params" class="headerlink" title="fixture 参数化 params"></a>fixture 参数化 params</h3><blockquote>
+<ol>
+<li>fixture 参数列表中的 request 也是 pytest 内建的 fixture 之一，代表 fixture 的调用状态，它有一个 param 字段会被@pytest.fixture(params&#x3D;[1, 2, 3, 4])的 params 列表中的一个元素填充</li>
+<li>装饰器@pytest.fixture(params&#x3D;[1, 2, 3, 4]，会分别传入数据 1，2，3 到用例中，这里传入的是个列表，传入的数据需要使用一个固定的参数名<font style="background-color:#F9EFCD;">request.param</font>来接收，对于 params 里面的每个值，fixture 都会调用执行一次。</li>
+</ol>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#def id_fuc():</span></span><br><span class="line"><span class="comment">#    ...</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@pytest.fixture(<span class="params">autouse=<span class="literal">True</span>, params=[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>], name=<span class="string">&#x27;eee&#x27;</span></span>)</span></span><br><span class="line"><span class="comment">#@pytest.fixture(autouse=True, params=[1, 2, 3, 4], name=&#x27;eee&#x27;, ids=id_func)  #ids参数也可以被指定为一个函数，供pytest生成标识</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">data_eee</span>(<span class="params">request</span>):</span><br><span class="line">    <span class="keyword">return</span> request.param</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_use_fixtures</span>():</span><br><span class="line">    <span class="keyword">assert</span> eee <span class="keyword">in</span> [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    pytest.main()</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/python710.png"></p>
+<h3 id="fixture-的-ids"><a href="#fixture-的-ids" class="headerlink" title="fixture 的 ids"></a>fixture 的 ids</h3><p>指定每个字符串 id，当有多个 param 时，针对每个 param，可以指定 id，这个 id 将成为测试用例名字的一部分，如果没有提供 id，则自动生成一个 id.</p>
+<h3 id="fixture-隐式调用-autouse"><a href="#fixture-隐式调用-autouse" class="headerlink" title="fixture 隐式调用 autouse"></a>fixture 隐式调用 autouse</h3><p>如果每条用例都需要前置执行 fixture 功能，则需要在每一个用例方法参数里面传入这个 fixture 的名字，这里在装饰器里面添加一个 autouse&#x3D;”true”参数，会自动应用到所有的测试方法中</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pytest</span><br><span class="line"></span><br><span class="line"><span class="meta">@pytest.fixture(<span class="params">autouse=<span class="string">&quot;true&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">some_data</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;yield前面的代码执行111111&quot;</span>)</span><br><span class="line">    <span class="keyword">yield</span>  <span class="number">42</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;yield前面的代码执行222222&quot;</span>)</span><br><span class="line">    <span class="comment"># return 42</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="fixture-重命名-name"><a href="#fixture-重命名-name" class="headerlink" title="fixture 重命名 name"></a>fixture 重命名 name</h3><p><font style="color:#bbb529;">@pytest.fixture</font>(<font style="color:#aa4926;">name</font>&#x3D;<font style="color:#6a8759;">“eee”</font>)，使用 fixture 的 name 参数对此 fixture 重命名</p>
+<p>pytest –fixtures XXX.py 如果想找出 eee 是哪里定义的，可以指定–fixtures 命令选项，并提供所在测试文件名，pytest 将列举所有可供测试使用的 fixture 包括重命名的。</p>
+<h3 id="将-fixture-作为函数参数使用（基本用法-pytest-fixture-）"><a href="#将-fixture-作为函数参数使用（基本用法-pytest-fixture-）" class="headerlink" title="将 fixture 作为函数参数使用（基本用法@pytest.fixture()）"></a>将 fixture 作为函数参数使用（基本用法<font style="color:#bbb529;">@pytest.fixture</font>()）</h3><p><font style="color:#bbb529;">@pytest.fixture</font>()装饰器用于声明函数是一个 fixture，如果测试函数的参数列表中包含 fixture 名，pytest 会以该名称搜索 fixture（先搜索该测试所在的模块，然后搜索 conftest.py），并在测试函数执行之前执行该 fixture。</p>
+<p>fixture 可以完成任务，也可以返回数据给测试函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pytest</span><br><span class="line"></span><br><span class="line"><span class="meta">@pytest.fixture()</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">some_data</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;yield前面的代码执行111111&quot;</span>)</span><br><span class="line">    <span class="keyword">yield</span>  <span class="number">42</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;yield前面的代码执行222222&quot;</span>)</span><br><span class="line">    <span class="comment"># return 42</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_some_data</span>(<span class="params">some_data</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;执行测试函数3333&quot;</span>,some_data)</span><br><span class="line">    <span class="keyword">assert</span> some_data == <span class="number">42</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="测试用例如何调用-fixture，如果要调用多个-fixture，应该怎么做？（多样用法）"><a href="#测试用例如何调用-fixture，如果要调用多个-fixture，应该怎么做？（多样用法）" class="headerlink" title="测试用例如何调用 fixture，如果要调用多个 fixture，应该怎么做？（多样用法）"></a>测试用例如何调用 fixture，如果要调用多个 fixture，应该怎么做？（多样用法）</h3><blockquote>
+<p>一个测试用例调用了多个 fixture，调用顺序是范围越广的先调用，比如 session 级别的先调用，然后再到 function 级别</p>
+</blockquote>
+<ol>
+<li>调用多个 fixture，就要把 fixture 作为参数传入测试用例函数中:def test_some_data(some_data,some_data1): …</li>
+</ol>
+<p><img src="/images/python711.png"></p>
+<ol start="2">
+<li>也可使用装饰器@pytest.mark.usefixtures(‘some_data’,‘some_data1’)指定多个 fixture，非常适合用在测试类上，与作为参数传入用例函数中区别在于作为参数传入能够使用 fixture 的返回值，usefixtures 形式不能拿到 fixture 的返回值</li>
+</ol>
+<p><img src="/images/python712.png"></p>
+<pre><code>tips: 如果叠加使用多个 fixture，多 fixture 笛卡尔积调用就是把 fixture 各组参数以笛卡尔积的形式进行组合。
+</code></pre>
+<ol start="3">
+<li>常用 fixture 添加 autouse 选项，这里代表每个测试函数会默认去执行此 fixture，并且我们测试函数不需要传入 some_data3 参数也可以执行这个 fixture。如果跟上 scope 作用域，则代表作用域内的测试函数都执行该 fixture</li>
+</ol>
+<p><img src="/images/python713.png"></p>
+<h3 id="使用-fixture-执行配置及销毁逻辑"><a href="#使用-fixture-执行配置及销毁逻辑" class="headerlink" title="使用 fixture 执行配置及销毁逻辑"></a>使用 fixture 执行配置及销毁逻辑</h3><p>fixture 函数会在测试函数之前执行，但如果 fixture 函数包含 yield，那么系统会在 yield 处停止，转而运行测试函数，等测试函数执行完再回到 fixture，继续执行 yield 后面的代码</p>
+<p>因此将 yield 之前的代码视为 setup 过程，yield 之后的代码视为 teardown 过程。无论测试函数执行过程中发生什么，yield 之后的代码都会被执行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pytest</span><br><span class="line"></span><br><span class="line"><span class="comment">#scope=&quot;module&quot;当前.py文件里面所有用例开始前只执行一次</span></span><br><span class="line"><span class="comment"># scope=&quot;module&quot;+yield结合，相当于setup_module和teardown_module方法</span></span><br><span class="line"><span class="comment"># 整个模块运行之前调用yield之前打印，整个运行之后调用yield之后打印他。如果用例出现异常，不影响yiled后面teardown执行</span></span><br><span class="line"><span class="meta">@pytest.fixture(<span class="params">scope=<span class="string">&quot;module&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">open</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;打开浏览器&quot;</span>)</span><br><span class="line">    <span class="keyword">yield</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;执行teardown&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;关闭浏览器&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">@pytest.mark.usefixtures(<span class="params"><span class="string">&quot;open&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_search1</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;test_search1&quot;</span>)</span><br><span class="line">    <span class="keyword">raise</span> NameError</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_search2</span>(<span class="params"><span class="built_in">open</span></span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;test_search2&quot;</span>)</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    pytest.main([<span class="string">&#x27;utils/my_utils/test_fixture_scope.py&#x27;</span>, <span class="string">&#x27;-vs&#x27;</span>])</span><br></pre></td></tr></table></figure>
+
+<h3 id="通过-conftest-py-共享-fixture"><a href="#通过-conftest-py-共享-fixture" class="headerlink" title="通过 conftest.py 共享 fixture"></a>通过 conftest.py 共享 fixture</h3><ol>
+<li><p>如果希望多个测试文件共享 fixture，可以在某个公共目录下新建一个 conftest.py 文件，将 fixture 放在其中。低一级的 conftest.py 中的 fixture 可以供所在目录及其子目录下的测试使用。</p>
+</li>
+<li><p>fixture scope 为 session 级别是可以跨.py 模块调用的，也就是我们有多个.py 文件的用例时，如果多个用例只需调用一次 fixture，可以将 scope&#x3D;’session’写到 conftest.py 文件。写到 conftest.py 文件可以全局调用这里面的方法。使用 conftest.py 规则是:</p>
+<ol>
+<li><p>conftest.py 文件名是固定的，不可更改</p>
+</li>
+<li><p>conftest.py 与运行的用例要在同一个 package 下，且这个包有<strong>init</strong>.py 文件</p>
+</li>
+<li><p>执行过程中 pytest 会自动识别当前目录的 conftest.py，不需要导入<br>（尽管 conftest.py 是 py 模块，但它不能被测试文件导入，import conftest 用法是不被允许的，它被 pytest 视作一个本地插件库，可以把 tests&#x2F;conftest.py 看成是供 tests 目录下所有测试文件使用的 fixture 仓库）</p>
+</li>
+<li><p>放在项目根目录下可以全局调用，放在某个 packeg 下，就在该 packeg 内生效（其作用域是当前目录以及子目录），如果希望 fixture 的作用域仅限于某个测试文件，就将它写在该测试文件中。</p>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="使用-fixture-传递测试数据，直接-return-数据"><a href="#使用-fixture-传递测试数据，直接-return-数据" class="headerlink" title="使用 fixture 传递测试数据，直接 return 数据"></a>使用 fixture 传递测试数据，直接 return 数据</h3><p>（数据可以用于测试中，也可以被其他 fixture 使用）</p>
+<blockquote>
+<p>如果是测试函数执行 assert 出错，测试结果为 Fail，用户就知道失败是发生在核心测试函数内部</p>
+<p>如果是 fixture 函数发生 assert 异常，那么测试函数会报告成 ERROR，用户就知道失败是发生在测试依赖的 fixture</p>
+</blockquote>
+<h2 id="pytest-内置-Fixture"><a href="#pytest-内置-Fixture" class="headerlink" title="pytest 内置 Fixture"></a>pytest 内置 Fixture</h2><blockquote>
+<p>内置的 fixture 可以大幅简化测试工作，例如在处理临时文件时，内置 fixture 可以识别命令行参数，在多个测试会话间通信，校验输出流，更改环境变量，审查错误报警</p>
+</blockquote>
+<h3 id="1-tmpdir，tmpdir-factory"><a href="#1-tmpdir，tmpdir-factory" class="headerlink" title="1. tmpdir，tmpdir_factory"></a>1. tmpdir，tmpdir_factory</h3><blockquote>
+<p>负责在测试开始运行前创建临时文件目录，并在结束测试后删除<br>tmpdir 作用范围是函数 function 级别，单个测试或者每个测试函数需要创建临时目录或文件应该使用 tmpdir<br>tmpdir_factory 作用范围是会话 session 级别</p>
+</blockquote>
+<p>如果需要模块或者类级别作用范围的临时目录，该怎么办？可以利用 tmpdir_factory 再创建一个 fixture</p>
+<p>假设有一个测试模块，其中有很多测试用例要读取一个 JSON 文件，我们可以在模块本身或 conftest.py 中创建一个作用范围是模块级别的 fixture，用于配置该文件</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> pytest</span><br><span class="line"><span class="string">&quot;&quot;&quot;author_file_json 这个新fixture创建了一个临时目录data，并在目录下创建了一个文件author_file.json，</span></span><br><span class="line"><span class="string">然后将python_author_data字典写入json文件中，因为这个fixture是module级别的，所以该json文件只需要被每个模块创建一次</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="meta">@pytest.fixture(<span class="params">scope=<span class="string">&#x27;module&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">author_file_json</span>(<span class="params">tmpdir_factory</span>):</span><br><span class="line">    python_author_data = &#123;</span><br><span class="line">        <span class="string">&#x27;Ned&#x27;</span>: &#123;<span class="string">&#x27;City&#x27;</span>: <span class="string">&#x27;Boston&#x27;</span>&#125;,</span><br><span class="line">        <span class="string">&#x27;Brian&#x27;</span>: &#123;<span class="string">&#x27;City&#x27;</span>: <span class="string">&#x27;Portland&#x27;</span>&#125;,</span><br><span class="line">        <span class="string">&#x27;Luciano&#x27;</span>: &#123;<span class="string">&#x27;City&#x27;</span>: <span class="string">&#x27;Sau Paulo&#x27;</span>&#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    file= tmpdir_factory.mktemp(<span class="string">&#x27;data&#x27;</span>).join(<span class="string">&#x27;author_file.json&#x27;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;file:&#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">str</span>(file)))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> file.<span class="built_in">open</span>(<span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        json.dump(python_author_data, f)</span><br><span class="line">    <span class="keyword">return</span> file</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="string">&quot;&quot;&quot;这里两个测试用例将使用同一个json文件，如果一个测试数据文件能服务于多个用例，那么就没必要为每个测试用例创建一个数据文件，直接定义为模块级别的fixture&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_brian_in_portland</span>(<span class="params">author_file_json</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;A test that uses a data file.&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">with</span> author_file_json.<span class="built_in">open</span>() <span class="keyword">as</span> f:</span><br><span class="line">        authors = json.load(f)</span><br><span class="line">    <span class="keyword">assert</span> authors[<span class="string">&#x27;Brian&#x27;</span>][<span class="string">&#x27;City&#x27;</span>] == <span class="string">&#x27;Portland&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_all_have_cities</span>(<span class="params">author_file_json</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Same file is used for both tests.&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">with</span> author_file_json.<span class="built_in">open</span>() <span class="keyword">as</span> f:</span><br><span class="line">        authors = json.load(f)</span><br><span class="line">    <span class="keyword">for</span> a <span class="keyword">in</span> authors:</span><br><span class="line">        <span class="keyword">assert</span> <span class="built_in">len</span>(authors[a][<span class="string">&#x27;City&#x27;</span>]) &gt; <span class="number">0</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-pytestconfig"><a href="#2-pytestconfig" class="headerlink" title="2. pytestconfig"></a>2. pytestconfig</h3><blockquote>
+<p><font style="color:rgb(77, 77, 77);">pytestconfig 可以通过</font><a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=%E5%91%BD%E4%BB%A4%E8%A1%8C&spm=1001.2101.3001.7020"><font style="color:rgb(77, 77, 77);">命令行</font></a><font style="color:rgb(77, 77, 77);">参数、选项、配置文件、插件、运行目录等方式来控制 pytest；</font></p>
+<p><font style="color:rgb(77, 77, 77);">pytestconfig 实际上就是 request.config 的快捷方式，被称为“pytest 配置对象”；</font></p>
+</blockquote>
+<h4 id="获取命令行参数的值"><a href="#获取命令行参数的值" class="headerlink" title="获取命令行参数的值"></a><font style="color:rgb(79, 79, 79);">获取命令行参数的值</font></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pytest</span><br><span class="line"></span><br><span class="line"><span class="comment"># 注册自定义参数 cmdopt 到配置对象</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">pytest_addoption</span>(<span class="params">parser</span>):</span><br><span class="line">    parser.addoption(<span class="string">&quot;--cmdopt&quot;</span>, action=<span class="string">&quot;store&quot;</span>, default=<span class="string">&quot;None&quot;</span>, <span class="built_in">help</span>=<span class="string">&quot;将自定义命令行参数 &#x27;--cmdopt&#x27; 添加到 pytest 配置中&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 从配置对象获取 cmdopt 的值</span></span><br><span class="line"><span class="meta">@pytest.fixture(<span class="params">scope=<span class="string">&#x27;session&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cmdopt</span>(<span class="params">pytestconfig</span>):</span><br><span class="line">    <span class="keyword">return</span> pytestconfig.getoption(<span class="string">&#x27;--cmdopt&#x27;</span>)    <span class="comment">#getoption() 可以获取命令行的值</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 然后任何 fixture 或测试用例都可以调用 cmdopt 来获得设备信息</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">device_info = &#123;<span class="string">&#x27;id&#x27;</span>: <span class="string">&#x27;xxx&#x27;</span>, <span class="string">&#x27;name&#x27;</span>: <span class="string">&#x27;华为&#x27;</span>, <span class="string">&#x27;version&#x27;</span>: <span class="string">&#x27;10&#x27;</span>&#125;</span><br><span class="line"></span><br><span class="line">pytest.main([<span class="string">&#x27;-m all&#x27;</span>, <span class="string">f&#x27;--cmdopt=<span class="subst">&#123;device_info&#125;</span>&#x27;</span>])  <span class="comment"># 使用自定义参数传参</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="获取-pytest-ini-配置文件参数的值"><a href="#获取-pytest-ini-配置文件参数的值" class="headerlink" title="获取 pytest.ini 配置文件参数的值"></a><font style="color:rgb(79, 79, 79);">获取 pytest.ini 配置文件参数的值</font></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[pytest]</span><br><span class="line">markers =</span><br><span class="line">    demo : marks tests <span class="keyword">as</span> demo</span><br><span class="line">    smoke: marks tests <span class="keyword">as</span> smoke</span><br><span class="line">    test : marks tests <span class="keyword">as</span> test</span><br><span class="line"></span><br><span class="line">log_cli = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@pytest.fixture(<span class="params">autouse=<span class="literal">True</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">fuc_fix</span>(<span class="params">pytestconfig</span>):</span><br><span class="line">    <span class="built_in">print</span>()</span><br><span class="line">    <span class="built_in">print</span>(pytestconfig.getini(<span class="string">&#x27;markers&#x27;</span>))  <span class="comment">#[&#x27;demo : marks tests as demo&#x27;, &#x27;smoke: marks tests as smoke&#x27;, &#x27;test : marks tests as test&#x27;]</span></span><br><span class="line">    <span class="built_in">print</span>(pytestconfig.getini(<span class="string">&#x27;log_cli&#x27;</span>))  <span class="comment">#True    部分参数中的值会被转换为布尔值！</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-pytest-cache-文件夹"><a href="#3-pytest-cache-文件夹" class="headerlink" title="3. .pytest_cache 文件夹"></a>3. .pytest_cache 文件夹</h3><blockquote>
+<p><font style="color:rgb(18, 18, 18);">pytest 运行完用例之后会生成一个 </font><font style="color:rgb(18, 18, 18);background-color:rgb(246, 246, 246);">.pytest_cache</font><font style="color:rgb(18, 18, 18);">的缓存文件夹，用于记录用例的 ids 和上一次失败的用例。</font><br><font style="color:rgb(18, 18, 18);">1、跑自动化时经常会出现这样一个情况，一轮自动化跑完后零星出现了几个失败测试用例，无法断定失败的原因，所以可能需要重新跑一下失败的测试用例去调试，那我们要做的是就去修改脚本把那几个失败的测试用例筛选出来然后重新跑一遍；</font><br><font style="color:rgb(18, 18, 18);">2、但是在 pytest 测试框架因为有缓存功能，就不需要手动去查找上次失败的测试用例并筛选执行;</font><br><font style="color:rgb(18, 18, 18);">3.、pytest 测试框架中执行完所有的测试用例后会在当前目录下生成 </font><font style="color:rgb(18, 18, 18);background-color:rgb(246, 246, 246);">.pytest_cache</font><font style="color:rgb(18, 18, 18);"> ，里面就保存了上一次用例执行的信息;</font></p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">--last-failed： 如重新运行上次运行结果为失败的测试用例， 如果没有执行失败的用例则执行所有的测试用例。【 --lf 】</span><br><span class="line">--failed-first：运行所有测试，但首先运行上次运行失败的测试（这可能会重新测试，从而导致重复的 fixture setup/teardown ）【 --ff 】</span><br><span class="line">--new-first：根据文件插件的时间，新的测试用例会先运行。【 --nf 】</span><br><span class="line">--cache-show：显示 .pytest_cache 文件内容，不会收集测试用例也不会执行测试用例</span><br><span class="line">--cache-clear：开始执行测试之前先清空 .pytest_cache 文件</span><br></pre></td></tr></table></figure>
+
+<p>cache 还可以用于记录测试的耗时，存储到 Cache，如果接下来的测试耗时大于之前的两倍，就抛出异常?????</p>
+<p>cache 的接口比较简单 cache.get(key, default),cache.set(key,value)</p>
+<h3 id="4-capsys"><a href="#4-capsys" class="headerlink" title="4. capsys"></a>4. capsys</h3><ol>
+<li>允许代码读取 stdout 和 stderr</li>
+<li>可以临时禁止抓取日志输出</li>
+</ol>
+<h3 id="5-monkypatch"><a href="#5-monkypatch" class="headerlink" title="5. monkypatch"></a>5. monkypatch</h3><ol>
+<li>在运行期间对类或者模块进行动态修改</li>
+</ol>
+<h3 id="5-doctest-namespace"><a href="#5-doctest-namespace" class="headerlink" title="5. doctest_namespace"></a>5. doctest_namespace</h3><h3 id="6-recwarn"><a href="#6-recwarn" class="headerlink" title="6. recwarn"></a>6. recwarn</h3><ol>
+<li>用来检查待测代码产生的警告信息</li>
+</ol>
+<h2 id="pytest-ini-配置文件"><a href="#pytest-ini-配置文件" class="headerlink" title="pytest.ini 配置文件"></a>pytest.ini 配置文件</h2><p>首先了解 pytest 中有哪些非测试文件？</p>
+<ol>
+<li>pytest.ini 主配置文件，可以改变 pytest 的默认行为</li>
+<li>conftest.py 本地插件库，其中的 hook 和 fixture 作用于该文件所在的目录以及所有子目录</li>
+<li><strong>init</strong>.py 每个测试子目录都包含</li>
+<li>tox.ini 使用 tox 工具时的配置文件，与 pytest.ini 一样的功能，但是这两个不能同时使用？？？</li>
+<li>setup.cfg 也采用 ini 的格式，可以影响 setup.py 的行为，用于发布一个 python 包的配置文件</li>
+</ol>
+<h3 id="1-修改默认命令行选项"><a href="#1-修改默认命令行选项" class="headerlink" title="1. 修改默认命令行选项"></a>1. 修改默认命令行选项</h3><p>使用 pytest.ini 文件中的 addopts 设置<br>-rsxX 表示 pytest 报告所有测试用例被跳过，预计失败但实际通过的原因<br>-l 表示报告所有失败测试的堆栈中的局部变量<br>–tb&#x3D;short 简化堆栈回溯信息，只保留文件和行数<br>–strict 禁止使用未在配置文件中注册的标记</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[pytest]</span></span><br><span class="line"><span class="attr">addopts</span> = -rsxX -l --tb=short --strict</span><br><span class="line"><span class="attr">xfail_strict</span> = <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="attr">markers</span> =</span><br><span class="line">    smoke: run the smoke test functions</span><br><span class="line">    get: run the get test functions</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-注册标记来防范拼写错误"><a href="#2-注册标记来防范拼写错误" class="headerlink" title="2. 注册标记来防范拼写错误"></a>2. 注册标记来防范拼写错误</h3><p>使用 pytest.ini 文件中的 markers 设置<br>使用 pytest –markers 查看注册了哪些标记</p>
+<h3 id="3-指定-pytest-的最低版本号"><a href="#3-指定-pytest-的最低版本号" class="headerlink" title="3. 指定 pytest 的最低版本号"></a>3. 指定 pytest 的最低版本号</h3><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">minversion</span> = <span class="number">3.0</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-指定-pytest-忽略哪些搜索目录"><a href="#4-指定-pytest-忽略哪些搜索目录" class="headerlink" title="4. 指定 pytest 忽略哪些搜索目录"></a>4. 指定 pytest 忽略哪些搜索目录</h3><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">norecursedirs</span> = ._ venv src _.egg dist build</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-添加测试用例路径"><a href="#5-添加测试用例路径" class="headerlink" title="5. 添加测试用例路径"></a>5. 添加测试用例路径</h3><p>testpaths 限定测试用例的搜索范围，只有在 pytest 未指定文件目录或测试用例标识符时，该选项才会被启用</p>
+<h3 id="6-修改测试用例搜索匹配规则"><a href="#6-修改测试用例搜索匹配规则" class="headerlink" title="6. 修改测试用例搜索匹配规则"></a>6. 修改测试用例搜索匹配规则</h3><p>pytest 寻找以 Test<em>开头的测试类，而且这个类不能有<strong>init</strong>函数，如果把测试类命名为</em>Test 或者*Suite 呢???</p>
+<figure class="highlight ini"><figcaption><span>pytest.ini</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[pytest]</span></span><br><span class="line">python*<span class="attr">classes</span> = \*\_Test Test*\* Suite</span><br><span class="line">python*<span class="attr">files</span> = test*\* _*test check*_</span><br><span class="line">python*<span class="attr">functions</span> = test*\_ check\_\_</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-指定-usefixtures-的默认配置"><a href="#7-指定-usefixtures-的默认配置" class="headerlink" title="7. 指定 usefixtures 的默认配置"></a>7. 指定 usefixtures 的默认配置</h3><figure class="highlight ini"><figcaption><span>pytest.ini</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[pytest]</span></span><br><span class="line"><span class="attr">usefixtures</span>=</span><br><span class="line">drivers</span><br><span class="line">login</span><br></pre></td></tr></table></figure>
+
+<p>如果 usefixtures 后面没有跟具体的 fixture,则读取配置文件中默认的 fixture,这个默认值必须存在,否则报错</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@pytest.mark usefixtures</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test</span>()...</span><br></pre></td></tr></table></figure>
+
+<h3 id="8-禁用-XPASS"><a href="#8-禁用-XPASS" class="headerlink" title="8. 禁用 XPASS"></a>8. 禁用 XPASS</h3><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">xfail_strict</span> = <span class="literal">true</span> <span class="comment">#会使那些被标记为@pytest.mark.xfail 但实际通过的测试用例也被报告为失败 Failed</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="9-避免文件名冲突"><a href="#9-避免文件名冲突" class="headerlink" title="9. 避免文件名冲突"></a>9. 避免文件名冲突</h3><p>只需要在两个子目录里各添加一个空的<strong>init</strong>.py 文件即可</p>
+<h3 id="10-ids-解决中文显示乱码的问题"><a href="#10-ids-解决中文显示乱码的问题" class="headerlink" title="10. ids 解决中文显示乱码的问题"></a>10. ids 解决中文显示乱码的问题</h3><p>第一种解决办法设置 ini 文件中的</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">disable_test_id_escaping_and_forfeit_all_rights_to_community_support</span> = <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><figcaption><span>第二种解决办法:在conftest.py中利用pytest提供的hook函数pytest_collection_modifyitems</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">pytest_collection_modifyitems</span>(<span class="params">items</span>):</span><br><span class="line"><span class="comment">#测试用例收集完成时，将收集到的item的name和nodeid的中文显示在控制台上</span></span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> items:</span><br><span class="line">    item.name = item.name.encode(<span class="string">&quot;utf-8&quot;</span>).decode(<span class="string">&quot;unicode_escape&quot;</span>)</span><br><span class="line">    item._nodeid = item.nodeid.encode(<span class="string">&quot;utf-8&quot;</span>).decode(<span class="string">&quot;unicode_escape&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="11-console-output-style-输出样式配置"><a href="#11-console-output-style-输出样式配置" class="headerlink" title="11. console_output_style 输出样式配置"></a>11. console_output_style 输出样式配置</h3><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">console_output_style</span>=</span><br><span class="line">classic (经典 pytest 输出,没有显示进度百分比)/</span><br><span class="line">progress(带进度指示器) /</span><br><span class="line">count (进度显示为已完成的测试数而不是百分比)</span><br></pre></td></tr></table></figure>
+
+<h3 id="12-filterwarnings-警告过滤"><a href="#12-filterwarnings-警告过滤" class="headerlink" title="12. filterwarnings 警告过滤"></a>12. filterwarnings 警告过滤</h3><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">filterwarnings</span> = error</span><br><span class="line">ignore:: DeprecationWarning</span><br></pre></td></tr></table></figure>
+
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3><h2 id="pytest-插件-plugins"><a href="#pytest-插件-plugins" class="headerlink" title="pytest 插件 plugins"></a>pytest 插件 plugins</h2><h3 id="改变测试流程的插件"><a href="#改变测试流程的插件" class="headerlink" title="改变测试流程的插件"></a>改变测试流程的插件</h3><h4 id="pytest-ordering-自定义用例执行顺序"><a href="#pytest-ordering-自定义用例执行顺序" class="headerlink" title="pytest-ordering 自定义用例执行顺序"></a>pytest-ordering 自定义用例执行顺序</h4><p>用例方法上添加装饰器@pytest.mark.run(order&#x3D;2),用例执行顺序会以 order 值大小升序去调用执行。</p>
+<h4 id="pytest–random-order-随机化测试顺序"><a href="#pytest–random-order-随机化测试顺序" class="headerlink" title="pytest–random-order 随机化测试顺序"></a>pytest–random-order 随机化测试顺序</h4><h4 id="pytest-assume-断言报错后依然执行"><a href="#pytest-assume-断言报错后依然执行" class="headerlink" title="pytest-assume 断言报错后依然执行"></a>pytest-assume 断言报错后依然执行</h4><p>pytest.assume(x&gt;1)</p>
+<h4 id="pytest-repeat-重复运行测试"><a href="#pytest-repeat-重复运行测试" class="headerlink" title="pytest-repeat 重复运行测试"></a>pytest-repeat 重复运行测试</h4><p>pytest test.py –count&#x3D;2 -v -k test-list 使用–count 来指定每个测试用例运行两次</p>
+<h4 id="pytest-timeout"><a href="#pytest-timeout" class="headerlink" title="pytest-timeout"></a>pytest-timeout</h4><p>允许在命令行指定超时时间或者直接在测试代码中标注超时时间</p>
+<h4 id="pytest-rerunfailures-失败测试用例自动重试"><a href="#pytest-rerunfailures-失败测试用例自动重试" class="headerlink" title="pytest-rerunfailures 失败测试用例自动重试"></a>pytest-rerunfailures 失败测试用例自动重试</h4><p>pytest test_demo.py –reruns 2 定义失败后重试 2 次</p>
+<h4 id="pytest-freezegun-冰冻时间"><a href="#pytest-freezegun-冰冻时间" class="headerlink" title="pytest-freezegun 冰冻时间"></a>pytest-freezegun 冰冻时间</h4><p>这个插件可以随时改变当前系统时间,freezer 可以冰冻时间, freezer.move_to 可以改变时间,解决验证某一时间点的代码触发,或未来时间的代码变化问题</p>
+<p>pytest.assume(x&gt;1)</p>
+<h4 id="pytest-xdist-并发运行测试用例"><a href="#pytest-xdist-并发运行测试用例" class="headerlink" title="pytest-xdist 并发运行测试用例"></a>pytest-xdist 并发运行测试用例</h4><p>原理: 将测试分发到 CPU 和远程主机,以盒装模式运行,该模式可以保留分段错误,以 looponfail 模式运行,并根据文件更改自动重新运行失败的测试</p>
+<blockquote>
+<p>假如测试用例 1000 条，一条测试用例执行需要 1 分钟，一个测试人员需要 1000 分钟才能完成一条回归测试，如果是 10 个人一起执行就需要 100 分钟，这就是一种并行测试，分布式的场景。</p>
+</blockquote>
+<p>通常测试都是依次执行的，因为有些资源一次只能被一个测试用例访问，如果你的测试不需要访问共享资源，就可以通过并行运行来提速，pytest-xdist 可以指定处理器数目来同时运行多个测试，甚至可以把测试放在多台机器上运行。pytest-xdist 是 pytest 分布式执行插件，特性在于：</p>
+<ol>
+<li>可以多个 CPU 或主机执行，允许用户将测试并发执行（进程级并发）</li>
+<li>插件动态决定用例执行顺序，为了保证每条用例在各个独立线程里正确的执行，应该保证测试用例的独立性（这也符合测试用例设计的最佳实践）</li>
+<li>多个 CPU 并发执行，需要加上参数<ol>
+<li>pytest -n auto，auto 表示自动检测 CPU 数目</li>
+<li>pytest -n 4，4 表示执行运行测试用例的处理器进程数</li>
+</ol>
+</li>
+</ol>
+<p>缺点：非线程安全&#x2F;多线程运行时性能不佳&#x2F;需要做状态隔离</p>
+<h4 id="pytest-parallel-并发运行测试用例"><a href="#pytest-parallel-并发运行测试用例" class="headerlink" title="pytest-parallel 并发运行测试用例"></a>pytest-parallel 并发运行测试用例</h4><p>pytest-parallel 仅仅支持 python3.6 以上，unix&#x2F;mac 上支持多线程运行和多进程运行两种，windows 上仅支持多线程运行方式</p>
+<ol>
+<li>指定 2 个进程并发: <code>pytest --workers 2</code></li>
+<li>指定 2 个进程并发,每个进程最多运行 3 个线程: <code>pytest --workers 2 --test-per-worker 3</code><br>有时会出现【管道已结束 109】错误，官方暂时未修复</li>
+</ol>
+<h3 id="改善输出效果的插件"><a href="#改善输出效果的插件" class="headerlink" title="改善输出效果的插件"></a>改善输出效果的插件</h3><h4 id="pytest-instafail-用例失败时立即显示错误堆栈回溯信息"><a href="#pytest-instafail-用例失败时立即显示错误堆栈回溯信息" class="headerlink" title="pytest-instafail 用例失败时立即显示错误堆栈回溯信息"></a>pytest-instafail 用例失败时立即显示错误堆栈回溯信息</h4><h4 id="pytest-sugar-显示色彩和进度"><a href="#pytest-sugar-显示色彩和进度" class="headerlink" title="pytest-sugar 显示色彩和进度"></a>pytest-sugar 显示色彩和进度</h4><h4 id="pytest-emoji-为测试添加一些乐趣，把测试状态字符替换成表情符号"><a href="#pytest-emoji-为测试添加一些乐趣，把测试状态字符替换成表情符号" class="headerlink" title="pytest-emoji 为测试添加一些乐趣，把测试状态字符替换成表情符号"></a>pytest-emoji 为测试添加一些乐趣，把测试状态字符替换成表情符号</h4><h4 id="pytest-html-为测试生成-html-报告"><a href="#pytest-html-为测试生成-html-报告" class="headerlink" title="pytest-html 为测试生成 html 报告"></a>pytest-html 为测试生成 html 报告</h4><h3 id="静态分析用的插件"><a href="#静态分析用的插件" class="headerlink" title="静态分析用的插件"></a>静态分析用的插件</h3><h4 id="pytest-pep8"><a href="#pytest-pep8" class="headerlink" title="pytest-pep8"></a>pytest-pep8</h4><h4 id="pytest-flakes"><a href="#pytest-flakes" class="headerlink" title="pytest-flakes"></a>pytest-flakes</h4><h3 id="web-开发用的插件"><a href="#web-开发用的插件" class="headerlink" title="web 开发用的插件"></a>web 开发用的插件</h3><h4 id="4-1-pytest-httpserver-模拟-http-服务"><a href="#4-1-pytest-httpserver-模拟-http-服务" class="headerlink" title="4.1 pytest-httpserver 模拟 http 服务"></a>4.1 pytest-httpserver 模拟 http 服务</h4><h4 id="4-2-pytest-picked-运行未提交-git-的用例"><a href="#4-2-pytest-picked-运行未提交-git-的用例" class="headerlink" title="4.2 pytest-picked 运行未提交 git 的用例"></a>4.2 pytest-picked 运行未提交 git 的用例</h4><pre><code>写完自动化后都会将代码提交到 git 仓库,随州用例的增多,为了保证仓库代码的干净,当有新增用例的时候,希望只运行新增的且尚未提交到 git 仓库的用例
+</code></pre>
+<h4 id="4-3-pytest-mock-模拟未实现的部分"><a href="#4-3-pytest-mock-模拟未实现的部分" class="headerlink" title="4.3 pytest-mock 模拟未实现的部分"></a>4.3 pytest-mock 模拟未实现的部分</h4><h4 id="4-4-pytest-cov-测试-python-程序覆盖率"><a href="#4-4-pytest-cov-测试-python-程序覆盖率" class="headerlink" title="4.4 pytest-cov 测试 python 程序覆盖率"></a>4.4 pytest-cov 测试 python 程序覆盖率</h4><p>先安装 pytest-cov 插件，coverage.py 时 pytest-cov 的一个依赖包<br>pytest –cov&#x3D;src src 是源码目录<br>pytest –cov&#x3D;src –cov-report&#x3D;html 得到一个 html 报告</p>
+<h3 id="插件管理-https-pypi-org-search-q-pytest"><a href="#插件管理-https-pypi-org-search-q-pytest" class="headerlink" title="插件管理 https://pypi.org/search/?q=pytest"></a>插件管理 <a target="_blank" rel="noopener" href="https://pypi.org/search/?q=pytest"><u>https://pypi.org/search/?q=pytest</u></a></h3><ol>
+<li>在测试模块或者 conftest.py 文件中加载插件: pytest_plugins &#x3D; (“myqpp.testsupport.myplugin”,)</li>
+<li>找出那些插件处于活动那个状态: 命令行中输入 pytest –trance –config</li>
+<li>通过名称停用&#x2F;注销插件: pytest - p no: NAME</li>
+<li>无条件禁用项目插件,则可以将此选项添加到 pytest.ini 文件中: addopts &#x3D; - P no: NAME</li>
+<li>仅在某些环境中(例如 CI 服务器中)禁用它,可以将 PYTEST_ADDOPTS 环境变量设置为 - P no: NAME</li>
+</ol>
+<h2 id="pytest-与其他工具搭配"><a href="#pytest-与其他工具搭配" class="headerlink" title="pytest 与其他工具搭配"></a>pytest 与其他工具搭配</h2><h3 id="pdb"><a href="#pdb" class="headerlink" title="pdb"></a>pdb</h3><p>调试失败的测试用例<br>pytest -v -lf -x –pdb<br>p&#x2F;print expr 输出 expr 的值<br>pp expr 美化输出 expr 的值<br>l&#x2F;list 列出错误并显示错误之前和之后的 5 行代码<br>l&#x2F;list begin,end 列出错误并通过行号指定需要显示的代码区域<br>a&#x2F;args 打印当前函数的参数列表<br>q&#x2F;quit 退出当前调试会话</p>
+<h3 id="tox"><a href="#tox" class="headerlink" title="tox"></a>tox</h3><p>测试多种配置<br>tox 不仅能测试不同的 python 版本，还可以用它来测试不同的依赖配置和不同的操作系统配置<br>pip install tox</p>
+<h3 id="jenkins-CI"><a href="#jenkins-CI" class="headerlink" title="jenkins CI"></a>jenkins CI</h3><p>让测试自动化<br>pytest 可以生成 junit.xml 格式的文件，用于给 jenkins 和其他 CI 系统显示结果<br>使用 jenkins 运行 pytest 测试组件，有两个 jenkins 插件好用<br>build-name-setter : 这个插件可以设置每次运行的名字，而不是默认的#1,#2,#3<br>Test Result Analyzer plugin ：这个插件以图表的形式显示测试执行的历史信息</p>
+<h3 id="unittest"><a href="#unittest" class="headerlink" title="unittest"></a>unittest</h3><p>用 pytest 运行历史遗留测试用例<br>用 unittest 运行是 python -m unittest -v a.py</p>
+<h3 id="Allure"><a href="#Allure" class="headerlink" title="Allure"></a>Allure</h3><p>pip install allure-pytest</p>
+<ol>
+<li>收集结果 pytest –alluredir &#x3D; &#x2F;tmp&#x2F;allure_results</li>
+<li>查看报告 allure serve &#x2F;tmp&#x2F;allure_results</li>
+</ol>
+<!-- # 待看
+
+parametrize [其他参数详细用法见书 P165]
+pytest_generate_tests 钩子函数允许定义自定义参数方案或扩展 P174
+最后几页 MOCK/钩子函数用法 -->
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt=" 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/pytest/" rel="tag"><i class="fa fa-tag"></i> pytest</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/post/python-6-unittest.html" rel="prev" title="python unittest">
+      <i class="fa fa-chevron-left"></i> python unittest
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/post/concurrent-programming-basics-1.html" rel="next" title="并发编程基础知识">
+      并发编程基础知识 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#pytest-%E6%96%87%E4%BB%B6%E5%91%BD%E5%90%8D%EF%BC%88%E4%B9%9F%E5%8F%AF%E4%BB%A5%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4%E7%9A%84%E6%90%9C%E7%B4%A2%E8%A7%84%E5%88%99%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">pytest 文件命名（也可以修改默认的搜索规则）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pytest-%E6%A1%86%E6%9E%B6%E7%BB%93%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">pytest 框架结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pytest-%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C"><span class="nav-number">3.</span> <span class="nav-text">pytest 运行结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pytest-%E8%BF%90%E8%A1%8C%E9%80%89%E9%A1%B9"><span class="nav-number">4.</span> <span class="nav-text">pytest 运行选项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pytest-%E9%9D%99%E6%80%81%E6%8C%91%E9%80%89%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B"><span class="nav-number">4.1.</span> <span class="nav-text">pytest 静态挑选测试用例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pytest-%E5%8A%A8%E6%80%81%E6%8C%91%E9%80%89%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B"><span class="nav-number">4.2.</span> <span class="nav-text">pytest 动态挑选测试用例</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-pytest-k-%E2%80%9Casdict-or-defaults%E2%80%9D-%E2%80%93collect-only-%E5%8A%A0%E4%B8%8A-k-%E6%8C%87%E5%AE%9A%E7%89%B9%E5%AE%9A%E8%BF%90%E8%A1%8C%E7%9A%84%E7%94%A8%E4%BE%8B%EF%BC%8C%E7%94%A8%E6%B5%8B%E8%AF%95%E5%90%8D%E5%88%92%E5%88%86%E6%B5%8B%E8%AF%95%E9%9B%86%E5%90%88%EF%BC%8C%E5%8F%AF%E4%BB%A5%E6%8C%87%E5%AE%9A%E6%B5%8B%E8%AF%95%E6%96%87%E4%BB%B6%E5%90%8D%EF%BC%8C%E7%9B%AE%E5%BD%95%EF%BC%8C%E7%B1%BB%E5%90%8D%EF%BC%8C%E5%87%BD%E6%95%B0%E5%90%8D"><span class="nav-number">4.2.1.</span> <span class="nav-text">1 pytest -k “asdict or defaults” –collect-only (加上-k 指定特定运行的用例，用测试名划分测试集合，可以指定测试文件名，目录，类名，函数名)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-pytest-m-run-please%EF%BC%88%E7%94%A8%E4%BA%8E%E6%A0%87%E8%AE%B0%E6%B5%8B%E8%AF%95%E7%B1%BB-%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95%E5%B9%B6%E5%88%86%E7%BB%84%EF%BC%8C%E4%BB%A5%E4%BE%BF%E5%BF%AB%E9%80%9F%E9%80%89%E4%B8%AD%E5%B9%B6%E5%85%81%E8%AE%B8%EF%BC%89-%E4%BD%BF%E7%94%A8-m-%E9%80%89%E9%A1%B9%E5%8F%AF%E4%BB%A5%E7%94%A8%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%8C%87%E5%AE%9A%E5%A4%9A%E4%B8%AA%E6%A0%87%E8%AE%B0%E5%90%8D%EF%BC%9A"><span class="nav-number">4.2.2.</span> <span class="nav-text">2 pytest -m run_please（用于标记测试类&#x2F;测试方法并分组，以便快速选中并允许）,使用-m 选项可以用表达式指定多个标记名：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pytest-%E5%BF%BD%E7%95%A5%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B"><span class="nav-number">4.3.</span> <span class="nav-text">pytest 忽略测试用例</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%BF%BD%E7%95%A5%E6%9F%90%E4%B8%80%E4%B8%AA%E6%B5%8B%E8%AF%95%E6%96%87%E4%BB%B6-%E2%80%93ignore"><span class="nav-number">4.3.1.</span> <span class="nav-text">1 忽略某一个测试文件 –ignore</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E5%BF%BD%E7%95%A5%E6%9F%90%E4%B8%80%E4%B8%AA%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95-%E2%80%93deselect"><span class="nav-number">4.3.2.</span> <span class="nav-text">2 忽略某一个测试方法 –deselect</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E4%BD%BF%E7%94%A8-pytest-mark-skip-%E8%A3%85%E9%A5%B0%E5%99%A8%E5%BF%BD%E7%95%A5"><span class="nav-number">4.3.3.</span> <span class="nav-text">3 使用 @pytest.mark.skip 装饰器忽略</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E4%BD%BF%E7%94%A8-pytest-mark-skipif-%E8%A3%85%E9%A5%B0%E5%99%A8%E5%BF%BD%E7%95%A5"><span class="nav-number">4.3.4.</span> <span class="nav-text">4 使用 @pytest.mark.skipif 装饰器忽略</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-%E4%BD%BF%E7%94%A8-m-%E6%88%96%E8%80%85-k-%E5%8F%82%E6%95%B0%E5%BF%BD%E7%95%A5"><span class="nav-number">4.3.5.</span> <span class="nav-text">5 使用-m 或者-k 参数忽略</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pytest-%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0"><span class="nav-number">4.4.</span> <span class="nav-text">pytest 命令行参数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-pytest-v-%EF%BC%88%E8%AF%A6%E7%BB%86%E5%B1%95%E7%A4%BA%E7%BB%93%E6%9E%9C%EF%BC%8C%E6%AF%8F%E4%B8%AA%E6%96%87%E4%BB%B6%E4%B8%AD%E7%9A%84%E6%AF%8F%E4%B8%AA%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B%E5%8D%A0%E4%B8%80%E8%A1%8C%EF%BC%8C%E6%96%87%E4%BB%B6%E5%90%8D%E5%87%BD%E6%95%B0%E5%90%8D%E7%BB%93%E6%9E%9C%E9%83%BD%E4%BC%9A%E6%98%BE%E7%A4%BA%E5%87%BA%E6%9D%A5%EF%BC%89"><span class="nav-number">4.4.1.</span> <span class="nav-text">1 pytest -v （详细展示结果，每个文件中的每个测试用例占一行，文件名函数名结果都会显示出来）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-pytest-q-%E5%92%8C-v-%E7%9B%B8%E5%8F%8D%EF%BC%8C%E5%9B%9E%E7%AE%80%E5%8C%96%E8%BE%93%E5%87%BA%E4%BF%A1%E6%81%AF"><span class="nav-number">4.4.2.</span> <span class="nav-text">2 pytest -q (和-v 相反，回简化输出信息)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-pytest-s-%EF%BC%88%E5%85%81%E8%AE%B8%E7%BB%88%E7%AB%AF%E8%BE%93%E5%87%BA-print-%E7%BB%93%E6%9E%9C%EF%BC%89"><span class="nav-number">4.4.3.</span> <span class="nav-text">3 pytest -s （允许终端输出 print 结果）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-pytest-%E2%80%93collect-only-%EF%BC%88%E5%B1%95%E7%A4%BA%E5%BD%93%E5%89%8D%E7%9B%AE%E5%BD%95%E4%B8%8B%E5%93%AA%E4%BA%9B%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B%E4%BC%9A%E8%A2%AB%E8%BF%90%E8%A1%8C%EF%BC%8C%E9%9D%9E%E5%B8%B8%E6%96%B9%E4%BE%BF%E7%9A%84%E5%9C%A8%E6%B5%8B%E8%AF%95%E8%BF%90%E8%A1%8C%E4%B9%8B%E5%89%8D%EF%BC%8C%E6%A3%80%E6%9F%A5%E9%80%89%E4%B8%AD%E7%9A%84%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B%E6%98%AF%E5%90%A6%E7%AC%A6%E5%90%88%E9%A2%84%E6%9C%9F%EF%BC%89"><span class="nav-number">4.4.4.</span> <span class="nav-text">4 pytest –collect-only （展示当前目录下哪些测试用例会被运行，非常方便的在测试运行之前，检查选中的测试用例是否符合预期）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-pytest-x-%E7%94%A8%E4%BA%8E-debug-%E6%97%B6%E5%80%99%EF%BC%8C%E9%81%87%E5%88%B0%E5%A4%B1%E8%B4%A5%E6%97%B6%E7%AB%8B%E5%8D%B3%E5%81%9C%E6%AD%A2%E6%95%B4%E4%B8%AA%E4%BC%9A%E8%AF%9D-%EF%BC%88%E6%AD%A3%E5%B8%B8%E6%83%85%E5%86%B5%E4%B8%8B%EF%BC%8C%E4%B8%8D%E4%BD%BF%E7%94%A8-x-%E9%81%87%E5%88%B0%E6%B5%8B%E8%AF%95%E5%A4%B1%E8%B4%A5%E7%9A%84%E7%94%A8%E4%BE%8B%EF%BC%8C%E5%B9%B6%E4%B8%8D%E4%BC%9A%E5%81%9C%E6%AD%A2%E6%89%A7%E8%A1%8C%E5%90%8E%E9%9D%A2%E7%9A%84%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B%EF%BC%89"><span class="nav-number">4.4.5.</span> <span class="nav-text">5 pytest -x (用于 debug 时候，遇到失败时立即停止整个会话)（正常情况下，不使用-x 遇到测试失败的用例，并不会停止执行后面的测试用例）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#56-pytest-%E2%80%93maxfail-2-x-%E6%97%B6%E9%81%87%E5%88%B0%E6%B5%8B%E8%AF%95%E5%A4%B1%E8%B4%A5%E5%B0%B1%E7%AB%8B%E5%8D%B3%E5%81%9C%E6%AD%A2%EF%BC%8C%E2%80%93maxfail-%E6%98%AF%E5%85%81%E8%AE%B8-pytest-%E5%A4%B1%E8%B4%A5%E5%87%A0%E4%B8%AA%E5%90%8E%E5%81%9C%E6%AD%A2%EF%BC%8C%E6%98%8E%E7%A1%AE%E6%8C%87%E5%87%BA%E5%8F%AF%E4%BB%A5%E5%A4%B1%E8%B4%A5%E5%87%A0%E6%AC%A1"><span class="nav-number">4.4.6.</span> <span class="nav-text">56 pytest –maxfail&#x3D;2 (-x 时遇到测试失败就立即停止，–maxfail 是允许 pytest 失败几个后停止，明确指出可以失败几次)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-pytest-v-lf-%E2%80%93last-failed-%E5%BD%93%E4%B8%80%E4%B8%AA%E6%88%96%E8%80%85%E5%A4%9A%E4%B8%AA%E6%B5%8B%E8%AF%95%E5%A4%B1%E8%B4%A5%E6%97%B6%EF%BC%8C%E5%86%8D%E6%AC%A1%E8%BF%90%E8%A1%8C%E5%B9%B6%E4%BD%BF%E7%94%A8%E2%80%93lf-%E6%97%B6%EF%BC%8C%E4%BB%85%E8%BF%90%E8%A1%8C%E4%B8%8A%E6%AC%A1%E6%9C%AA%E9%80%9A%E8%BF%87%E7%9A%84%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B"><span class="nav-number">4.4.7.</span> <span class="nav-text">7 pytest -v -lf –last-failed (当一个或者多个测试失败时，再次运行并使用–lf 时，仅运行上次未通过的测试用例)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-pytest-v-ff-%E2%80%93failed-first-%E5%BD%93%E4%B8%80%E4%B8%AA%E6%88%96%E8%80%85%E5%A4%9A%E4%B8%AA%E6%B5%8B%E8%AF%95%E5%A4%B1%E8%B4%A5%E6%97%B6%EF%BC%8C%E5%86%8D%E6%AC%A1%E8%BF%90%E8%A1%8C%E5%B9%B6%E4%BD%BF%E7%94%A8%E2%80%93ff-%E6%97%B6%EF%BC%8C%E4%B9%8B%E5%89%8D%E8%BF%90%E8%A1%8C%E6%9C%AA%E9%80%9A%E8%BF%87%E7%9A%84%E7%94%A8%E4%BE%8B%E4%BC%9A%E9%A6%96%E5%85%88%E6%89%A7%E8%A1%8C%EF%BC%8C%E7%84%B6%E5%90%8E%E6%89%8D%E6%98%AF%E5%85%B6%E4%BB%96%E7%94%A8%E4%BE%8B"><span class="nav-number">4.4.8.</span> <span class="nav-text">8 pytest -v -ff –failed-first (当一个或者多个测试失败时，再次运行并使用–ff 时，之前运行未通过的用例会首先执行，然后才是其他用例)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-pytest-l-%E2%80%93showlocals%EF%BC%88%E5%A4%B1%E8%B4%A5%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B%E7%94%B1%E4%BA%8E%E8%A2%AB%E5%A0%86%E6%A0%88%E8%B7%9F%E8%B8%AA%EF%BC%8C%E6%89%80%E4%BB%A5%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F%E4%BB%A5%E5%8F%8A%E5%80%BC%E9%83%BD%E4%BC%9A%E6%98%BE%E7%A4%BA%E5%87%BA%E6%9D%A5%EF%BC%89"><span class="nav-number">4.4.9.</span> <span class="nav-text">9 pytest -l &#x2F; –showlocals（失败测试用例由于被堆栈跟踪，所以局部变量以及值都会显示出来）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-pytest-%E2%80%93tb-XXX-%EF%BC%88%E5%86%B3%E5%AE%9A%E6%8D%95%E6%8D%89%E5%88%B0%E5%A4%B1%E8%B4%A5%E6%97%B6%E8%BE%93%E5%87%BA%E4%BF%A1%E6%81%AF%E7%9A%84%E5%B1%95%E7%A4%BA%E6%96%B9%E5%BC%8F%EF%BC%89"><span class="nav-number">4.4.10.</span> <span class="nav-text">10 pytest –tb&#x3D;XXX （决定捕捉到失败时输出信息的展示方式）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#11-pytest-%E2%80%93durations-N-vv-%EF%BC%88%E7%BB%9F%E8%AE%A1%E6%B5%8B%E8%AF%95%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%82%A3%E5%87%A0%E4%B8%AA%E9%98%B6%E6%AE%B5%E6%98%AF%E6%9C%80%E6%85%A2%E7%9A%84%EF%BC%8C%E4%BC%9A%E6%98%BE%E7%A4%BA%E6%9C%80%E6%85%A2%E7%9A%84-N-%E4%B8%AA%E9%98%B6%E6%AE%B5%EF%BC%8C%E8%80%97%E6%97%B6%E8%B6%8A%E9%95%BF%E8%B6%8A%E9%9D%A0%E5%89%8D%EF%BC%89"><span class="nav-number">4.4.11.</span> <span class="nav-text">11 pytest –durations&#x3D;N -vv （统计测试过程中那几个阶段是最慢的，会显示最慢的 N 个阶段，耗时越长越靠前）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#12-pytest-h-%EF%BC%88%E5%B1%95%E7%A4%BA-pytest-%E7%9A%84%E7%94%A8%E6%B3%95%E5%92%8C%E6%96%B0%E6%B7%BB%E5%8A%A0%E6%8F%92%E4%BB%B6%E7%9A%84%E9%80%89%E9%A1%B9%EF%BC%89"><span class="nav-number">4.4.12.</span> <span class="nav-text">12 pytest -h （展示 pytest 的用法和新添加插件的选项）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pytest-%E7%A8%8B%E5%BA%8F%E4%B8%AD%E6%89%A7%E8%A1%8C-pytest-main"><span class="nav-number">4.5.</span> <span class="nav-text">pytest 程序中执行 pytest.main()</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pytest-%E5%8F%82%E6%95%B0%E5%8C%96-parametrize"><span class="nav-number">5.</span> <span class="nav-text">pytest 参数化 parametrize</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#parametrize-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="nav-number">5.1.</span> <span class="nav-text">parametrize 源码分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#parametrize-%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="nav-number">5.2.</span> <span class="nav-text">parametrize 使用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#parametrize-%E8%87%AA%E5%8A%A8%E7%94%9F%E6%88%90%E7%9A%84%E7%94%A8%E4%BE%8B%E6%A0%87%E8%AF%86"><span class="nav-number">5.2.1.</span> <span class="nav-text">parametrize 自动生成的用例标识</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ids-%E5%8F%82%E6%95%B0%E7%94%A8%E6%B3%95"><span class="nav-number">5.2.2.</span> <span class="nav-text">ids 参数用法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E6%AC%A1%E4%BD%BF%E7%94%A8-paramtrize"><span class="nav-number">5.2.3.</span> <span class="nav-text">多次使用 paramtrize</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pytest-fixture-%E4%B8%8E-pytest-mark-parametrize-%E7%BB%93%E5%90%88%E5%AE%9E%E7%8E%B0%E5%8F%82%E6%95%B0%E5%8C%96%EF%BC%88indirect-%E5%8F%82%E6%95%B0%E7%94%A8%E6%B3%95%EF%BC%89"><span class="nav-number">5.2.4.</span> <span class="nav-text">@pytest.fixture 与@pytest.mark.parametrize 结合实现参数化（indirect 参数用法）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#argnames-%E7%9A%84%E7%94%A8%E6%B3%95-%E5%85%B6%E4%BB%96%E5%8F%82%E6%95%B0%E8%AF%A6%E7%BB%86%E7%94%A8%E6%B3%95%E8%A7%81%E4%B9%A6-P165"><span class="nav-number">5.2.5.</span> <span class="nav-text">argnames 的用法 [其他参数详细用法见书 P165]</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pytest-%E8%87%AA%E5%AE%9A%E4%B9%89-Fixture"><span class="nav-number">6.</span> <span class="nav-text">pytest 自定义 Fixture</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#fixture-%E7%9A%84-scope-%E4%BD%9C%E7%94%A8%E8%8C%83%E5%9B%B4%E5%93%AA%E5%87%A0%E7%A7%8D%E5%80%BC%EF%BC%9F"><span class="nav-number">6.1.</span> <span class="nav-text">fixture 的 scope 作用范围哪几种值？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fixture-%E5%8F%82%E6%95%B0%E5%8C%96-params"><span class="nav-number">6.2.</span> <span class="nav-text">fixture 参数化 params</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fixture-%E7%9A%84-ids"><span class="nav-number">6.3.</span> <span class="nav-text">fixture 的 ids</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fixture-%E9%9A%90%E5%BC%8F%E8%B0%83%E7%94%A8-autouse"><span class="nav-number">6.4.</span> <span class="nav-text">fixture 隐式调用 autouse</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fixture-%E9%87%8D%E5%91%BD%E5%90%8D-name"><span class="nav-number">6.5.</span> <span class="nav-text">fixture 重命名 name</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%86-fixture-%E4%BD%9C%E4%B8%BA%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E4%BD%BF%E7%94%A8%EF%BC%88%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95-pytest-fixture-%EF%BC%89"><span class="nav-number">6.6.</span> <span class="nav-text">将 fixture 作为函数参数使用（基本用法@pytest.fixture()）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B%E5%A6%82%E4%BD%95%E8%B0%83%E7%94%A8-fixture%EF%BC%8C%E5%A6%82%E6%9E%9C%E8%A6%81%E8%B0%83%E7%94%A8%E5%A4%9A%E4%B8%AA-fixture%EF%BC%8C%E5%BA%94%E8%AF%A5%E6%80%8E%E4%B9%88%E5%81%9A%EF%BC%9F%EF%BC%88%E5%A4%9A%E6%A0%B7%E7%94%A8%E6%B3%95%EF%BC%89"><span class="nav-number">6.7.</span> <span class="nav-text">测试用例如何调用 fixture，如果要调用多个 fixture，应该怎么做？（多样用法）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-fixture-%E6%89%A7%E8%A1%8C%E9%85%8D%E7%BD%AE%E5%8F%8A%E9%94%80%E6%AF%81%E9%80%BB%E8%BE%91"><span class="nav-number">6.8.</span> <span class="nav-text">使用 fixture 执行配置及销毁逻辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E8%BF%87-conftest-py-%E5%85%B1%E4%BA%AB-fixture"><span class="nav-number">6.9.</span> <span class="nav-text">通过 conftest.py 共享 fixture</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-fixture-%E4%BC%A0%E9%80%92%E6%B5%8B%E8%AF%95%E6%95%B0%E6%8D%AE%EF%BC%8C%E7%9B%B4%E6%8E%A5-return-%E6%95%B0%E6%8D%AE"><span class="nav-number">6.10.</span> <span class="nav-text">使用 fixture 传递测试数据，直接 return 数据</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pytest-%E5%86%85%E7%BD%AE-Fixture"><span class="nav-number">7.</span> <span class="nav-text">pytest 内置 Fixture</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-tmpdir%EF%BC%8Ctmpdir-factory"><span class="nav-number">7.1.</span> <span class="nav-text">1. tmpdir，tmpdir_factory</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-pytestconfig"><span class="nav-number">7.2.</span> <span class="nav-text">2. pytestconfig</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0%E7%9A%84%E5%80%BC"><span class="nav-number">7.2.1.</span> <span class="nav-text">获取命令行参数的值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96-pytest-ini-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%8F%82%E6%95%B0%E7%9A%84%E5%80%BC"><span class="nav-number">7.2.2.</span> <span class="nav-text">获取 pytest.ini 配置文件参数的值</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-pytest-cache-%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="nav-number">7.3.</span> <span class="nav-text">3. .pytest_cache 文件夹</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-capsys"><span class="nav-number">7.4.</span> <span class="nav-text">4. capsys</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-monkypatch"><span class="nav-number">7.5.</span> <span class="nav-text">5. monkypatch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-doctest-namespace"><span class="nav-number">7.6.</span> <span class="nav-text">5. doctest_namespace</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-recwarn"><span class="nav-number">7.7.</span> <span class="nav-text">6. recwarn</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pytest-ini-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">8.</span> <span class="nav-text">pytest.ini 配置文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4%E5%91%BD%E4%BB%A4%E8%A1%8C%E9%80%89%E9%A1%B9"><span class="nav-number">8.1.</span> <span class="nav-text">1. 修改默认命令行选项</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%B3%A8%E5%86%8C%E6%A0%87%E8%AE%B0%E6%9D%A5%E9%98%B2%E8%8C%83%E6%8B%BC%E5%86%99%E9%94%99%E8%AF%AF"><span class="nav-number">8.2.</span> <span class="nav-text">2. 注册标记来防范拼写错误</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%8C%87%E5%AE%9A-pytest-%E7%9A%84%E6%9C%80%E4%BD%8E%E7%89%88%E6%9C%AC%E5%8F%B7"><span class="nav-number">8.3.</span> <span class="nav-text">3. 指定 pytest 的最低版本号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E6%8C%87%E5%AE%9A-pytest-%E5%BF%BD%E7%95%A5%E5%93%AA%E4%BA%9B%E6%90%9C%E7%B4%A2%E7%9B%AE%E5%BD%95"><span class="nav-number">8.4.</span> <span class="nav-text">4. 指定 pytest 忽略哪些搜索目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E6%B7%BB%E5%8A%A0%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B%E8%B7%AF%E5%BE%84"><span class="nav-number">8.5.</span> <span class="nav-text">5. 添加测试用例路径</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E4%BF%AE%E6%94%B9%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B%E6%90%9C%E7%B4%A2%E5%8C%B9%E9%85%8D%E8%A7%84%E5%88%99"><span class="nav-number">8.6.</span> <span class="nav-text">6. 修改测试用例搜索匹配规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E6%8C%87%E5%AE%9A-usefixtures-%E7%9A%84%E9%BB%98%E8%AE%A4%E9%85%8D%E7%BD%AE"><span class="nav-number">8.7.</span> <span class="nav-text">7. 指定 usefixtures 的默认配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-%E7%A6%81%E7%94%A8-XPASS"><span class="nav-number">8.8.</span> <span class="nav-text">8. 禁用 XPASS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-%E9%81%BF%E5%85%8D%E6%96%87%E4%BB%B6%E5%90%8D%E5%86%B2%E7%AA%81"><span class="nav-number">8.9.</span> <span class="nav-text">9. 避免文件名冲突</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-ids-%E8%A7%A3%E5%86%B3%E4%B8%AD%E6%96%87%E6%98%BE%E7%A4%BA%E4%B9%B1%E7%A0%81%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">8.10.</span> <span class="nav-text">10. ids 解决中文显示乱码的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-console-output-style-%E8%BE%93%E5%87%BA%E6%A0%B7%E5%BC%8F%E9%85%8D%E7%BD%AE"><span class="nav-number">8.11.</span> <span class="nav-text">11. console_output_style 输出样式配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-filterwarnings-%E8%AD%A6%E5%91%8A%E8%BF%87%E6%BB%A4"><span class="nav-number">8.12.</span> <span class="nav-text">12. filterwarnings 警告过滤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">8.13.</span> <span class="nav-text"></span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pytest-%E6%8F%92%E4%BB%B6-plugins"><span class="nav-number">9.</span> <span class="nav-text">pytest 插件 plugins</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%B9%E5%8F%98%E6%B5%8B%E8%AF%95%E6%B5%81%E7%A8%8B%E7%9A%84%E6%8F%92%E4%BB%B6"><span class="nav-number">9.1.</span> <span class="nav-text">改变测试流程的插件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#pytest-ordering-%E8%87%AA%E5%AE%9A%E4%B9%89%E7%94%A8%E4%BE%8B%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F"><span class="nav-number">9.1.1.</span> <span class="nav-text">pytest-ordering 自定义用例执行顺序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pytest%E2%80%93random-order-%E9%9A%8F%E6%9C%BA%E5%8C%96%E6%B5%8B%E8%AF%95%E9%A1%BA%E5%BA%8F"><span class="nav-number">9.1.2.</span> <span class="nav-text">pytest–random-order 随机化测试顺序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pytest-assume-%E6%96%AD%E8%A8%80%E6%8A%A5%E9%94%99%E5%90%8E%E4%BE%9D%E7%84%B6%E6%89%A7%E8%A1%8C"><span class="nav-number">9.1.3.</span> <span class="nav-text">pytest-assume 断言报错后依然执行</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pytest-repeat-%E9%87%8D%E5%A4%8D%E8%BF%90%E8%A1%8C%E6%B5%8B%E8%AF%95"><span class="nav-number">9.1.4.</span> <span class="nav-text">pytest-repeat 重复运行测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pytest-timeout"><span class="nav-number">9.1.5.</span> <span class="nav-text">pytest-timeout</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pytest-rerunfailures-%E5%A4%B1%E8%B4%A5%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B%E8%87%AA%E5%8A%A8%E9%87%8D%E8%AF%95"><span class="nav-number">9.1.6.</span> <span class="nav-text">pytest-rerunfailures 失败测试用例自动重试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pytest-freezegun-%E5%86%B0%E5%86%BB%E6%97%B6%E9%97%B4"><span class="nav-number">9.1.7.</span> <span class="nav-text">pytest-freezegun 冰冻时间</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pytest-xdist-%E5%B9%B6%E5%8F%91%E8%BF%90%E8%A1%8C%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B"><span class="nav-number">9.1.8.</span> <span class="nav-text">pytest-xdist 并发运行测试用例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pytest-parallel-%E5%B9%B6%E5%8F%91%E8%BF%90%E8%A1%8C%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B"><span class="nav-number">9.1.9.</span> <span class="nav-text">pytest-parallel 并发运行测试用例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%B9%E5%96%84%E8%BE%93%E5%87%BA%E6%95%88%E6%9E%9C%E7%9A%84%E6%8F%92%E4%BB%B6"><span class="nav-number">9.2.</span> <span class="nav-text">改善输出效果的插件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#pytest-instafail-%E7%94%A8%E4%BE%8B%E5%A4%B1%E8%B4%A5%E6%97%B6%E7%AB%8B%E5%8D%B3%E6%98%BE%E7%A4%BA%E9%94%99%E8%AF%AF%E5%A0%86%E6%A0%88%E5%9B%9E%E6%BA%AF%E4%BF%A1%E6%81%AF"><span class="nav-number">9.2.1.</span> <span class="nav-text">pytest-instafail 用例失败时立即显示错误堆栈回溯信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pytest-sugar-%E6%98%BE%E7%A4%BA%E8%89%B2%E5%BD%A9%E5%92%8C%E8%BF%9B%E5%BA%A6"><span class="nav-number">9.2.2.</span> <span class="nav-text">pytest-sugar 显示色彩和进度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pytest-emoji-%E4%B8%BA%E6%B5%8B%E8%AF%95%E6%B7%BB%E5%8A%A0%E4%B8%80%E4%BA%9B%E4%B9%90%E8%B6%A3%EF%BC%8C%E6%8A%8A%E6%B5%8B%E8%AF%95%E7%8A%B6%E6%80%81%E5%AD%97%E7%AC%A6%E6%9B%BF%E6%8D%A2%E6%88%90%E8%A1%A8%E6%83%85%E7%AC%A6%E5%8F%B7"><span class="nav-number">9.2.3.</span> <span class="nav-text">pytest-emoji 为测试添加一些乐趣，把测试状态字符替换成表情符号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pytest-html-%E4%B8%BA%E6%B5%8B%E8%AF%95%E7%94%9F%E6%88%90-html-%E6%8A%A5%E5%91%8A"><span class="nav-number">9.2.4.</span> <span class="nav-text">pytest-html 为测试生成 html 报告</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E5%88%86%E6%9E%90%E7%94%A8%E7%9A%84%E6%8F%92%E4%BB%B6"><span class="nav-number">9.3.</span> <span class="nav-text">静态分析用的插件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#pytest-pep8"><span class="nav-number">9.3.1.</span> <span class="nav-text">pytest-pep8</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pytest-flakes"><span class="nav-number">9.3.2.</span> <span class="nav-text">pytest-flakes</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#web-%E5%BC%80%E5%8F%91%E7%94%A8%E7%9A%84%E6%8F%92%E4%BB%B6"><span class="nav-number">9.4.</span> <span class="nav-text">web 开发用的插件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-pytest-httpserver-%E6%A8%A1%E6%8B%9F-http-%E6%9C%8D%E5%8A%A1"><span class="nav-number">9.4.1.</span> <span class="nav-text">4.1 pytest-httpserver 模拟 http 服务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-pytest-picked-%E8%BF%90%E8%A1%8C%E6%9C%AA%E6%8F%90%E4%BA%A4-git-%E7%9A%84%E7%94%A8%E4%BE%8B"><span class="nav-number">9.4.2.</span> <span class="nav-text">4.2 pytest-picked 运行未提交 git 的用例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-pytest-mock-%E6%A8%A1%E6%8B%9F%E6%9C%AA%E5%AE%9E%E7%8E%B0%E7%9A%84%E9%83%A8%E5%88%86"><span class="nav-number">9.4.3.</span> <span class="nav-text">4.3 pytest-mock 模拟未实现的部分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-4-pytest-cov-%E6%B5%8B%E8%AF%95-python-%E7%A8%8B%E5%BA%8F%E8%A6%86%E7%9B%96%E7%8E%87"><span class="nav-number">9.4.4.</span> <span class="nav-text">4.4 pytest-cov 测试 python 程序覆盖率</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E4%BB%B6%E7%AE%A1%E7%90%86-https-pypi-org-search-q-pytest"><span class="nav-number">9.5.</span> <span class="nav-text">插件管理 https:&#x2F;&#x2F;pypi.org&#x2F;search&#x2F;?q&#x3D;pytest</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pytest-%E4%B8%8E%E5%85%B6%E4%BB%96%E5%B7%A5%E5%85%B7%E6%90%AD%E9%85%8D"><span class="nav-number">10.</span> <span class="nav-text">pytest 与其他工具搭配</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pdb"><span class="nav-number">10.1.</span> <span class="nav-text">pdb</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tox"><span class="nav-number">10.2.</span> <span class="nav-text">tox</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jenkins-CI"><span class="nav-number">10.3.</span> <span class="nav-text">jenkins CI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#unittest"><span class="nav-number">10.4.</span> <span class="nav-text">unittest</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Allure"><span class="nav-number">10.5.</span> <span class="nav-text">Allure</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description">Fake it till you make it!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="mailto:tishaqin@gmail.com" title="E-Mail → mailto:tishaqin@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/TishaQin" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;TishaQin" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/weixin_43623871" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;weixin_43623871" rel="noopener" target="_blank"><i class="fab fa-cuttlefish fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzkwODY2OTc2MQ==" title="微信公众号 → https:&#x2F;&#x2F;mp.weixin.qq.com&#x2F;mp&#x2F;profile_ext?action&#x3D;home&amp;__biz&#x3D;MzkwODY2OTc2MQ&#x3D;&#x3D;" rel="noopener" target="_blank"><i class="fab fa-weixin fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">TISHA@HD</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">126k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:55</span>
+</div>
+
+<div>
+  <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+  <script>
+      var now = new Date();
+      function createtime() {
+          var grt= new Date("08/24/2024 00:00:00");
+          now.setTime(now.getTime()+250);
+          days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+          hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+          if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+          mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+          seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+          snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+          document.getElementById("timeDate").innerHTML = "建站 "+dnum+" 天 ";
+          document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+      }
+  setInterval("createtime()",250);
+  </script>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'Ya3zOA5Mu8o4wbWCkMJooFOx-gzGzoHsz',
+      appKey     : 'qp2hI1mmbcy43clW5ONpT3Z8',
+      placeholder: "Just go go",
+      avatar     : 'monsterid',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-CN' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // 查找所有 div.table-container 元素
+    const tableContainers = document.querySelectorAll(".table-container");
+
+    // 遍历所有 div.table-container 元素
+    tableContainers.forEach(function(tableContainer) {
+      // 获取 div.table-container 内的行数（假设每行对应一个 <span>）
+      const lineCount = tableContainer.querySelectorAll("tbody > tr > td.code > pre > span").length;
+
+      // 检查行数是否大于 5
+      if (lineCount > 5) {
+        // 默认添加 "code-hidden" 类
+        tableContainer.classList.add("code-hidden");
+      }
+
+      // 检查 div.table-container 前面是否有 figcaption 元素，如果没有则添加一个
+      const prevElement = tableContainer.previousElementSibling;
+      let figcaption;
+      let iElement;
+      if (!prevElement || prevElement.tagName.toLowerCase() !== "figcaption") {
+        // 在 div.table-container 前插入一个 figcaption 元素
+        figcaption = document.createElement("figcaption");
+
+        // 将 figcaption 插入到 DOM 中
+        tableContainer.parentNode.insertBefore(figcaption, tableContainer);
+      } else {
+        figcaption = prevElement;
+      }
+
+      // 创建一个 <i> 标签并添加功能
+      iElement = document.createElement("i");
+      iElement.className = "fas fa-angle-down";
+      // 插入一点空格
+      iElement.innerHTML = "&nbsp;&nbsp;&nbsp;";
+      figcaption.insertBefore(iElement, figcaption.firstChild);
+
+      // 为 <i> 标签添加点击事件
+      iElement.addEventListener("click", function() {
+        // 切换 tableContainer 的 "code-hidden" 类
+        tableContainer.classList.toggle("code-hidden");
+
+        // 切换 <i> 标签的类名
+        if (iElement.classList.contains("fa-angle-down")) {
+          iElement.classList.remove("fa-angle-down");
+          iElement.classList.add("fa-angle-right");
+        } else {
+          iElement.classList.remove("fa-angle-right");
+          iElement.classList.add("fa-angle-down");
+        }
+      });
+    });
+  });
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":200,"height":350},"mobile":{"show":true},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

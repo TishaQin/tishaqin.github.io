@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+  <meta name="baidu-site-verification" content="true">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"tishaqin.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="一. DB 服务">
+<meta property="og:type" content="article">
+<meta property="og:title" content="jenkins pipeline自动构建部署Fastapi服务">
+<meta property="og:url" content="https://tishaqin.github.io/post/jenkins-3-fastapi.html">
+<meta property="og:site_name" content="测试与时光手札">
+<meta property="og:description" content="一. DB 服务">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-09-23T00:00:00.000Z">
+<meta property="article:modified_time" content="2024-09-23T00:00:00.000Z">
+<meta property="article:tag" content="jenkins">
+<meta property="article:tag" content="CICD">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://tishaqin.github.io/post/jenkins-3-fastapi.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>jenkins pipeline自动构建部署Fastapi服务 | 测试与时光手札</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-46H282EQWZ"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-46H282EQWZ');
+      }
+    </script>
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?ed024ed44db96475c9bbd0aa42047d02";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">测试与时光手札</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">测试 ｜ 探索 </p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/archives/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">13</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">5</span></a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/TishaQin" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://tishaqin.github.io/post/jenkins-3-fastapi.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="Fake it till you make it!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="测试与时光手札">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          jenkins pipeline自动构建部署Fastapi服务
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-09-23 00:00:00" itemprop="dateCreated datePublished" datetime="2024-09-23T00:00:00+00:00">2024-09-23</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4/" itemprop="url" rel="index"><span itemprop="name">自动化运维</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/post/jenkins-3-fastapi.html" class="post-meta-item leancloud_visitors" data-flag-title="jenkins pipeline自动构建部署Fastapi服务" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/post/jenkins-3-fastapi.html#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/post/jenkins-3-fastapi.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>8.7k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>8 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="一-DB-服务"><a href="#一-DB-服务" class="headerlink" title="一. DB 服务"></a>一. DB 服务</h1><h2 id="1-docker-compose-yml，一次启动多个服务"><a href="#1-docker-compose-yml，一次启动多个服务" class="headerlink" title="1.docker-compose.yml，一次启动多个服务"></a>1.docker-compose.yml，一次启动多个服务</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#先要配置持久化数据目录权限</span></span><br><span class="line"><span class="comment">#1.创建挂载目录</span></span><br><span class="line"><span class="built_in">mkdir</span> -p ./store/mysql/data</span><br><span class="line"><span class="built_in">mkdir</span> -p ./store/mysql/log</span><br><span class="line"></span><br><span class="line"><span class="comment">#2.修改目录拥有者</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chown</span> -R $(<span class="built_in">whoami</span>):$(<span class="built_in">whoami</span>) ./store/mysql/data</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chown</span> -R $(<span class="built_in">whoami</span>):$(<span class="built_in">whoami</span>) ./store/mysql/log</span><br><span class="line"></span><br><span class="line"><span class="comment">#3.修改目录权限</span></span><br><span class="line"><span class="built_in">chmod</span> -R 777 ./store/mysql/data</span><br><span class="line"><span class="built_in">chmod</span> -R 777 ./store/mysql/log</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">mysql:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">bitnami/mysql:8.0</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">my_mysql</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="attr">MYSQL_ROOT_PASSWORD:</span> <span class="string">****</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;3306:3306&quot;</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;./store/mysql/data:/bitnami/mysql/data&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;./store/mysql/log:/bitnami/mysql/log&quot;</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">network</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">redis:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">bitnami/redis:7.4</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">my_redis</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">ALLOW_EMPTY_PASSWORD=yes</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;6379:6379&quot;</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;./store/redis/data:/bitnami/redis/data&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;./store/redis/log:/bitnami/redis/log&quot;</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">network</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">mongodb:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">bitnami/mongodb:7.0</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">my_mongodb</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;27017:27017&quot;</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;./store/mongodb/data:/bitnami/mongodb/data&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;./store/mongodb/log:/bitnami/mongodb/log&quot;</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">network</span></span><br><span class="line"></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line">  <span class="attr">network:</span></span><br><span class="line">    <span class="attr">driver:</span> <span class="string">bridge</span> <span class="comment"># 使用默认的 bridge 网络类型</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-docker-run-启动单个服务"><a href="#2-docker-run-启动单个服务" class="headerlink" title="2.docker run 启动单个服务"></a>2.docker run 启动单个服务</h2><p>目录下启动，持久化数据</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动 MySQL 容器</span></span><br><span class="line">docker run -d \</span><br><span class="line">  --name my_mysql \</span><br><span class="line">  --network monitor \</span><br><span class="line">  --restart always \</span><br><span class="line">  -e MYSQL_ROOT_PASSWORD=**** \</span><br><span class="line">  -p 3306:3306 \</span><br><span class="line">  -v ./store/mysql/data:/bitnami/mysql/data \</span><br><span class="line">  -v ./store/mysql/log:/bitnami/mysql/log \</span><br><span class="line">  bitnami/mysql:8.0</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动 Redis 容器</span></span><br><span class="line">docker run -d \</span><br><span class="line">  --name my_redis \</span><br><span class="line">  --restart always \</span><br><span class="line">  --network monitor \</span><br><span class="line">  -e ALLOW_EMPTY_PASSWORD=<span class="built_in">yes</span> \</span><br><span class="line">  -e REDIS_PASSWORD=rootroot \</span><br><span class="line">  -e REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL \</span><br><span class="line">  -p 6379:6379 \</span><br><span class="line">  -v ./store/redis/data:/bitnami/redis/data \</span><br><span class="line">  -v ./store/redis/log:/bitnami/redis/log \</span><br><span class="line">  bitnami/redis:7.4</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动 MongoDB 容器</span></span><br><span class="line">docker run -d \</span><br><span class="line">  --name my_mongodb \</span><br><span class="line">  --network monitor \</span><br><span class="line">  --restart always \</span><br><span class="line">  -p 27017:27017 \</span><br><span class="line">  -v ./store/mongodb/data:/bitnami/mongodb/data \</span><br><span class="line">  -v ./store/mongodb/log:/bitnami/mongodb/log \</span><br><span class="line">  bitnami/mongodb:7.0</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="二-Docker"><a href="#二-Docker" class="headerlink" title="二.Docker"></a>二.Docker</h1><h2 id="1-配置-docker"><a href="#1-配置-docker" class="headerlink" title="1.配置 docker"></a>1.配置 docker</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#确保当前用户具有访问 Docker 守护进程的权限。通过将用户添加到 docker 组来授予该权限</span></span><br><span class="line"><span class="built_in">sudo</span> usermod -aG docker tisha</span><br><span class="line"></span><br><span class="line"><span class="comment">#重启 Docker 守护进程</span></span><br><span class="line"><span class="built_in">sudo</span> service docker restart/start</span><br><span class="line"><span class="built_in">sudo</span> service docker status</span><br><span class="line"><span class="built_in">sudo</span> service daemon-reload</span><br><span class="line"></span><br><span class="line"><span class="comment">#要将所有权分配给 Docker Unix 套接字，可以使用 chown 命令。该命令应以 root 用户或具有超级用户权限的用户身份执行。</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chown</span> root /var/run/docker.sock</span><br><span class="line"></span><br><span class="line"><span class="comment">#运行 sudo update-alternatives --config iptables</span></span><br><span class="line">输入 1 选择 iptables-legacy</span><br><span class="line">现在运行 <span class="built_in">sudo</span> service docker start，Docker 将按预期启动！</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-docker-使用"><a href="#2-docker-使用" class="headerlink" title="2.docker 使用"></a>2.docker 使用</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#进入 mysql</span></span><br><span class="line">docker <span class="built_in">exec</span> -it my_mysql bash</span><br><span class="line">mysql -u root -p</span><br><span class="line">SHOW DATABASES;</span><br><span class="line">CREATE DATABASE fastapi;</span><br><span class="line">USE fastapi;</span><br><span class="line">DESCRIBE fastapi;</span><br><span class="line"></span><br><span class="line"><span class="comment">#进入 python 命令行</span></span><br><span class="line">docker <span class="built_in">exec</span> -it 45789a13b24f python</span><br><span class="line"></span><br><span class="line"><span class="comment">#修改 docker-compose.yml 或者 nginx.conf 文件后，重新启动容器</span></span><br><span class="line">docker-compose up -d --force-recreate</span><br><span class="line"></span><br><span class="line"><span class="comment">#查看 nginx 日志</span></span><br><span class="line">docker <span class="built_in">exec</span> -it nginx <span class="built_in">cat</span> /var/log/nginx/error.log</span><br><span class="line"></span><br><span class="line"><span class="comment">#移除镜像的 tag</span></span><br><span class="line">docker rmi mysql:latest</span><br><span class="line"></span><br><span class="line"><span class="comment">#查看当前 latest 镜像到底是什么版本</span></span><br><span class="line">docker run --<span class="built_in">rm</span> nginx:latest nginx -v</span><br><span class="line">nginx version: nginx/1.25.4</span><br><span class="line"></span><br><span class="line"><span class="comment">#修改 latest 为指定版本</span></span><br><span class="line">docker run -d -p 80:80 -v /home/tisha/fastapi-server/nginx.conf:/etc/nginx/nginx.conf:ro --name nginx-latest nginx:1.25.4</span><br><span class="line"></span><br><span class="line"><span class="comment">#删除所有镜像</span></span><br><span class="line">docker rmi $(docker images -q)</span><br><span class="line"></span><br><span class="line"><span class="comment">#删除指定镜像</span></span><br><span class="line">docker rmi</span><br><span class="line"></span><br><span class="line"><span class="comment">#删除所有容器</span></span><br><span class="line">docker <span class="built_in">rm</span> $(docker ps -a -q)</span><br><span class="line"></span><br><span class="line"><span class="comment">#停止并删除所有正在运行和已停止的容器</span></span><br><span class="line">docker stop $(docker ps -aq) &amp;&amp; docker <span class="built_in">rm</span> $(docker ps -aq)</span><br><span class="line"></span><br><span class="line"><span class="comment">#删除指定容器</span></span><br><span class="line">docker <span class="built_in">rm</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#删除所有为 none 的镜像</span></span><br><span class="line">docker images -f <span class="string">&quot;dangling=true&quot;</span> -q | xargs docker rmi</span><br><span class="line"></span><br><span class="line"><span class="comment">#清除 Docker Compose 的缓存。你可以运行以下命令来移除你的服务</span></span><br><span class="line">docker-compose down --rmi all</span><br><span class="line"></span><br><span class="line"><span class="comment">#再次运行你的服务： 重新构建你的镜像并启动你的服务。</span></span><br><span class="line">docker-compose up --build</span><br><span class="line"></span><br><span class="line"><span class="comment">#Dockerfile 位于当前目录下，构建镜像执行以下命令来构建 Docker 镜像。记得在后方加上一个点（.），表示当前目录。同时可以用 -t 标记来给镜像一个易于记忆的名字，比如 &quot;myapp&quot;。</span></span><br><span class="line">docker build --no-cache -t fastapi_app:latest .</span><br><span class="line"></span><br><span class="line"><span class="comment">#构建成功后，你可以使用以下命令来启动一个基于这个镜像的容器：</span></span><br><span class="line">docker run -p 8000:8000 fastapi_app</span><br><span class="line">docker run --name=fastapi_app -p 8000:8000 fastapi_app</span><br><span class="line"></span><br><span class="line"><span class="comment">#修改仓库代码后需要重新构建并重新启动容器</span></span><br><span class="line">docker build -t fastapi_app .</span><br><span class="line">docker stop fastapi_app</span><br><span class="line">docker <span class="built_in">rm</span> fastapi_app</span><br><span class="line">docker run --name=fastapi_app -p 8000:8000 fastapi_app</span><br><span class="line"></span><br><span class="line"><span class="comment">#查看 Docker 的系统日志。</span></span><br><span class="line">journalctl -u docker</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-网络使用"><a href="#3-网络使用" class="headerlink" title="3.网络使用"></a>3.网络使用</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#查容器的详细信息，包括网络配置</span></span><br><span class="line">docker inspect my_jenkins</span><br><span class="line"></span><br><span class="line"><span class="comment">#简化输出，仅显示网络信息</span></span><br><span class="line">docker inspect -f <span class="string">&#x27;&#123;&#123;.NetworkSettings.Networks&#125;&#125;&#x27;</span> my_registry</span><br><span class="line">docker inspect -f <span class="string">&#x27;&#123;&#123;.NetworkSettings.Networks&#125;&#125;&#x27;</span> my_jenkins</span><br><span class="line"></span><br><span class="line"><span class="comment">#清理未使用的网络</span></span><br><span class="line">docker network prune</span><br><span class="line"></span><br><span class="line"><span class="comment">#删除指定网络</span></span><br><span class="line">docker network <span class="built_in">rm</span> my-network</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#输出容器IP地址</span></span><br><span class="line">docker inspect -f <span class="string">&#x27;&#123;&#123;range .NetworkSettings.Networks&#125;&#125;&#123;&#123;.IPAddress&#125;&#125;&#123;&#123;end&#125;&#125;&#x27;</span> my_mysql</span><br></pre></td></tr></table></figure>
+
+<h1 id="三-部署应用"><a href="#三-部署应用" class="headerlink" title="三. 部署应用"></a>三. 部署应用</h1><h2 id="1-构建-fastapiserver-镜像文件"><a href="#1-构建-fastapiserver-镜像文件" class="headerlink" title="1.构建 fastapiserver 镜像文件"></a>1.构建 fastapiserver 镜像文件</h2><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用 Python 3.11 作为基础镜像</span></span><br><span class="line"><span class="keyword">FROM</span> python:<span class="number">3.11</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装系统依赖</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> apt-get update &amp;&amp; apt-get install -y \</span></span><br><span class="line"><span class="language-bash">    build-essential \</span></span><br><span class="line"><span class="language-bash">    default-libmysqlclient-dev \</span></span><br><span class="line"><span class="language-bash">    &amp;&amp; <span class="built_in">rm</span> -rf /var/lib/apt/lists/*</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置工作目录</span></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="language-bash"> /app</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 复制 Poetry 配置文件</span></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> pyproject.toml poetry.lock* ./</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 更新 pip 并设置国内镜像源</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> pip install --upgrade pip &amp;&amp; \</span></span><br><span class="line"><span class="language-bash">    pip config <span class="built_in">set</span> global.index-url https://pypi.tuna.tsinghua.edu.cn/simple</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 Poetry，增加超时时间</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> pip install --no-cache-dir --<span class="built_in">timeout</span>=300 poetry</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 Poetry 安装依赖（禁用虚拟环境），添加重试逻辑</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> poetry config virtualenvs.create <span class="literal">false</span> &amp;&amp; \</span></span><br><span class="line"><span class="language-bash">    <span class="keyword">for</span> i <span class="keyword">in</span> 1 2 3; <span class="keyword">do</span> poetry install --no-dev --no-interaction &amp;&amp; <span class="built_in">break</span> || <span class="built_in">sleep</span> 5; <span class="keyword">done</span> &amp;&amp; \</span></span><br><span class="line"><span class="language-bash">    pip show uvicorn</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 复制项目文件</span></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> . .</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置 PYTHONPATH</span></span><br><span class="line"><span class="keyword">ENV</span> PYTHONPATH=<span class="string">&quot;/app&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 暴露应用端口</span></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">8000</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行数据库检查和启动应用</span></span><br><span class="line"><span class="keyword">CMD</span><span class="language-bash"> [<span class="string">&quot;python&quot;</span>, <span class="string">&quot;app/run.py&quot;</span>]</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-本地-mac-使用-docker-部署服务"><a href="#2-本地-mac-使用-docker-部署服务" class="headerlink" title="2.本地 mac 使用 docker 部署服务"></a>2.本地 mac 使用 docker 部署服务</h2><ol>
+<li>部署检查 mysql 服务</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动 mysql 容器</span></span><br><span class="line">docker run -d \</span><br><span class="line">  --name my_mysql \</span><br><span class="line">  --network monitor \</span><br><span class="line">  --restart always \</span><br><span class="line">  -e MYSQL_ROOT_PASSWORD=**** \</span><br><span class="line">  -p 3306:3306 \</span><br><span class="line">  -v ./store/mysql/data:/bitnami/mysql/data \</span><br><span class="line">  -v ./store/mysql/log:/bitnami/mysql/log \</span><br><span class="line">  bitnami/mysql:8.0</span><br><span class="line"></span><br><span class="line"><span class="comment">#检查 my_mysql 容器 容器自动加入 bridge 网络中</span></span><br><span class="line">docker inspect -f <span class="string">&#x27;&#123;&#123;.NetworkSettings.Networks&#125;&#125;&#x27;</span> my_mysql</span><br><span class="line"></span><br><span class="line"><span class="comment">#my_mysql容器 IP 地址</span></span><br><span class="line">docker inspect -f <span class="string">&#x27;&#123;&#123;range .NetworkSettings.Networks&#125;&#125;&#123;&#123;.IPAddress&#125;&#125;&#123;&#123;end&#125;&#125;&#x27;</span> my_mysql</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>部署 fastapiserver 服务</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#打包 fastapiserver 镜像</span></span><br><span class="line">docker build -t fastapiserver:latest .</span><br><span class="line"></span><br><span class="line"><span class="comment">#启动 fastapiserver 容器，连接 mysql 使用容器 IP 地址</span></span><br><span class="line">docker run -d \</span><br><span class="line">    --name fastapiserver \</span><br><span class="line">    --network monitor \</span><br><span class="line">    -p 8000:8000 \</span><br><span class="line">    --env-file .<span class="built_in">env</span> \</span><br><span class="line">    -e DATABASE_URL=mysql+pymysql://****:****@172.17.0.2:3306/fastapi \</span><br><span class="line">    fastapiserver:latest \</span><br><span class="line">    sh -c <span class="string">&quot;alembic upgrade head &amp;&amp; uvicorn app.run:app --host 0.0.0.0 --port 8000&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#检查fastapiserver 容器 容器自动加入 bridge 网络中</span></span><br><span class="line">docker inspect -f <span class="string">&#x27;&#123;&#123;.NetworkSettings.Networks&#125;&#125;&#x27;</span> 检查fastapiserver</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>访问 <a target="_blank" rel="noopener" href="http://localhost:8000/redoc">http://localhost:8000/redoc</a></li>
+</ol>
+<h2 id="3-服务器上部署服务"><a href="#3-服务器上部署服务" class="headerlink" title="3.服务器上部署服务"></a>3.服务器上部署服务</h2><ol>
+<li>启动 mysql 容器<br>&#x2F;home&#x2F;tisha&#x2F;db&#x2F;docker-compose.yml 启动 mysql,加入 db_network 网络</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line"> --name my_mysql \</span><br><span class="line"> --network monitor \</span><br><span class="line"> --restart always \</span><br><span class="line"> -e MYSQL_ROOT_PASSWORD=**** \</span><br><span class="line"> -p 3306:3306 \</span><br><span class="line"> -v ./store/mysql/data:/bitnami/mysql/data \</span><br><span class="line"> -v ./store/mysql/log:/bitnami/mysql/log \</span><br><span class="line"> bitnami/mysql:8.0</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>启动 fastapiserver 服务【用于 jenkinsfile 配置】</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line"> --name fastapiserver \</span><br><span class="line"> --network monitor \</span><br><span class="line"> -p 8000:8000 \</span><br><span class="line"> -e DATABASE_URL=mysql+pymysql://****:****@172.17.0.3:3306/fastapi \</span><br><span class="line"> fastapiserver:latest \</span><br><span class="line"> sh -c <span class="string">&quot;alembic upgrade head &amp;&amp; uvicorn app.run:app --host 0.0.0.0 --port 8000&quot;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>访问 <a target="_blank" rel="noopener" href="http://ip:8000/redoc">http://IP:8000/redoc</a></li>
+</ol>
+<h2 id="4-服务器上-CICD，jenkinsfile-配置文件"><a href="#4-服务器上-CICD，jenkinsfile-配置文件" class="headerlink" title="4. 服务器上 CICD，jenkinsfile 配置文件"></a>4. 服务器上 CICD，jenkinsfile 配置文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line">pipeline &#123;</span><br><span class="line">    agent any</span><br><span class="line"></span><br><span class="line">    environment &#123;</span><br><span class="line">        IMAGE_NAME = <span class="string">&#x27;qblingserver&#x27;</span></span><br><span class="line">        IMAGE_TAG = <span class="string">&#x27;latest&#x27;</span></span><br><span class="line">        REPO_URL = <span class="string">&#x27;git@github.com:TishaQin/qblingServer.git&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    stages &#123;</span><br><span class="line">        stage(<span class="string">&#x27;Checkout&#x27;</span>) &#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                cleanWs()</span><br><span class="line">                script &#123;</span><br><span class="line">                    // 使用 sshagent 插件注入 SSH 凭证</span><br><span class="line">                    sshagent([<span class="string">&#x27;github-credentials-id&#x27;</span>]) &#123;</span><br><span class="line">                        // 使用 checkout 步骤来克隆仓库</span><br><span class="line">                        checkout([<span class="variable">$class</span>: <span class="string">&#x27;GitSCM&#x27;</span>,</span><br><span class="line">                            branches: [[name: <span class="string">&#x27;*/master&#x27;</span>]],</span><br><span class="line">                            userRemoteConfigs: [[url: <span class="string">&quot;<span class="variable">$&#123;REPO_URL&#125;</span>&quot;</span>]]</span><br><span class="line">                        ])</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        stage(<span class="string">&#x27;Stop and Remove Existing Container&#x27;</span>) &#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                script &#123;</span><br><span class="line">                    def containerExists = sh(script: <span class="string">&quot;docker ps -q -f name=<span class="variable">$&#123;IMAGE_NAME&#125;</span>&quot;</span>, returnStatus: <span class="literal">true</span>) == 0</span><br><span class="line">                    <span class="keyword">if</span> (containerExists) &#123;</span><br><span class="line">                        sh <span class="string">&quot;&quot;</span><span class="string">&quot;</span></span><br><span class="line"><span class="string">                        docker stop <span class="variable">$&#123;IMAGE_NAME&#125;</span> || echo &quot;</span>Container <span class="variable">$&#123;IMAGE_NAME&#125;</span> not running.<span class="string">&quot;</span></span><br><span class="line"><span class="string">                        docker rm <span class="variable">$&#123;IMAGE_NAME&#125;</span> || echo &quot;</span>Container <span class="variable">$&#123;IMAGE_NAME&#125;</span> not found.<span class="string">&quot;</span></span><br><span class="line"><span class="string">                        &quot;</span><span class="string">&quot;&quot;</span></span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        <span class="built_in">echo</span> <span class="string">&quot;No existing container found: <span class="variable">$&#123;IMAGE_NAME&#125;</span>. Skipping stop and remove.&quot;</span></span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        stage(<span class="string">&#x27;Build Docker Image&#x27;</span>) &#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                script &#123;</span><br><span class="line">                    sh <span class="string">&quot;docker build -t <span class="variable">$&#123;IMAGE_NAME&#125;</span>:<span class="variable">$&#123;IMAGE_TAG&#125;</span> .&quot;</span></span><br><span class="line">                    <span class="built_in">echo</span> <span class="string">&quot;Docker image built successfully.&quot;</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        stage(<span class="string">&#x27;Deploy with Docker Run&#x27;</span>) &#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                script &#123;</span><br><span class="line">                    sh <span class="string">&quot;&quot;</span><span class="string">&quot;</span></span><br><span class="line"><span class="string">                    docker run -d \\</span></span><br><span class="line"><span class="string">                        --name <span class="variable">$&#123;IMAGE_NAME&#125;</span> \\</span></span><br><span class="line"><span class="string">                        --network monitor \\</span></span><br><span class="line"><span class="string">                        -p 8000:8000 \\</span></span><br><span class="line"><span class="string">                        --env-file .env.prod \\</span></span><br><span class="line"><span class="string">                        -e DATABASE_URL=mysql+pymysql://root:rootroot@my_mysql/qbling \\</span></span><br><span class="line"><span class="string">                        -v /var/log/qblingserver:/app/logs \\</span></span><br><span class="line"><span class="string">                        <span class="variable">$&#123;IMAGE_NAME&#125;</span>:<span class="variable">$&#123;IMAGE_TAG&#125;</span></span></span><br><span class="line"><span class="string">                    &quot;</span><span class="string">&quot;&quot;</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    post &#123;</span><br><span class="line">        always &#123;</span><br><span class="line">            cleanWs()</span><br><span class="line">            script &#123;</span><br><span class="line">                sh <span class="string">&#x27;docker rmi $(docker images -f &quot;dangling=true&quot; -q) || true&#x27;</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt=" 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/jenkins/" rel="tag"><i class="fa fa-tag"></i> jenkins</a>
+              <a href="/tags/CICD/" rel="tag"><i class="fa fa-tag"></i> CICD</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/post/jenkins-2-docker-pipeline.html" rel="prev" title="jenkins pipeline中使用docker">
+      <i class="fa fa-chevron-left"></i> jenkins pipeline中使用docker
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/post/attack.html" rel="next" title="接口攻击">
+      接口攻击 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80-DB-%E6%9C%8D%E5%8A%A1"><span class="nav-number">1.</span> <span class="nav-text">一. DB 服务</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-docker-compose-yml%EF%BC%8C%E4%B8%80%E6%AC%A1%E5%90%AF%E5%8A%A8%E5%A4%9A%E4%B8%AA%E6%9C%8D%E5%8A%A1"><span class="nav-number">1.1.</span> <span class="nav-text">1.docker-compose.yml，一次启动多个服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-docker-run-%E5%90%AF%E5%8A%A8%E5%8D%95%E4%B8%AA%E6%9C%8D%E5%8A%A1"><span class="nav-number">1.2.</span> <span class="nav-text">2.docker run 启动单个服务</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C-Docker"><span class="nav-number">2.</span> <span class="nav-text">二.Docker</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E9%85%8D%E7%BD%AE-docker"><span class="nav-number">2.1.</span> <span class="nav-text">1.配置 docker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-docker-%E4%BD%BF%E7%94%A8"><span class="nav-number">2.2.</span> <span class="nav-text">2.docker 使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E7%BD%91%E7%BB%9C%E4%BD%BF%E7%94%A8"><span class="nav-number">2.3.</span> <span class="nav-text">3.网络使用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89-%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">三. 部署应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%9E%84%E5%BB%BA-fastapiserver-%E9%95%9C%E5%83%8F%E6%96%87%E4%BB%B6"><span class="nav-number">3.1.</span> <span class="nav-text">1.构建 fastapiserver 镜像文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%9C%AC%E5%9C%B0-mac-%E4%BD%BF%E7%94%A8-docker-%E9%83%A8%E7%BD%B2%E6%9C%8D%E5%8A%A1"><span class="nav-number">3.2.</span> <span class="nav-text">2.本地 mac 使用 docker 部署服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E9%83%A8%E7%BD%B2%E6%9C%8D%E5%8A%A1"><span class="nav-number">3.3.</span> <span class="nav-text">3.服务器上部署服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A-CICD%EF%BC%8Cjenkinsfile-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">3.4.</span> <span class="nav-text">4. 服务器上 CICD，jenkinsfile 配置文件</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description">Fake it till you make it!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="mailto:tishaqin@gmail.com" title="E-Mail → mailto:tishaqin@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/TishaQin" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;TishaQin" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/weixin_43623871" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;weixin_43623871" rel="noopener" target="_blank"><i class="fab fa-cuttlefish fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzkwODY2OTc2MQ==" title="微信公众号 → https:&#x2F;&#x2F;mp.weixin.qq.com&#x2F;mp&#x2F;profile_ext?action&#x3D;home&amp;__biz&#x3D;MzkwODY2OTc2MQ&#x3D;&#x3D;" rel="noopener" target="_blank"><i class="fab fa-weixin fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">TISHA@HD</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">126k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:55</span>
+</div>
+
+<div>
+  <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+  <script>
+      var now = new Date();
+      function createtime() {
+          var grt= new Date("08/24/2024 00:00:00");
+          now.setTime(now.getTime()+250);
+          days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+          hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+          if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+          mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+          seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+          snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+          document.getElementById("timeDate").innerHTML = "建站 "+dnum+" 天 ";
+          document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+      }
+  setInterval("createtime()",250);
+  </script>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'Ya3zOA5Mu8o4wbWCkMJooFOx-gzGzoHsz',
+      appKey     : 'qp2hI1mmbcy43clW5ONpT3Z8',
+      placeholder: "Just go go",
+      avatar     : 'monsterid',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-CN' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // 查找所有 div.table-container 元素
+    const tableContainers = document.querySelectorAll(".table-container");
+
+    // 遍历所有 div.table-container 元素
+    tableContainers.forEach(function(tableContainer) {
+      // 获取 div.table-container 内的行数（假设每行对应一个 <span>）
+      const lineCount = tableContainer.querySelectorAll("tbody > tr > td.code > pre > span").length;
+
+      // 检查行数是否大于 5
+      if (lineCount > 5) {
+        // 默认添加 "code-hidden" 类
+        tableContainer.classList.add("code-hidden");
+      }
+
+      // 检查 div.table-container 前面是否有 figcaption 元素，如果没有则添加一个
+      const prevElement = tableContainer.previousElementSibling;
+      let figcaption;
+      let iElement;
+      if (!prevElement || prevElement.tagName.toLowerCase() !== "figcaption") {
+        // 在 div.table-container 前插入一个 figcaption 元素
+        figcaption = document.createElement("figcaption");
+
+        // 将 figcaption 插入到 DOM 中
+        tableContainer.parentNode.insertBefore(figcaption, tableContainer);
+      } else {
+        figcaption = prevElement;
+      }
+
+      // 创建一个 <i> 标签并添加功能
+      iElement = document.createElement("i");
+      iElement.className = "fas fa-angle-down";
+      // 插入一点空格
+      iElement.innerHTML = "&nbsp;&nbsp;&nbsp;";
+      figcaption.insertBefore(iElement, figcaption.firstChild);
+
+      // 为 <i> 标签添加点击事件
+      iElement.addEventListener("click", function() {
+        // 切换 tableContainer 的 "code-hidden" 类
+        tableContainer.classList.toggle("code-hidden");
+
+        // 切换 <i> 标签的类名
+        if (iElement.classList.contains("fa-angle-down")) {
+          iElement.classList.remove("fa-angle-down");
+          iElement.classList.add("fa-angle-right");
+        } else {
+          iElement.classList.remove("fa-angle-right");
+          iElement.classList.add("fa-angle-down");
+        }
+      });
+    });
+  });
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":200,"height":350},"mobile":{"show":true},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

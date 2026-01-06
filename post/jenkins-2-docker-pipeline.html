@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+  <meta name="baidu-site-verification" content="true">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"tishaqin.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="一.搭建 Docker Registry">
+<meta property="og:type" content="article">
+<meta property="og:title" content="jenkins pipeline中使用docker">
+<meta property="og:url" content="https://tishaqin.github.io/post/jenkins-2-docker-pipeline.html">
+<meta property="og:site_name" content="测试与时光手札">
+<meta property="og:description" content="一.搭建 Docker Registry">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://tishaqin.github.io/images/pipeline1.png">
+<meta property="article:published_time" content="2024-09-22T00:00:00.000Z">
+<meta property="article:modified_time" content="2024-09-22T00:00:00.000Z">
+<meta property="article:tag" content="jenkins">
+<meta property="article:tag" content="CICD">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://tishaqin.github.io/images/pipeline1.png">
+
+<link rel="canonical" href="https://tishaqin.github.io/post/jenkins-2-docker-pipeline.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>jenkins pipeline中使用docker | 测试与时光手札</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-46H282EQWZ"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-46H282EQWZ');
+      }
+    </script>
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?ed024ed44db96475c9bbd0aa42047d02";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">测试与时光手札</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">测试 ｜ 探索 </p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/archives/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">13</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">5</span></a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/TishaQin" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://tishaqin.github.io/post/jenkins-2-docker-pipeline.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="Fake it till you make it!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="测试与时光手札">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          jenkins pipeline中使用docker
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-09-22 00:00:00" itemprop="dateCreated datePublished" datetime="2024-09-22T00:00:00+00:00">2024-09-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4/" itemprop="url" rel="index"><span itemprop="name">自动化运维</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/post/jenkins-2-docker-pipeline.html" class="post-meta-item leancloud_visitors" data-flag-title="jenkins pipeline中使用docker" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/post/jenkins-2-docker-pipeline.html#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/post/jenkins-2-docker-pipeline.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>8.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>7 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="一-搭建-Docker-Registry"><a href="#一-搭建-Docker-Registry" class="headerlink" title="一.搭建 Docker Registry"></a>一.搭建 Docker Registry</h1><p>开源的小型私有 Docker 镜像库</p>
+<h2 id="1-docker-compose-yml-文件"><a href="#1-docker-compose-yml-文件" class="headerlink" title="1. docker-compose.yml 文件"></a>1. docker-compose.yml 文件</h2><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&quot;3.8&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">registry:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">registry:2</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">my_registry</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;5000:5000&quot;</span> <span class="comment"># 将宿主机的5000端口映射到容器的5000端口</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">my_network</span> <span class="comment"># 加入名为my_network的自定义网络</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./registry_data:/var/lib/registry</span> <span class="comment"># 持久化数据，将本地目录映射到容器内部的数据存储目录</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./auth:/auth</span> <span class="comment"># 挂载认证文件目录</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="attr">REGISTRY_AUTH:</span> <span class="string">htpasswd</span> <span class="comment"># 启用 htpasswd 认证方式</span></span><br><span class="line">      <span class="attr">REGISTRY_AUTH_HTPASSWD_REALM:</span> <span class="string">&quot;Registry Realm&quot;</span></span><br><span class="line">      <span class="attr">REGISTRY_AUTH_HTPASSWD_PATH:</span> <span class="string">/auth/htpasswd</span> <span class="comment"># 指定 htpasswd 文件路径</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span> <span class="comment"># 设置失败自动重启，确保容器常驻</span></span><br><span class="line"></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line">  <span class="attr">my_network:</span></span><br><span class="line">    <span class="attr">driver:</span> <span class="string">bridge</span> <span class="comment"># 使用桥接网络模式</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-配置凭证"><a href="#2-配置凭证" class="headerlink" title="2. 配置凭证"></a>2. 配置凭证</h2><ol>
+<li>安装:<code> sudo apt install apache2-utils</code></li>
+<li>确保 htpasswd 文件路径正确： 确保 Docker Compose 配置中的 REGISTRY_AUTH_HTPASSWD_PATH 指向的文件路径正确。你的配置应该类似于：<code>REGISTRY_AUTH_HTPASSWD_PATH: /auth/htpasswd</code></li>
+<li>确认 htpasswd 文件内容： 确保 .&#x2F;auth&#x2F;htpasswd 文件中确实包含用户 username。你可以使用以下命令查看文件内容：<code>cat ./auth/htpasswd</code></li>
+<li>检查文件权限： 确保 htpasswd 文件的权限允许 Docker 容器读取。可以尝试更改文件权限：<code>sudo chmod 644 ./auth/htpasswd</code></li>
+<li>检查 Docker 组： 确保你的 Docker 进程可以访问 auth 目录和 htpasswd 文件。可以尝试将文件的所有者更改为 root：<code>sudo chown root:root ./auth/htpasswd</code> <code>docker login localhost:5000</code></li>
+<li>使用完整的 curl 命令： 当使用 curl 进行测试时，请确保包括用户名和密码： <code>curl -u username:password http://localhost:5000/v2/_catalog</code></li>
+<li>如果密码错误,可以尝试创建一个新的用户并测试是否能成功登录：<code>sudo htpasswd -B ./auth/htpasswd newuser</code>,然后尝试使用 newuser 登录。如果可以成功登录，问题可能出在原用户的密码上。</li>
+<li>要清空 htpasswd 文件中的所有用户，你可以直接删除该文件，或者通过命令清空内容。以下是两种方法：<br>清空文件内容：<code>cat /dev/null &gt; ./auth/htpasswd</code><br>删除 htpasswd 文件后新建文件再新建用户: <code>rm ./auth/htpasswd</code> <code>touch ./auth/htpasswd</code> <code>sudo htpasswd ./auth/htpasswd username</code></li>
+<li>修改凭证后重启下容器</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker-compose down</span><br><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
+
+<ol start="10">
+<li>目录结构如下<br><img src="/images/pipeline1.png"></li>
+</ol>
+<h2 id="2-给镜像打标签"><a href="#2-给镜像打标签" class="headerlink" title="2. 给镜像打标签"></a>2. 给镜像打标签</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker tag &lt;image_id&gt; localhost:5000/&lt;image_name&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-推送镜像到私有仓库"><a href="#3-推送镜像到私有仓库" class="headerlink" title="3. 推送镜像到私有仓库"></a>3. 推送镜像到私有仓库</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker push localhost:5000/&lt;image_name&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-验证推送成功-使用以下命令列出私有-Registry-中的镜像"><a href="#4-验证推送成功-使用以下命令列出私有-Registry-中的镜像" class="headerlink" title="4. 验证推送成功,使用以下命令列出私有 Registry 中的镜像"></a>4. 验证推送成功,使用以下命令列出私有 Registry 中的镜像</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X GET http://127.0.0.1:5000/v2/_catalog</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-从-Registry-拉取镜像"><a href="#5-从-Registry-拉取镜像" class="headerlink" title="5. 从 Registry 拉取镜像"></a>5. 从 Registry 拉取镜像</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull 127.0.0.1:5000/my-app</span><br></pre></td></tr></table></figure>
+
+<p>运行镜像,拉取后，你可以像运行其他镜像一样使用 docker run 运行它：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run localhost:5000/my-app</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="6-配置-HTTP-访问"><a href="#6-配置-HTTP-访问" class="headerlink" title="6. 配置 HTTP 访问"></a>6. 配置 HTTP 访问</h2><p>默认情况下，Docker 对非 HTTPS 的 Registry 访问是受限制的。如果你只是为了测试或在局域网内使用，可以通过修改 Docker 配置来允许 HTTP 访问。</p>
+<p>在 Docker 客户端上（想要与私有 Registry 交互的每台机器上），你需要编辑 &#x2F;etc&#x2F;docker&#x2F;daemon.json 文件并添加以下内容：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;insecure-registries&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;127.0.0.1:5000&quot;</span><span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后重新启动 Docker 服务：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl restart docker</span><br></pre></td></tr></table></figure>
+
+<h2 id="7-清理无用的镜像"><a href="#7-清理无用的镜像" class="headerlink" title="7. 清理无用的镜像"></a>7. 清理无用的镜像</h2><p>随着时间推移，Registry 中可能会存储大量镜像，导致磁盘空间占用增加。你可以使用 Docker Registry 提供的垃圾收集功能清理无用的镜像：</p>
+<h3 id="1-停止-Registry-容器："><a href="#1-停止-Registry-容器：" class="headerlink" title="1. 停止 Registry 容器："></a>1. 停止 Registry 容器：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker stop my_registry</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-运行垃圾收集命令："><a href="#2-运行垃圾收集命令：" class="headerlink" title="2. 运行垃圾收集命令："></a>2. 运行垃圾收集命令：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker run --<span class="built_in">rm</span> -v /path/on/host:/var/lib/registry registry:2 \</span><br><span class="line">  bin/registry garbage-collect /etc/docker/registry/config.yml</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-重新启动-Registry-容器："><a href="#3-重新启动-Registry-容器：" class="headerlink" title="3. 重新启动 Registry 容器："></a>3. 重新启动 Registry 容器：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker start my_registry</span><br></pre></td></tr></table></figure>
+
+<p>通过这些步骤，你可以保持私有 Registry 的整洁，并确保其高效运行。</p>
+<h1 id="二-搭建-jenkins-pipeline"><a href="#二-搭建-jenkins-pipeline" class="headerlink" title="二. 搭建 jenkins pipeline"></a>二. 搭建 jenkins pipeline</h1><h2 id="1-自己构建含-docker-的-jenkins-镜像-Docker-in-D-有坑不建议使用"><a href="#1-自己构建含-docker-的-jenkins-镜像-Docker-in-D-有坑不建议使用" class="headerlink" title="1. 自己构建含 docker 的 jenkins 镜像 [Docker in D][有坑不建议使用]"></a>1. 自己构建含 docker 的 jenkins 镜像 [Docker in D][有坑不建议使用]</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建Jenkins目录文件夹并设置权限</span></span><br><span class="line"><span class="built_in">mkdir</span> -p /var/jenkins_home</span><br><span class="line"><span class="built_in">chmod</span> 777 -R /var/jenkins_home</span><br><span class="line"></span><br><span class="line"><span class="built_in">mkdir</span> -p /certs/client</span><br><span class="line"><span class="built_in">chmod</span> 777 -R /certs/client</span><br><span class="line"></span><br><span class="line"><span class="comment"># 拉取 Docker in Docker 镜像</span></span><br><span class="line">docker image pull docker:dind</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动一个名为 jenkins-docker 的容器，该容器包含 Docker in Docker。</span></span><br><span class="line"><span class="comment"># 该容器与 Jenkins 容器共享网络，并设置了一些环境变量和卷，以便在 Jenkins 中连接到 Docker。</span></span><br><span class="line">docker run --name jenkins-docker --<span class="built_in">rm</span> --detach \</span><br><span class="line">  --privileged --network jenkins --network-alias docker \</span><br><span class="line">  --<span class="built_in">env</span> DOCKER_TLS_CERTDIR=/certs \</span><br><span class="line">  --volume /certs/client:/certs/client \</span><br><span class="line">  --volume /var/jenkins_home:/var/jenkins_home \</span><br><span class="line">  --publish 2376:2376 \</span><br><span class="line">  docker:dind --storage-driver overlay2</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-1-先配置新建一个-Dockerfile"><a href="#1-1-先配置新建一个-Dockerfile" class="headerlink" title="1.1. 先配置新建一个 Dockerfile"></a>1.1. 先配置新建一个 Dockerfile</h3><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用了 jenkins/jenkins:lts-jdk17 作为基础镜像</span></span><br><span class="line"><span class="comment"># 这是 Jenkins 官方提供的基于 OpenJDK 17 的 Jenkins 镜像。FROM 关键字用于指定基础镜像。</span></span><br><span class="line"><span class="keyword">FROM</span> jenkins/jenkins:lts-jdk17</span><br><span class="line"><span class="comment"># 切换用户到 root：</span></span><br><span class="line"><span class="keyword">USER</span> root</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 lsb-release（Debian 系统中的包）和 curl</span></span><br><span class="line"><span class="comment"># 使用 apt-get 更新包列表并安装 lsb-release。</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> apt-get update &amp;&amp; apt-get install -y lsb-release curl</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载 Docker GPG 密钥</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> curl -fsSLo /usr/share/keyrings/docker-archive-keyring.asc https://mirrors.aliyun.com/docker-ce/linux/debian/gpg</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置 Docker APT 源：</span></span><br><span class="line"><span class="comment"># 使用阿里云的源，可以根据需要选择其他镜像源</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">echo</span> <span class="string">&quot;deb [arch=<span class="subst">$(dpkg --print-architecture)</span> signed-by=/usr/share/keyrings/docker-archive-keyring.asc] https://mirrors.aliyun.com/docker-ce/linux/debian <span class="subst">$(lsb_release -cs)</span> stable&quot;</span> &gt; /etc/apt/sources.list.d/docker.list</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 Docker CLI</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> apt-get update &amp;&amp; apt-get install -y docker-ce-cli</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#将用户切换回 jenkins 用户</span></span><br><span class="line"><span class="comment"># USER jenkins</span></span><br><span class="line"><span class="comment"># 安装 Jenkins 插件</span></span><br><span class="line"><span class="comment"># 使用 jenkins-plugin-cli 工具安装 Jenkins 插件，包括 &quot;blueocean&quot; 和 &quot;docker-workflow&quot;</span></span><br><span class="line"><span class="comment"># RUN jenkins-plugin-cli --plugins &quot;blueocean docker-workflow&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-构建镜像"><a href="#1-2-构建镜像" class="headerlink" title="1.2.构建镜像"></a>1.2.构建镜像</h3><p>镜像名字叫 my_jenkins</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t my_jenkins .</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-3-运行镜像"><a href="#1-3-运行镜像" class="headerlink" title="1.3.运行镜像"></a>1.3.运行镜像</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">docker run --name my_jenkins --detach \</span><br><span class="line">  --network jenkins --<span class="built_in">env</span> DOCKER_HOST=tcp://docker:2376 \</span><br><span class="line">  --<span class="built_in">env</span> DOCKER_CERT_PATH=/certs/client --<span class="built_in">env</span> DOCKER_TLS_VERIFY=1 \</span><br><span class="line">  --publish 8080:8080 --publish 50000:50000 \</span><br><span class="line">  --volume /var/jenkins_home:/var/jenkins_home \</span><br><span class="line">  --volume /certs/client:/certs/client:ro \</span><br><span class="line">  my_jenkins</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>–name my_jenkins：指定容器的名称为 my_jenkins。</li>
+<li>–detach：让容器在后台运行（detached 模式）。</li>
+<li>–network jenkins: 将容器连接到名为 jenkins 的 Docker 网络。</li>
+<li>–env DOCKER_HOST&#x3D;tcp:&#x2F;&#x2F;docker:2376：设置环境变量 DOCKER_HOST，指定 Docker 客户端连接的 Docker 守护进程地址。这里使用了 Docker in Docker 容器的别名 docker 和端口 2376。</li>
+<li>–env DOCKER_CERT_PATH&#x3D;&#x2F;certs&#x2F;client：设置环境变量 DOCKER_CERT_PATH，指定 Docker TLS 证书的路径。</li>
+<li>–env DOCKER_TLS_VERIFY&#x3D;1：设置环境变量 DOCKER_TLS_VERIFY，启用 Docker 客户端的 TLS 验证。</li>
+<li>–publish 8080:8080：将 Jenkins 容器的 8080 端口映射到主机的 8080 端口，使得可以通过主机的 8080 端口访问 Jenkins Web UI。</li>
+<li>–publish 50000:50000：将 Jenkins 容器的 50000 端口映射到主机的 50000 端口，这是 Jenkins 使用的 Agent 的通信端口。</li>
+<li>–volume .&#x2F;jenkins_home:&#x2F;var&#x2F;jenkins_home：将主机上的 .&#x2F;jenkins_home 目录挂载到容器内部的 &#x2F;var&#x2F;jenkins_home，用于持久化存储 Jenkins 数据和配置。</li>
+<li>–volume &#x2F;certs&#x2F;client:&#x2F;certs&#x2F;client:ro：将主机上的 &#x2F;certs&#x2F;client 目录挂载到容器内部的 &#x2F;certs&#x2F;client，用于存储 Docker TLS 证书。:ro 表示挂载为只读，以增加安全性。</li>
+<li>my_jenkins：指定要运行的镜像，这里假设你之前使用 docker build 命令构建了一个名为 my_jenkins 的 Jenkins 镜像。</li>
+</ol>
+<hr>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/abu935009066/article/details/136450091">https://blog.csdn.net/abu935009066/article/details/136450091</a></p>
+<h2 id="2-拉取-jenkins-镜像-启动后去容器里安装-Docker-CLI"><a href="#2-拉取-jenkins-镜像-启动后去容器里安装-Docker-CLI" class="headerlink" title="2.拉取 jenkins 镜像,启动后去容器里安装 Docker CLI"></a>2.拉取 jenkins 镜像,启动后去容器里安装 Docker CLI</h2><h3 id="2-1-启动-Jenkins-容器并绑定-Docker-套接字，以允许-Jenkins-使用宿主机的-Docker："><a href="#2-1-启动-Jenkins-容器并绑定-Docker-套接字，以允许-Jenkins-使用宿主机的-Docker：" class="headerlink" title="2.1. 启动 Jenkins 容器并绑定 Docker 套接字，以允许 Jenkins 使用宿主机的 Docker："></a>2.1. 启动 Jenkins 容器并绑定 Docker 套接字，以允许 Jenkins 使用宿主机的 Docker：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#将宿主机目录 /var/jenkins_home 挂载到容器中，检查并修改宿主机上的目录权限将宿主机目录 /var/jenkins_home 挂载到容器中，检查并修改宿主机上的目录权限</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chown</span> -R 1000:1000 /var/jenkins_home</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动 Jenkins 容器</span></span><br><span class="line">docker run -d \</span><br><span class="line">  --name my_jenkins \</span><br><span class="line">  -p 8080:8080 \</span><br><span class="line">  -p 50000:50000 \</span><br><span class="line">  -v /var/run/docker.sock:/var/run/docker.sock \</span><br><span class="line">  -v /var/jenkins_home:/var/jenkins_home \</span><br><span class="line">  jenkins/jenkins:lts-jdk17</span><br><span class="line"></span><br><span class="line">  <span class="comment">#这条命令通过 -v /var/run/docker.sock:/var/run/docker.sock 将宿主机的 Docker socket 挂载到 Jenkins 容器内。这允许 Jenkins 容器通过 /var/run/docker.sock 直接与宿主机的 Docker 服务进行通信。</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-在容器内执行以下命令，以更新包列表并安装-Docker-CLI："><a href="#2-2-在容器内执行以下命令，以更新包列表并安装-Docker-CLI：" class="headerlink" title="2.2. 在容器内执行以下命令，以更新包列表并安装 Docker CLI："></a>2.2. 在容器内执行以下命令，以更新包列表并安装 Docker CLI：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 更新包列表</span></span><br><span class="line">apt-get update</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 Docker CLI 所需的依赖项</span></span><br><span class="line">apt-get install -y apt-transport-https ca-certificates curl gnupg2 software-properties-common</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加 Docker 的官方 GPG 密钥</span></span><br><span class="line">curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加 Docker 的官方源</span></span><br><span class="line">add-apt-repository <span class="string">&quot;deb [arch=amd64] https://download.docker.com/linux/debian <span class="subst">$(lsb_release -cs)</span> stable&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 Docker CLI</span></span><br><span class="line">apt-get install -y docker-ce-cli</span><br><span class="line"></span><br><span class="line"><span class="comment">#验证 Docker CLI 是否安装成功</span></span><br><span class="line">docker --version</span><br><span class="line"></span><br><span class="line"><span class="comment">#退出容器并重启</span></span><br><span class="line"><span class="built_in">exit</span></span><br><span class="line">docker restart my_jenkins</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>只包括安装 Docker CLI 所需的必要包</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">apt-get update &amp;&amp; \</span><br><span class="line">apt-get install -y apt-transport-https ca-certificates curl &amp;&amp; \</span><br><span class="line">curl -fsSL https://download.docker.com/linux/debian/gpg | <span class="built_in">tee</span> /etc/apt/trusted.gpg.d/docker.gpg &gt; /dev/null &amp;&amp; \</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;deb [arch=amd64] https://download.docker.com/linux/debian stable main&quot;</span> &gt; /etc/apt/sources.list.d/docker.list &amp;&amp; \</span><br><span class="line">apt-get update &amp;&amp; \</span><br><span class="line">apt-get install -y docker-ce-cli &amp;&amp; \</span><br><span class="line">docker --version</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-为了使-Jenkins-能够使用-Docker-CLI，jenkins-用户必须属于-docker-组"><a href="#2-3-为了使-Jenkins-能够使用-Docker-CLI，jenkins-用户必须属于-docker-组" class="headerlink" title="2.3. 为了使 Jenkins 能够使用 Docker CLI，jenkins 用户必须属于 docker 组"></a>2.3. 为了使 Jenkins 能够使用 Docker CLI，jenkins 用户必须属于 docker 组</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入容器</span></span><br><span class="line">docker <span class="built_in">exec</span> -it --user root my_jenkins /bin/bash</span><br><span class="line"><span class="comment">#在容器内部查看 Docker 组 ID,记录 Docker 组的 ID（例如 998）。</span></span><br><span class="line"><span class="built_in">ls</span> -n /var/run/docker.sock</span><br><span class="line"></span><br><span class="line">groupadd -g $(<span class="built_in">stat</span> -c <span class="string">&#x27;%g&#x27;</span> /var/run/docker.sock) docker</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建 Docker 组（如果不存在）</span></span><br><span class="line">groupadd -g 998 docker</span><br><span class="line"></span><br><span class="line"><span class="comment">#添加 Jenkins 用户到 Docker 组</span></span><br><span class="line">groupmod -g 998 docker</span><br><span class="line"></span><br><span class="line"><span class="comment">#确保 Docker 组的 ID 与宿主机上的一致。</span></span><br><span class="line">usermod -aG docker jenkins</span><br><span class="line"></span><br><span class="line"><span class="comment">#查看 jenkins 用户是否已经成功加入 docker 组：</span></span><br><span class="line"><span class="built_in">groups</span> jenkins</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置jenkins密码</span></span><br><span class="line">passwd jenkins  <span class="comment"># 设置jenkins密码</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置为连接数据库密码，可以使用 su - jenkins 切换到 jenkins 用户</span></span><br><span class="line">su - jenkins</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加完用户后，需重启 Jenkins 容器以使改动生效：</span></span><br><span class="line"><span class="built_in">exit</span>  <span class="comment"># 退出容器</span></span><br><span class="line">docker restart my_jenkins</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-4-提交已经安装-docker-cli-的-jenkins-镜像"><a href="#2-4-提交已经安装-docker-cli-的-jenkins-镜像" class="headerlink" title="2.4.提交已经安装 docker cli 的 jenkins 镜像"></a>2.4.提交已经安装 docker cli 的 jenkins 镜像</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">docker stop my_jenkins</span><br><span class="line"></span><br><span class="line"><span class="comment">#将现有容器保存为一个新的镜像,包含当前容器的所有更改（包括已安装的 Docker CLI）</span></span><br><span class="line">docker commit my_jenkins my-jenkins-with-docker-cli</span><br><span class="line"></span><br><span class="line"><span class="comment">#在确认镜像已保存后，可以删除旧的容器：</span></span><br><span class="line">docker <span class="built_in">rm</span> my_jenkins</span><br><span class="line"></span><br><span class="line"><span class="comment">#使用新镜像启动一个新的 Jenkins 容器并挂载正确的卷</span></span><br><span class="line">docker run -d \</span><br><span class="line">  --name my_jenkins \</span><br><span class="line">  -p 8080:8080 \</span><br><span class="line">  -p 50000:50000 \</span><br><span class="line">  -v /var/run/docker.sock:/var/run/docker.sock \</span><br><span class="line">  -v /var/jenkins_home:/var/jenkins_home \</span><br><span class="line">  my-jenkins-with-docker-cli</span><br><span class="line"></span><br><span class="line"><span class="comment">#保留现有容器的环境：新镜像基于之前容器的状态，因此容器中安装的 Docker CLI 和其他修改都会保留。</span></span><br><span class="line"><span class="comment">#挂载正确的卷：确保 /var/jenkins_home 目录正确挂载，实现持久化数据存储。</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-5-配置-jenkins"><a href="#2-5-配置-jenkins" class="headerlink" title="2.5 配置 jenkins"></a>2.5 配置 jenkins</h2><ol>
+<li>安装插件 github plugin&#x2F;docker pipeline plugin</li>
+<li>配置凭证 github-credentials-id【jenkins 容器内部 ssh：私钥放 jenkins 中，公钥放 github-ssh 中】 ，</li>
+<li>配置凭证 registry-url 以及 registry-credentials-id【登录 register 用户名和密码】。以及配置 宿主机 docker 配置项中 registry-url</li>
+<li>配置 github webhook，jenkins 容器内部监听 8080 端口，jenkins 配置 webhook 地址为 <a target="_blank" rel="noopener" href="http://jenkinsip:8080/github-webhook/">http://jenkinsip:8080/github-webhook/</a></li>
+<li>新建一个 pipeline 任务，<br>选择【构建触发器】 GitHub hook trigger for GITScm polling<br>选择【定义】pipeline script from SCM<br>指定 master 分支</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt=" 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/jenkins/" rel="tag"><i class="fa fa-tag"></i> jenkins</a>
+              <a href="/tags/CICD/" rel="tag"><i class="fa fa-tag"></i> CICD</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/post/hexo-cli.html" rel="prev" title="hexo-cli">
+      <i class="fa fa-chevron-left"></i> hexo-cli
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/post/jenkins-3-fastapi.html" rel="next" title="jenkins pipeline自动构建部署Fastapi服务">
+      jenkins pipeline自动构建部署Fastapi服务 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80-%E6%90%AD%E5%BB%BA-Docker-Registry"><span class="nav-number">1.</span> <span class="nav-text">一.搭建 Docker Registry</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-docker-compose-yml-%E6%96%87%E4%BB%B6"><span class="nav-number">1.1.</span> <span class="nav-text">1. docker-compose.yml 文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E9%85%8D%E7%BD%AE%E5%87%AD%E8%AF%81"><span class="nav-number">1.2.</span> <span class="nav-text">2. 配置凭证</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E7%BB%99%E9%95%9C%E5%83%8F%E6%89%93%E6%A0%87%E7%AD%BE"><span class="nav-number">1.3.</span> <span class="nav-text">2. 给镜像打标签</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E6%8E%A8%E9%80%81%E9%95%9C%E5%83%8F%E5%88%B0%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93"><span class="nav-number">1.4.</span> <span class="nav-text">3. 推送镜像到私有仓库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E9%AA%8C%E8%AF%81%E6%8E%A8%E9%80%81%E6%88%90%E5%8A%9F-%E4%BD%BF%E7%94%A8%E4%BB%A5%E4%B8%8B%E5%91%BD%E4%BB%A4%E5%88%97%E5%87%BA%E7%A7%81%E6%9C%89-Registry-%E4%B8%AD%E7%9A%84%E9%95%9C%E5%83%8F"><span class="nav-number">1.5.</span> <span class="nav-text">4. 验证推送成功,使用以下命令列出私有 Registry 中的镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E4%BB%8E-Registry-%E6%8B%89%E5%8F%96%E9%95%9C%E5%83%8F"><span class="nav-number">1.6.</span> <span class="nav-text">5. 从 Registry 拉取镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E9%85%8D%E7%BD%AE-HTTP-%E8%AE%BF%E9%97%AE"><span class="nav-number">1.7.</span> <span class="nav-text">6. 配置 HTTP 访问</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E6%B8%85%E7%90%86%E6%97%A0%E7%94%A8%E7%9A%84%E9%95%9C%E5%83%8F"><span class="nav-number">1.8.</span> <span class="nav-text">7. 清理无用的镜像</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%81%9C%E6%AD%A2-Registry-%E5%AE%B9%E5%99%A8%EF%BC%9A"><span class="nav-number">1.8.1.</span> <span class="nav-text">1. 停止 Registry 容器：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E8%BF%90%E8%A1%8C%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%91%BD%E4%BB%A4%EF%BC%9A"><span class="nav-number">1.8.2.</span> <span class="nav-text">2. 运行垃圾收集命令：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E9%87%8D%E6%96%B0%E5%90%AF%E5%8A%A8-Registry-%E5%AE%B9%E5%99%A8%EF%BC%9A"><span class="nav-number">1.8.3.</span> <span class="nav-text">3. 重新启动 Registry 容器：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C-%E6%90%AD%E5%BB%BA-jenkins-pipeline"><span class="nav-number">2.</span> <span class="nav-text">二. 搭建 jenkins pipeline</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E8%87%AA%E5%B7%B1%E6%9E%84%E5%BB%BA%E5%90%AB-docker-%E7%9A%84-jenkins-%E9%95%9C%E5%83%8F-Docker-in-D-%E6%9C%89%E5%9D%91%E4%B8%8D%E5%BB%BA%E8%AE%AE%E4%BD%BF%E7%94%A8"><span class="nav-number">2.1.</span> <span class="nav-text">1. 自己构建含 docker 的 jenkins 镜像 [Docker in D][有坑不建议使用]</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E5%85%88%E9%85%8D%E7%BD%AE%E6%96%B0%E5%BB%BA%E4%B8%80%E4%B8%AA-Dockerfile"><span class="nav-number">2.1.1.</span> <span class="nav-text">1.1. 先配置新建一个 Dockerfile</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E6%9E%84%E5%BB%BA%E9%95%9C%E5%83%8F"><span class="nav-number">2.1.2.</span> <span class="nav-text">1.2.构建镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E8%BF%90%E8%A1%8C%E9%95%9C%E5%83%8F"><span class="nav-number">2.1.3.</span> <span class="nav-text">1.3.运行镜像</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%8B%89%E5%8F%96-jenkins-%E9%95%9C%E5%83%8F-%E5%90%AF%E5%8A%A8%E5%90%8E%E5%8E%BB%E5%AE%B9%E5%99%A8%E9%87%8C%E5%AE%89%E8%A3%85-Docker-CLI"><span class="nav-number">2.2.</span> <span class="nav-text">2.拉取 jenkins 镜像,启动后去容器里安装 Docker CLI</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E5%90%AF%E5%8A%A8-Jenkins-%E5%AE%B9%E5%99%A8%E5%B9%B6%E7%BB%91%E5%AE%9A-Docker-%E5%A5%97%E6%8E%A5%E5%AD%97%EF%BC%8C%E4%BB%A5%E5%85%81%E8%AE%B8-Jenkins-%E4%BD%BF%E7%94%A8%E5%AE%BF%E4%B8%BB%E6%9C%BA%E7%9A%84-Docker%EF%BC%9A"><span class="nav-number">2.2.1.</span> <span class="nav-text">2.1. 启动 Jenkins 容器并绑定 Docker 套接字，以允许 Jenkins 使用宿主机的 Docker：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E5%9C%A8%E5%AE%B9%E5%99%A8%E5%86%85%E6%89%A7%E8%A1%8C%E4%BB%A5%E4%B8%8B%E5%91%BD%E4%BB%A4%EF%BC%8C%E4%BB%A5%E6%9B%B4%E6%96%B0%E5%8C%85%E5%88%97%E8%A1%A8%E5%B9%B6%E5%AE%89%E8%A3%85-Docker-CLI%EF%BC%9A"><span class="nav-number">2.2.2.</span> <span class="nav-text">2.2. 在容器内执行以下命令，以更新包列表并安装 Docker CLI：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E4%B8%BA%E4%BA%86%E4%BD%BF-Jenkins-%E8%83%BD%E5%A4%9F%E4%BD%BF%E7%94%A8-Docker-CLI%EF%BC%8Cjenkins-%E7%94%A8%E6%88%B7%E5%BF%85%E9%A1%BB%E5%B1%9E%E4%BA%8E-docker-%E7%BB%84"><span class="nav-number">2.2.3.</span> <span class="nav-text">2.3. 为了使 Jenkins 能够使用 Docker CLI，jenkins 用户必须属于 docker 组</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-%E6%8F%90%E4%BA%A4%E5%B7%B2%E7%BB%8F%E5%AE%89%E8%A3%85-docker-cli-%E7%9A%84-jenkins-%E9%95%9C%E5%83%8F"><span class="nav-number">2.3.</span> <span class="nav-text">2.4.提交已经安装 docker cli 的 jenkins 镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-5-%E9%85%8D%E7%BD%AE-jenkins"><span class="nav-number">2.4.</span> <span class="nav-text">2.5 配置 jenkins</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description">Fake it till you make it!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="mailto:tishaqin@gmail.com" title="E-Mail → mailto:tishaqin@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/TishaQin" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;TishaQin" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/weixin_43623871" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;weixin_43623871" rel="noopener" target="_blank"><i class="fab fa-cuttlefish fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzkwODY2OTc2MQ==" title="微信公众号 → https:&#x2F;&#x2F;mp.weixin.qq.com&#x2F;mp&#x2F;profile_ext?action&#x3D;home&amp;__biz&#x3D;MzkwODY2OTc2MQ&#x3D;&#x3D;" rel="noopener" target="_blank"><i class="fab fa-weixin fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">TISHA@HD</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">126k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:55</span>
+</div>
+
+<div>
+  <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+  <script>
+      var now = new Date();
+      function createtime() {
+          var grt= new Date("08/24/2024 00:00:00");
+          now.setTime(now.getTime()+250);
+          days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+          hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+          if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+          mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+          seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+          snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+          document.getElementById("timeDate").innerHTML = "建站 "+dnum+" 天 ";
+          document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+      }
+  setInterval("createtime()",250);
+  </script>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'Ya3zOA5Mu8o4wbWCkMJooFOx-gzGzoHsz',
+      appKey     : 'qp2hI1mmbcy43clW5ONpT3Z8',
+      placeholder: "Just go go",
+      avatar     : 'monsterid',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-CN' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // 查找所有 div.table-container 元素
+    const tableContainers = document.querySelectorAll(".table-container");
+
+    // 遍历所有 div.table-container 元素
+    tableContainers.forEach(function(tableContainer) {
+      // 获取 div.table-container 内的行数（假设每行对应一个 <span>）
+      const lineCount = tableContainer.querySelectorAll("tbody > tr > td.code > pre > span").length;
+
+      // 检查行数是否大于 5
+      if (lineCount > 5) {
+        // 默认添加 "code-hidden" 类
+        tableContainer.classList.add("code-hidden");
+      }
+
+      // 检查 div.table-container 前面是否有 figcaption 元素，如果没有则添加一个
+      const prevElement = tableContainer.previousElementSibling;
+      let figcaption;
+      let iElement;
+      if (!prevElement || prevElement.tagName.toLowerCase() !== "figcaption") {
+        // 在 div.table-container 前插入一个 figcaption 元素
+        figcaption = document.createElement("figcaption");
+
+        // 将 figcaption 插入到 DOM 中
+        tableContainer.parentNode.insertBefore(figcaption, tableContainer);
+      } else {
+        figcaption = prevElement;
+      }
+
+      // 创建一个 <i> 标签并添加功能
+      iElement = document.createElement("i");
+      iElement.className = "fas fa-angle-down";
+      // 插入一点空格
+      iElement.innerHTML = "&nbsp;&nbsp;&nbsp;";
+      figcaption.insertBefore(iElement, figcaption.firstChild);
+
+      // 为 <i> 标签添加点击事件
+      iElement.addEventListener("click", function() {
+        // 切换 tableContainer 的 "code-hidden" 类
+        tableContainer.classList.toggle("code-hidden");
+
+        // 切换 <i> 标签的类名
+        if (iElement.classList.contains("fa-angle-down")) {
+          iElement.classList.remove("fa-angle-down");
+          iElement.classList.add("fa-angle-right");
+        } else {
+          iElement.classList.remove("fa-angle-right");
+          iElement.classList.add("fa-angle-down");
+        }
+      });
+    });
+  });
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":200,"height":350},"mobile":{"show":true},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

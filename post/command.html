@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+  <meta name="baidu-site-verification" content="true">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"tishaqin.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Linux 基础命令">
+<meta property="og:type" content="article">
+<meta property="og:title" content="command">
+<meta property="og:url" content="https://tishaqin.github.io/post/command.html">
+<meta property="og:site_name" content="测试与时光手札">
+<meta property="og:description" content="Linux 基础命令">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://tishaqin.github.io/images/commandshell1.png">
+<meta property="og:image" content="https://tishaqin.github.io/images/commandshell2.png">
+<meta property="og:image" content="https://tishaqin.github.io/images/commandawk1.png">
+<meta property="og:image" content="https://tishaqin.github.io/images/commandawk2.png">
+<meta property="og:image" content="https://tishaqin.github.io/images/commandawk3.png">
+<meta property="og:image" content="https://tishaqin.github.io/images/commandawk4.png">
+<meta property="og:image" content="https://tishaqin.github.io/images/commandawk5.png">
+<meta property="og:image" content="https://tishaqin.github.io/images/commandawk6.png">
+<meta property="og:image" content="https://tishaqin.github.io/images/commandawk7.png">
+<meta property="og:image" content="https://tishaqin.github.io/images/commandawk8.png">
+<meta property="og:image" content="https://tishaqin.github.io/images/commandawk9.png">
+<meta property="og:image" content="https://tishaqin.github.io/images/commandawk10.png">
+<meta property="og:image" content="https://tishaqin.github.io/images/command1.png">
+<meta property="og:image" content="https://tishaqin.github.io/images/command2.png">
+<meta property="og:image" content="https://tishaqin.github.io/images/command3.png">
+<meta property="og:image" content="https://tishaqin.github.io/images/command4.png">
+<meta property="og:image" content="https://tishaqin.github.io/images/command5.png">
+<meta property="og:image" content="https://tishaqin.github.io/images/gitmerge.png">
+<meta property="og:image" content="https://tishaqin.github.io/images/gitcommit.png">
+<meta property="article:published_time" content="2022-08-20T00:00:00.000Z">
+<meta property="article:modified_time" content="2022-08-20T00:00:00.000Z">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="Shell">
+<meta property="article:tag" content="Redis">
+<meta property="article:tag" content="Docker">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://tishaqin.github.io/images/commandshell1.png">
+
+<link rel="canonical" href="https://tishaqin.github.io/post/command.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>command | 测试与时光手札</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-46H282EQWZ"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-46H282EQWZ');
+      }
+    </script>
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?ed024ed44db96475c9bbd0aa42047d02";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">测试与时光手札</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">测试 ｜ 探索 </p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/archives/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">13</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">5</span></a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/TishaQin" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://tishaqin.github.io/post/command.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="Fake it till you make it!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="测试与时光手札">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          command
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-08-20 00:00:00" itemprop="dateCreated datePublished" datetime="2022-08-20T00:00:00+00:00">2022-08-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4/" itemprop="url" rel="index"><span itemprop="name">自动化运维</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/post/command.html" class="post-meta-item leancloud_visitors" data-flag-title="command" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/post/command.html#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/post/command.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>19k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>17 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Linux-基础命令"><a href="#Linux-基础命令" class="headerlink" title="Linux 基础命令"></a>Linux 基础命令</h1><h2 id="1-打包解压缩"><a href="#1-打包解压缩" class="headerlink" title="1.打包解压缩"></a>1.打包解压缩</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1.打包文件(c表示打包，f指定要操作的文件)</span></span><br><span class="line">tar cf /tmp/demobackup.tar  demo</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2.打包并压缩（加入z,j,J参数表示用不同的压缩方式来压缩，用双扩展名表示打包并压缩）</span></span><br><span class="line"><span class="comment">#压缩方式：gzip-&gt;.tar.gz/.tgz    bzip2-&gt;.tar.bz2/.tbz2（双扩展名的两种写法都可以）</span></span><br><span class="line">tar czf /tmp/demobackup.tar.gz   demo</span><br><span class="line">tar cjf /tmp/demobackup.tar.bz2  demo</span><br><span class="line">tar cJf /tmp/demobackup.tar.xz   demo</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3.解压（x参数解压）</span></span><br><span class="line">tar xf    /tmp/demobackup.tar  -C  文件解包存放的位置  <span class="comment">#-C 在特定目录解压缩</span></span><br><span class="line">tar xzfv  /tmp/demobackup.tar.gz    <span class="comment"># -v 解压缩过程将文件显示出来</span></span><br><span class="line">tar xjf  /tmp/demobackup.tar.bz2</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 查看压缩包中的文件</span></span><br><span class="line">-t 查看压缩包里面的文件 ，t,c,x三个动作参数不能同时存在，一次操作只能使用其中的一个参数</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-ls-的参数"><a href="#2-ls-的参数" class="headerlink" title="2.ls 的参数"></a>2.ls 的参数</h2><table>
+<thead>
+<tr>
+<th align="left">参数</th>
+<th align="left">用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">- l</td>
+<td align="left">显示长格式文件</td>
+</tr>
+<tr>
+<td align="left">-a</td>
+<td align="left">显示隐藏文件</td>
+</tr>
+<tr>
+<td align="left">-t</td>
+<td align="left">按照时间顺序显示</td>
+</tr>
+<tr>
+<td align="left">-R</td>
+<td align="left">递归显示</td>
+</tr>
+<tr>
+<td align="left">-h</td>
+<td align="left">文件大小用 M 显示</td>
+</tr>
+<tr>
+<td align="left">-d</td>
+<td align="left">单独查看某个文件，ls -d 要查看的文件名</td>
+</tr>
+<tr>
+<td align="left">-r</td>
+<td align="left">逆序显示</td>
+</tr>
+</tbody></table>
+<h2 id="3-文件及文件夹操作"><a href="#3-文件及文件夹操作" class="headerlink" title="3.文件及文件夹操作"></a>3.文件及文件夹操作</h2><table>
+<thead>
+<tr>
+<th align="left">命令</th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">mkdir</td>
+<td align="left">新建文件夹</td>
+</tr>
+<tr>
+<td align="left">mkdir -p &#x2F;tmp&#x2F;demo&#x2F;</td>
+<td align="left">嵌套建立多层目录</td>
+</tr>
+<tr>
+<td align="left">rmdir</td>
+<td align="left">删除空文件夹</td>
+</tr>
+<tr>
+<td align="left">rm -rf</td>
+<td align="left">删除非空目录，f 表示不提示</td>
+</tr>
+<tr>
+<td align="left">rm</td>
+<td align="left">删除文件</td>
+</tr>
+<tr>
+<td align="left">cp -r</td>
+<td align="left">复制目录</td>
+</tr>
+<tr>
+<td align="left">cp -p</td>
+<td align="left">复制文件但是保留用户权限时间等文件属性</td>
+</tr>
+<tr>
+<td align="left">mv</td>
+<td align="left">移动 mv 原文件 目的目录</td>
+</tr>
+<tr>
+<td align="left">mv</td>
+<td align="left">重命名 mv 源文件名 目标文件名</td>
+</tr>
+</tbody></table>
+<h2 id="4-Vim-操作"><a href="#4-Vim-操作" class="headerlink" title="4.Vim 操作"></a>4.Vim 操作</h2><h3 id="1-插入模式"><a href="#1-插入模式" class="headerlink" title="1.插入模式"></a>1.插入模式</h3><table>
+<thead>
+<tr>
+<th align="left">进入插入模式有多种方式</th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">i</td>
+<td align="left">光标处插入</td>
+</tr>
+<tr>
+<td align="left">I</td>
+<td align="left">光标移到该行开头插入</td>
+</tr>
+<tr>
+<td align="left">a</td>
+<td align="left">光标移到后一位插入</td>
+</tr>
+<tr>
+<td align="left">A</td>
+<td align="left">光标移到该行末尾插入</td>
+</tr>
+<tr>
+<td align="left">o</td>
+<td align="left">光标该行的下一行插入空行</td>
+</tr>
+<tr>
+<td align="left">O</td>
+<td align="left">光标该行的上一行插入空行</td>
+</tr>
+</tbody></table>
+<h3 id="2-正常模式"><a href="#2-正常模式" class="headerlink" title="2.正常模式"></a>2.正常模式</h3><p>(插入模式下按 ESC 回到正常模式)</p>
+<table>
+<thead>
+<tr>
+<th align="left">正常模式</th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">h j k l</td>
+<td align="left">光标上下左右移动操作</td>
+</tr>
+<tr>
+<td align="left">yy</td>
+<td align="left">单行复制</td>
+</tr>
+<tr>
+<td align="left">3yy</td>
+<td align="left">多行复制，复制 3 行</td>
+</tr>
+<tr>
+<td align="left">y$</td>
+<td align="left">复制光标到该行结尾的所有内容</td>
+</tr>
+<tr>
+<td align="left">p</td>
+<td align="left">将复试的行粘贴</td>
+</tr>
+<tr>
+<td align="left">dd</td>
+<td align="left">剪切光标所在的行</td>
+</tr>
+<tr>
+<td align="left">d$</td>
+<td align="left">剪切光标到该行结尾的所有内容</td>
+</tr>
+<tr>
+<td align="left">u</td>
+<td align="left">复原前一个动作(撤销)</td>
+</tr>
+<tr>
+<td align="left">ctrl + r</td>
+<td align="left">重做上一个动作</td>
+</tr>
+<tr>
+<td align="left">x</td>
+<td align="left">删除光标当前字符</td>
+</tr>
+<tr>
+<td align="left">r</td>
+<td align="left">替换光标当前字符</td>
+</tr>
+<tr>
+<td align="left">^</td>
+<td align="left">光标移到该行开头</td>
+</tr>
+<tr>
+<td align="left">$</td>
+<td align="left">光标移到该行末尾</td>
+</tr>
+<tr>
+<td align="left">g</td>
+<td align="left">光标移到文本第一行开头</td>
+</tr>
+<tr>
+<td align="left">G</td>
+<td align="left">光标移到文本最后一行开头</td>
+</tr>
+<tr>
+<td align="left">5G</td>
+<td align="left">光标移到指定的第 5 行的开头</td>
+</tr>
+<tr>
+<td align="left">:set nu</td>
+<td align="left">显示行数</td>
+</tr>
+<tr>
+<td align="left">:set nonu</td>
+<td align="left">不显示行数</td>
+</tr>
+</tbody></table>
+<h3 id="3-命令模式"><a href="#3-命令模式" class="headerlink" title="3.命令模式"></a>3.命令模式</h3><table>
+<thead>
+<tr>
+<th align="left">命令</th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">:w</td>
+<td align="left">保存文件（ :w &#x2F;root&#x2F;a.txt 适用于直接 vi 文件没保存的）</td>
+</tr>
+<tr>
+<td align="left">:q</td>
+<td align="left">退出</td>
+</tr>
+<tr>
+<td align="left">:q!</td>
+<td align="left">表示强制退出，不对文件进行保存 等于<code>ZQ</code></td>
+</tr>
+<tr>
+<td align="left">:wq</td>
+<td align="left">强制性写入文件并退出。即使文件没有被修改也强制写入，并更新文件的修改时间。等同于<code>ZZ</code></td>
+</tr>
+<tr>
+<td align="left">:wq!</td>
+<td align="left">保存并强制退出</td>
+</tr>
+<tr>
+<td align="left">:! 命令</td>
+<td align="left"><code>:!ifconfig</code>临时退出去看 ip 地址</td>
+</tr>
+<tr>
+<td align="left">&#x2F;word</td>
+<td align="left">向光标之下寻找一个名称为 word 的字符串。（多次按<code>n</code>向下查找 &#x2F; 按<code>shift+n</code>向上查找(反向查找)）</td>
+</tr>
+<tr>
+<td align="left">?word</td>
+<td align="left">向光标之上寻找一个字符串名称为 word 的字符串。（多次按<code>n</code>向上查找 &#x2F; 按<code>shift+n</code>向下查找）</td>
+</tr>
+<tr>
+<td align="left">:n1,n2s&#x2F;a&#x2F;b&#x2F;g</td>
+<td align="left">部分行内替换， <code>:3,5/s/7/8/g</code>在第三 3 行到 5 行将 7 替换成 8</td>
+</tr>
+<tr>
+<td align="left">:%s&#x2F;a&#x2F;b&#x2F;g</td>
+<td align="left">全文替换，将 a 替换成 b</td>
+</tr>
+</tbody></table>
+<h3 id="4-可视模式"><a href="#4-可视模式" class="headerlink" title="4.可视模式"></a>4.可视模式</h3><table>
+<thead>
+<tr>
+<th>正常模式进入可视模式的命令</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>v</td>
+<td>进入字符可视模式</td>
+</tr>
+<tr>
+<td>V（shift+v）</td>
+<td>行可视模式</td>
+</tr>
+<tr>
+<td>ctrl + v</td>
+<td>块可视模式，配合 d 和大写 i 命令进行块的操作</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>举例；块模式，先按 ctrl+v,用光标移动选择对应的块（每一行相同位置组成的块），再按 shift+i，回到所选快位置的第一行光标处插入 XXX，再按 2 下 ESC，这样所选块的每一行开头都插入了 XXX 内容。或者选中了块后按 d 删掉该块</p>
+</blockquote>
+<h2 id="5-用户和用户组管理"><a href="#5-用户和用户组管理" class="headerlink" title="5.用户和用户组管理"></a>5.用户和用户组管理</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">useradd 新用户名</span><br><span class="line"><span class="built_in">id</span> 用户名</span><br><span class="line">passwd 用户名(修改用户密码)</span><br><span class="line">userdel 用户名(删除用户但是会保留该用户的家目录)</span><br><span class="line">userdel -r 用户名（删除用户不会保留用户的家目录，删得比较干净）</span><br><span class="line"></span><br><span class="line">groupadd 用户组名 （新建用户组）</span><br><span class="line">usermod -g 目标用户组 用户名 （将用户加入到目标用户组中）</span><br><span class="line">useradd -g 目标用户组 新建用户名 （新建用户并直接加入到目标用户组中，常用，一步到位）</span><br><span class="line">su 用户名（切换用户）</span><br><span class="line"><span class="built_in">sudo</span> (以其他用户身份执行命令)</span><br></pre></td></tr></table></figure>
+
+<h2 id="6-文件和目录的权限"><a href="#6-文件和目录的权限" class="headerlink" title="6.文件和目录的权限"></a>6.文件和目录的权限</h2><p>1.文件类型:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- 普通文件</span><br><span class="line">d 目录</span><br><span class="line">l 符号链接</span><br><span class="line">b 块特殊文件（设备文件）</span><br><span class="line">c字符设备文件（设备文件）</span><br><span class="line">f命名管道（网络中的）</span><br><span class="line">s套接字文件（网络中的）</span><br></pre></td></tr></table></figure>
+
+<p>2.权限表示方法</p>
+<table>
+<thead>
+<tr>
+<th align="left">普通文件字符权限表示方法</th>
+<th align="left">数字权限表示</th>
+<th align="left">目录文件权限表示方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">r 读</td>
+<td align="left">r&#x3D;4</td>
+<td align="left">x 进入目录</td>
+</tr>
+<tr>
+<td align="left">w 写</td>
+<td align="left">w&#x3D;2</td>
+<td align="left">rx 显示目录内的文件名（可进可查看）</td>
+</tr>
+<tr>
+<td align="left">x 执行</td>
+<td align="left">x&#x3D;1</td>
+<td align="left">wx 修改目录内的文件（可修改可删除）</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">rwx 修改目录内的文件（可进可查看可修改可删除）</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>创建新文件有默认权限，根据 umask(022)来计算，属主和属组根据当前进程的用户来设定，默认的普通文件权限应该是 666，减去 umask 等于 644，则默认文件权限都是 644</p>
+</blockquote>
+<p>3.修改权限命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">1. <span class="built_in">chmod</span> 修改文件，目录的权限</span><br><span class="line">修改权限： 属主权限（u） 属组权限(g) 其他用户权限(0)  3个一起修改(a)</span><br><span class="line">例子；</span><br><span class="line">		<span class="built_in">chmod</span> g+x afile</span><br><span class="line">		<span class="built_in">chmod</span> o-r afile</span><br><span class="line">		<span class="built_in">chmod</span> a+w afile</span><br><span class="line"></span><br><span class="line">2. <span class="built_in">chown</span> 更改属主和属组</span><br><span class="line"><span class="built_in">chown</span> user1 /test (更改目录<span class="built_in">test</span>的属主为user1)</span><br><span class="line"><span class="built_in">chown</span> :group1 /test (更改目录<span class="built_in">test</span>的属组，属组前面要加上:)</span><br><span class="line"><span class="built_in">chown</span> user1:group /test (同时更改属主和属组)</span><br><span class="line"></span><br><span class="line">3. <span class="built_in">chgrp</span> 可以单独更改属组（不常用）</span><br></pre></td></tr></table></figure>
+
+<p>4.特殊权限</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">SUID （用于二进制可执行文件，执行命令时取得文件属主权限，如/usr/bin/passwd ; -rwsr-xr-x）</span><br><span class="line">	<span class="built_in">chmod</span> 4XXX /afile (给文件设置SUID，用数字权限前面加个４)</span><br><span class="line"></span><br><span class="line">SGID (用于目录，在该目录下创建新文件和目录，权限自动更改为该目录的属组，文件共享的时候经常用到)</span><br><span class="line">	<span class="built_in">chmod</span> １XXX /afile (给文件设置SGID ，用数字权限前面加个１)</span><br><span class="line"></span><br><span class="line">SBIT （用于目录，该目录下新建的文件和目录，仅root和自己可以删除，如<span class="built_in">ls</span> /tmp ; drwxrwxrwt.）</span><br></pre></td></tr></table></figure>
+
+<h2 id="7-进程和文件系统"><a href="#7-进程和文件系统" class="headerlink" title="7.进程和文件系统"></a>7.进程和文件系统</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">1.查看进程</span><br><span class="line">ps -e</span><br><span class="line">ps -ef</span><br><span class="line">ps -eLf|more  (分页查看更多进程)</span><br><span class="line">top</span><br><span class="line">top -p 进程号 (只动态查看一个进程)</span><br><span class="line">pstree</span><br><span class="line"></span><br><span class="line">2. 内存查看</span><br><span class="line">free -m</span><br><span class="line">top</span><br><span class="line"></span><br><span class="line">3.磁盘查看</span><br><span class="line">fdisk -l (分区磁盘的查看)</span><br><span class="line">parted -l</span><br><span class="line">dh -h</span><br><span class="line"><span class="built_in">du</span> /etc/passwd (查看文件实际用量)（<span class="built_in">ls</span> -lh 中的h查出来的文件有空洞大小，不是文件实际的大小）</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>创建一个有空洞的文件（linux 虚拟化就是创建一个非常大比如 1T 大小的文件，实际占用大小可以很小）<br>dd if&#x3D;&#x2F;dev&#x2F;zero bs&#x3D;4M count&#x3D;10 seek&#x3D;20 of&#x3D;bfile<br>count 就是记录一块是 10M，seek 时跳过 20 块 X4M<br>ls -lh bfile -&gt; 120M (记录从看似 hi 到结尾写了多少字节)<br>du -h bfile -&gt;40M(真正统计实际的文件长度)</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">常见的文件系统，linux支持多种文件系统：ext4/xfs/NTFS</span><br><span class="line">ext4中</span><br><span class="line">超级块</span><br><span class="line">i节点（inode），记录每个文件权限信息，文件名存在父目录中，<span class="built_in">ls</span> -i查看</span><br><span class="line">数据块（datablock），记录数据信息</span><br><span class="line">-------------------------------------------------------------------</span><br><span class="line">用i节点的角度来解读下面几个命令：</span><br><span class="line"></span><br><span class="line"><span class="built_in">cp</span> afile afile1</span><br><span class="line"><span class="built_in">ls</span> -li afile* 复制文件，会生成2个不同的i节点</span><br><span class="line"></span><br><span class="line"><span class="built_in">mv</span> afile afile2</span><br><span class="line"><span class="built_in">ls</span> -li afile* 重命名很快，是因为两个文件对应的i节点没变</span><br><span class="line"></span><br><span class="line">vim编辑文件保存后会改变i节点，因为每次使用vi编辑一个文件，它会在缓冲区新生成一个afile.swp的隐藏文件，改变的数据存在swp文件中。</span><br><span class="line"><span class="built_in">echo</span> 123&gt;afile 追加不会改变i节点，只会改变数据块的内容</span><br><span class="line"></span><br><span class="line"><span class="built_in">rm</span> afile 删除文件，准确来说是将i节点和文件名之间的链接断开</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>ln afile bfile</code> 给 afile 创建一个<em>硬链接</em>，硬链接的两个文件是<em>同步更改</em>的，这两个文件名指向同一个 i 节点</li>
+</ul>
+<ol>
+<li>硬链接:两个文件指定的是同一个 inode</li>
+<li>硬链接不能跨分区存在</li>
+<li>硬链接不能链接到目录(要避免循环引用)</li>
+<li>删除硬链接只会减少文件被硬链接的次数,源文件不会动.<br>删除源文件，硬链接不受影响。</li>
+</ol>
+<ul>
+<li><code>ln -s afile aafile</code> 给 afile 创建一个<em>软链接（符号链接</em>），aafile 文件的 i 节点和 afile 是不一样的。<br><code>ls -li aafile -&gt; 3799 lrwxrwxrwx ... </code>(会多一个<code>l</code>表示它是一个符号链接)</li>
+</ul>
+<ol>
+<li>软链接:是一个独立的文件,有自己独立的 inode，和源文件不一样。</li>
+<li>软链接没有存储任何数据，只是存储了访问文件的另-种路径，所以对软连接修改权限是不会生效的.<br>软链接可以对目录创建也可以跨分区</li>
+<li>删除软链接,跟源文件没任何关系。<br>源文件被删除,软连接将不可用.</li>
+</ol>
+<h1 id="shell-脚本"><a href="#shell-脚本" class="headerlink" title="shell 脚本"></a>shell 脚本</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">##1.计算1-100的和</span></span><br><span class="line"><span class="built_in">sum</span>=0</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> `<span class="built_in">seq</span> 1 100`;<span class="keyword">do</span></span><br><span class="line">	<span class="built_in">sum</span>=$[<span class="variable">$sum</span>+<span class="variable">$i</span>]</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$sum</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">##2.编写shell脚本，要求输入一个数字，然后计算出从1到输入数字的和，要求，如果输入的数字小于1，则重新输入，直到输入正确的数字为止</span></span><br><span class="line">n=0</span><br><span class="line"><span class="keyword">while</span> [ <span class="variable">$n</span> -lt 1 ] ;<span class="keyword">do</span></span><br><span class="line">	<span class="built_in">read</span> -p <span class="string">&quot;请输入大于或者等于1的数字：&quot;</span> n</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="built_in">sum</span>=0</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> `<span class="built_in">seq</span> 1 <span class="variable">$n</span>`;<span class="keyword">do</span></span><br><span class="line">	<span class="built_in">sum</span>=$[<span class="variable">$sum</span>+<span class="variable">$i</span>]</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$sum</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">##3.编写shell脚本，把/root/目录下的所有目录（只需要一级）拷贝到/tmp/目录下</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> `<span class="built_in">ls</span> ./demo`;<span class="keyword">do</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="variable">$i</span></span><br><span class="line">	<span class="keyword">if</span> [ -d <span class="variable">$i</span> ];<span class="keyword">then</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$i</span>是文件&quot;</span></span><br><span class="line">	<span class="built_in">cp</span> -r ./demo/<span class="variable">$i</span> ./tmp</span><br><span class="line">	<span class="built_in">echo</span> <span class="string">&quot;cp复制&quot;</span></span><br><span class="line">	<span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">##4. 编写shell脚本，批量建立用户user_00, user_01, … ,user_100并且所有用户同属于users组；</span></span><br><span class="line">groupadd <span class="built_in">users</span>;</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> `<span class="built_in">seq</span> 0 9`;<span class="keyword">do</span></span><br><span class="line">	useradd -G <span class="built_in">users</span> user_<span class="variable">$i</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> `<span class="built_in">seq</span> 10 100`;<span class="keyword">do</span></span><br><span class="line">	useradd -G <span class="built_in">users</span> user_<span class="variable">$i</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">##5. 编写shell脚本，截取文件test.log中包含关键词’abc’的行中的第一列（假设分隔符为”:”），然后把截取的数字排序（假设第一列为数字），然后打印出重复次数超过10次的列；</span></span><br><span class="line">awk -F <span class="string">&quot;:&quot;</span> <span class="string">&quot;<span class="variable">$0</span>~/abc/ &#123;print <span class="variable">$1</span>&#125;&quot;</span> test.log &gt; data.txt</span><br><span class="line"><span class="built_in">sort</span> -n data.txt |<span class="built_in">uniq</span> -c|<span class="built_in">sort</span> -n &gt; res.txt</span><br><span class="line">awk <span class="string">&#x27;$1&gt;10 &#123;print $2&#125;&#x27;</span> res.txt</span><br><span class="line"><span class="comment">#uniq -c 检查文件并删除文件中重复出现的行，并在行首显示该行重复出现的次数。</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">##6. 编写shell脚本，判断输入的IP是否正确（IP的规则是，n1.n2.n3.n4，其中1&lt;n1&lt;255, 0&lt;n2&lt;255,=&quot;&quot; 0&lt;n3&lt;255,=&quot;&quot; 0&lt;n4&lt;255&lt;=&quot;&quot; span=&quot;&quot;&gt;）。</span></span><br><span class="line">？？？</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/commandshell1.png"><br><img src="/images/commandshell2.png"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 7.批量重命名</span></span><br><span class="line"><span class="keyword">for</span> filename <span class="keyword">in</span> `<span class="built_in">ls</span> *.mp3`; <span class="keyword">do</span></span><br><span class="line"><span class="built_in">mv</span> <span class="variable">$filename</span> $(<span class="built_in">basename</span> <span class="variable">$filename</span> .mp3).mp4</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#实用场景，递归删除一个文件夹下指定后缀名的文件</span></span><br><span class="line"><span class="comment">#! /bin/bash</span></span><br><span class="line"><span class="keyword">function</span> <span class="function"><span class="title">deletefiles</span></span>()&#123;</span><br><span class="line">	<span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$&#123;1##*.&#125;</span>&quot;</span> = <span class="string">&quot;<span class="variable">$2</span>&quot;</span> ];<span class="keyword">then</span></span><br><span class="line">		<span class="built_in">echo</span> <span class="string">&quot;后缀名是 <span class="variable">$2</span>, 删除 <span class="variable">$1</span>&quot;</span></span><br><span class="line">		<span class="built_in">rm</span> -f <span class="variable">$1</span></span><br><span class="line">	<span class="keyword">fi</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="function"><span class="title">listfolder</span></span>()&#123;</span><br><span class="line">	<span class="keyword">if</span> [ ! -d <span class="string">&quot;<span class="variable">$1</span>&quot;</span> ] || [ <span class="string">&quot;`ls -A <span class="variable">$1</span>`&quot;</span> = <span class="string">&quot;&quot;</span> ]</span><br><span class="line">	<span class="keyword">then</span></span><br><span class="line">		<span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$1</span>不存在或者是个空目录&quot;</span></span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		flists=`<span class="built_in">ls</span> <span class="variable">$1</span>`</span><br><span class="line">		<span class="built_in">cd</span> <span class="variable">$1</span></span><br><span class="line">		<span class="keyword">for</span> f <span class="keyword">in</span> <span class="variable">$flists</span></span><br><span class="line">		<span class="keyword">do</span></span><br><span class="line">			<span class="keyword">if</span> <span class="built_in">test</span> -d <span class="variable">$f</span></span><br><span class="line">			<span class="keyword">then</span></span><br><span class="line">				listfolder <span class="variable">$f</span> <span class="variable">$2</span></span><br><span class="line">			<span class="keyword">else</span></span><br><span class="line">				deletefiles <span class="variable">$f</span> <span class="variable">$2</span></span><br><span class="line">			<span class="keyword">fi</span></span><br><span class="line">		<span class="keyword">done</span></span><br><span class="line">		<span class="built_in">cd</span> ../</span><br><span class="line">	<span class="keyword">fi</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">dir</span>=./demo</span><br><span class="line">listfolder <span class="variable">$dir</span> txt mp3</span><br></pre></td></tr></table></figure>
+
+<h1 id="Linux-awk-用法"><a href="#Linux-awk-用法" class="headerlink" title="Linux-awk 用法"></a>Linux-awk 用法</h1><h2 id="1-awk-和-sed-的区别"><a href="#1-awk-和-sed-的区别" class="headerlink" title="1.awk 和 sed 的区别"></a>1.awk 和 sed 的区别</h2><ol>
+<li>sed 的核心是正则，对于 sed， 基本的两个概念是匹配和行为。 1. 匹配是通过区域选择加上正则表达式实现，比如“3 到 6 行以 This 开头的” 2. 行为是增删改查。可以在某个位置新增或删除一行，可以通过正则表达式进行变量替换，可以显示满足某些条件的行。配合 shell 的批处理就会很强大， 比如我想把所有文件的开头添加一个注释，比如我想把所有文件的某一个变量进行替换，比如我想把所有文件满足某些条件的行进行合并和拆分。 3. 同时，sed 提供了一个保持空间（hold space）可以实现逆序输出等操作。 4. 另外，sed 的用法非常灵活，你可以将匹配和行为进行不同的嵌套，举个复杂的例子“将第某行到某行之间的满足 A 条件的里面满足 B 条件的行进行 C 操作和 D 操作并且将 E 条件的行进行 F 操作”这样的灵活组合方式怕是也只有 sed 了</li>
+<li>awk，经常用于格式化输出，也就是将数据按照我们想要的方式来显示，并且可以做一些基本的统计工作。 1. 它的运作模式是“预处理+逐行处理+最终处理”。一般我们只用“逐行处理”比如对于满足条件的某些行，我们打印某某列。通过指定分隔符，我们很容易的对列进行操作。 2. 预处理来定义变量，逐行处理来修改变量，最终处理来打印变量。</li>
+</ol>
+<h2 id="2-awk-使用"><a href="#2-awk-使用" class="headerlink" title="2.awk 使用"></a>2.awk 使用</h2><p><code>awk &#39;BEGIN&#123; commands &#125; /pattern/ &#123;commands&#125; END&#123; commands &#125;&#39;</code></p>
+<blockquote>
+<p>1、<code>BEGIN&#123; commands &#125; </code>开始块就是在程序启动的时候执行的代码部分，并且它在整个过程中只执行一次。一般情况下，我们可以在开始块中初始化一些变量。<br>注意：开始块部分是可选的，你的程序可以没有开始块部分。<br>2、<code> /pattern/ &#123;commands&#125;</code>pattern 部分匹配该行内容成功后，才会执行 commands 的内容。<br>3 <code>END&#123; commands &#125;</code>结束块是在程序结束时执行的代码。<br>注意：结束块部分也是可选的</p>
+</blockquote>
+<h2 id="3-awk-基本用法"><a href="#3-awk-基本用法" class="headerlink" title="3.awk 基本用法"></a>3.awk 基本用法</h2><table>
+<thead>
+<tr>
+<th>选项</th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-F</td>
+<td align="left"><code>-F &#39;,&#39;</code>或者 <code>-F &#39;正则表达式&#39; </code> -F 选项来改变字段分隔符</td>
+</tr>
+<tr>
+<td>-v</td>
+<td align="left"><code>-va=1</code>赋值一个用户定义变量 a 的值为 1</td>
+</tr>
+<tr>
+<td>-f</td>
+<td align="left"><code>-f scripfile</code>，从脚本文件中读取 awk 命令</td>
+</tr>
+</tbody></table>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cat</span> 1.txt</span><br><span class="line"> 2 this is a test1</span><br><span class="line"> 3 Are you like awk1</span><br><span class="line"> This<span class="string">&#x27;s a test1</span></span><br><span class="line"><span class="string"> 10 There are orange,apple,mongo</span></span><br><span class="line"><span class="string">------------------------------------------------------------------------------------------------------------</span></span><br><span class="line"><span class="string">$ awk &#x27;</span>&#123;<span class="built_in">print</span> <span class="variable">$1</span>,<span class="variable">$4</span>&#125;<span class="string">&#x27; 1.txt    # 每行按空格或TAB分割，输出文本中的1、4项</span></span><br><span class="line"><span class="string"> 2 a</span></span><br><span class="line"><span class="string"> 3 like</span></span><br><span class="line"><span class="string"> This&#x27;</span>s</span><br><span class="line"> 10 orange,apple,mongo</span><br><span class="line">------------------------------------------------------------------------------------------------------------</span><br><span class="line">$ awk <span class="string">&#x27;&#123;printf &quot;%-8s %-10s\n&quot;,$1,$4&#125;&#x27;</span> 1.txt  <span class="comment"># 格式化输出</span></span><br><span class="line"> 2        a</span><br><span class="line"> 3        like</span><br><span class="line"> This<span class="string">&#x27;s</span></span><br><span class="line"><span class="string"> 10       orange,apple,mongo</span></span><br><span class="line"><span class="string">--------------------------------------------------------------------------------------------</span></span><br><span class="line"><span class="string">$ awk -F, &#x27;</span>&#123;<span class="built_in">print</span> <span class="variable">$1</span>,<span class="variable">$2</span>&#125;<span class="string">&#x27; 1.txt   # 使用&quot;,&quot;分割。-F相当于内置变量FS, 指定分割字符</span></span><br><span class="line"><span class="string"> 2 this is a test</span></span><br><span class="line"><span class="string"> 3 Are you like awk</span></span><br><span class="line"><span class="string"> This&#x27;</span>s a <span class="built_in">test</span></span><br><span class="line"> 10 There are orange apple</span><br><span class="line">---------------------------------------------------------------------------------------------</span><br><span class="line">$ awk <span class="string">&#x27;BEGIN&#123;FS=&quot;,&quot;&#125; &#123;print $1,$2&#125;&#x27;</span> 1.txt   <span class="comment"># 或者使用内建变量</span></span><br><span class="line"> 2 this is a <span class="built_in">test</span></span><br><span class="line"> 3 Are you like awk</span><br><span class="line"> This<span class="string">&#x27;s a test</span></span><br><span class="line"><span class="string"> 10 There are orange apple</span></span><br><span class="line"><span class="string">-----------------------------------------------------------------------------------------------------</span></span><br><span class="line"><span class="string">$ awk -F &#x27;</span>[ ,]<span class="string">&#x27;  &#x27;</span>&#123;<span class="built_in">print</span> <span class="variable">$1</span>,<span class="variable">$2</span>,<span class="variable">$5</span>&#125;<span class="string">&#x27;   1.txt   # 使用多个分隔符.先使用空格分割，然后对分割结果再使用&quot;,&quot;分割</span></span><br><span class="line"><span class="string"> 2 this test</span></span><br><span class="line"><span class="string"> 3 Are awk</span></span><br><span class="line"><span class="string"> This&#x27;</span>s a</span><br><span class="line"> 10 There apple</span><br><span class="line">-----------------------------------------------------------------------------------------------------</span><br><span class="line">$ awk -va=1 <span class="string">&#x27;&#123;print $1,$1+a&#125;&#x27;</span> 1.txt  <span class="comment"># -v  设置变量</span></span><br><span class="line"> 2 3</span><br><span class="line"> 3 4</span><br><span class="line"> This<span class="string">&#x27;s 1</span></span><br><span class="line"><span class="string"> 10 11</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">$ awk -va=1 -vb=s &#x27;</span>&#123;<span class="built_in">print</span> <span class="variable">$1</span>,<span class="variable">$1</span>+a,<span class="variable">$1b</span>&#125;<span class="string">&#x27; 1.txt</span></span><br><span class="line"><span class="string"> 2 3 2s</span></span><br><span class="line"><span class="string"> 3 4 3s</span></span><br><span class="line"><span class="string"> This&#x27;</span>s 1 This<span class="string">&#x27;ss</span></span><br><span class="line"><span class="string"> 10 11 10s</span></span><br><span class="line"><span class="string">-----------------------------------------------------------------------------------------------------</span></span><br><span class="line"><span class="string"> $ awk -f cal.awk log.txt #  awk -f &#123;awk脚本&#125; &#123;文件名&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="4-awk-常用系统变量"><a href="#4-awk-常用系统变量" class="headerlink" title="4.awk 常用系统变量"></a>4.awk 常用系统变量</h2><table>
+<thead>
+<tr>
+<th align="left">变量</th>
+<th align="left">描述（列举常用的，还有很多其他的没怎么常用）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">$n</td>
+<td align="left"><strong>$1 当前记录的第 1 个字段的内容</strong>。<strong>和 sed 中的$1 不同,sed 表示第一个参数</strong></td>
+</tr>
+<tr>
+<td align="left">$0</td>
+<td align="left">整行数据的内容</td>
+</tr>
+<tr>
+<td align="left">FS</td>
+<td align="left">字段分隔符 (默认是空格)</td>
+</tr>
+<tr>
+<td align="left">OFS</td>
+<td align="left">输出字段的分隔符（默认是空格）</td>
+</tr>
+<tr>
+<td align="left">RS</td>
+<td align="left">行分隔符（默认以\n 作为一行的结尾），单行分割成多行用到</td>
+</tr>
+<tr>
+<td align="left">NR</td>
+<td align="left">行号，从 1 开始，多文件时候也是连续接着计数</td>
+</tr>
+<tr>
+<td align="left">FNR</td>
+<td align="left">各文件分别计数的行号，多文件的时候会和 NR 不同，它会重新计数</td>
+</tr>
+<tr>
+<td align="left">NF</td>
+<td align="left">一行中字段数量，最后一个字段内容可以用<code>$NF</code>取出</td>
+</tr>
+<tr>
+<td align="left">ARGC</td>
+<td align="left">命令行参数的数目</td>
+</tr>
+<tr>
+<td align="left">ARGV</td>
+<td align="left">包含命令行参数的数组，第一个参数是命令 awk</td>
+</tr>
+</tbody></table>
+<p><img src="/images/commandawk1.png"><br><img src="/images/commandawk2.png"><br><img src="/images/commandawk3.png"><br><img src="/images/commandawk4.png"><br><img src="/images/commandawk5.png"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cat</span> log.txt</span><br><span class="line"> 2 this is a test1</span><br><span class="line"> 3 Are you like awk1</span><br><span class="line"> This<span class="string">&#x27;s a test1</span></span><br><span class="line"><span class="string"> 10 There are orange,apple,mongo</span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">$ awk <span class="string">&#x27;/re/ &#x27;</span> log.txt    <span class="comment"># 输出包含 &quot;re&quot; 的行</span></span><br><span class="line">---------------------------------- -----------</span><br><span class="line">3 Are you like awk</span><br><span class="line">10 There are orange,apple,mongo</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">$ awk <span class="string">&#x27;BEGIN&#123;IGNORECASE=1&#125; /this/&#x27;</span> log.txt <span class="comment">#忽略大小写</span></span><br><span class="line">---------------------------------------------</span><br><span class="line">2 this is a <span class="built_in">test</span></span><br><span class="line">This<span class="string">&#x27;s a test</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">$ awk &#x27;</span><span class="variable">$2</span> ~ /th/ &#123;<span class="built_in">print</span> <span class="variable">$2</span>,<span class="variable">$4</span>&#125;<span class="string">&#x27; log.txt  # 输出第二列包含 &quot;th&quot;，并打印第二列与第四列  ~代表模式</span></span><br><span class="line"><span class="string">---------------------------------------------</span></span><br><span class="line"><span class="string">this a</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">$ awk &#x27;</span><span class="variable">$2</span> !~ /th/ &#123;<span class="built_in">print</span> <span class="variable">$2</span>,<span class="variable">$4</span>&#125;<span class="string">&#x27; log.txt      #模式取反</span></span><br><span class="line"><span class="string">---------------------------------------------</span></span><br><span class="line"><span class="string">Are like</span></span><br><span class="line"><span class="string">a</span></span><br><span class="line"><span class="string">There orange,apple,mongo</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">$ awk &#x27;</span>!/th/ &#123;<span class="built_in">print</span> <span class="variable">$2</span>,<span class="variable">$4</span>&#125;<span class="string">&#x27; log.txt   #模式取反（和上面一个是一样的效果）</span></span><br><span class="line"><span class="string">---------------------------------------------</span></span><br><span class="line"><span class="string">Are like</span></span><br><span class="line"><span class="string">a</span></span><br><span class="line"><span class="string">There orange,apple,mongo</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">ls</span> -l *.txt | awk <span class="string">&#x27;&#123;sum+=$5&#125; END &#123;print sum&#125;&#x27;</span>  <span class="comment">#计算文件大小</span></span><br><span class="line">--------------------------------------------------</span><br><span class="line">666581</span><br><span class="line"></span><br><span class="line">$ awk <span class="string">&#x27;length&gt;80&#x27;</span> log.txt <span class="comment">#从文件中找出长度大于 80 的行</span></span><br><span class="line"></span><br><span class="line">$ <span class="built_in">seq</span> 9 | sed <span class="string">&#x27;H;g&#x27;</span> | awk -v RS=<span class="string">&#x27;&#x27;</span> <span class="string">&#x27;&#123;for(i=1;i&lt;=NF;i++)printf(&quot;%dx%d=%d%s&quot;, i, NR, i*NR, i==NR?&quot;\n&quot;:&quot;\t&quot;)&#125;&#x27;</span> <span class="comment">#打印九九乘法表</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="5-awk-循环和数组"><a href="#5-awk-循环和数组" class="headerlink" title="5.awk 循环和数组"></a>5.awk 循环和数组</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">awk <span class="string">&#x27;&#123;for(c=2;c&lt;=NF;c++) print $c&#125;&#x27;</span> 1.txt</span><br><span class="line">awk <span class="string">&#x27;&#123;sum=0;for(c=2;c&lt;NF;c++)  sum+=$c; print sum/(NF-1)&#125;&#x27;</span> 1.txt <span class="comment">#求每行的平均值</span></span><br><span class="line">awk <span class="string">&#x27;&#123;sum=0;for(c=2;c&lt;NF;c++)  sum+=$c;average[$1]=sum/(NF-1)&#125; END&#123;for(user in average) print user,average[user]&#125;&#x27;</span> 1.txt  <span class="comment">#用数组的方式求每行的平均数</span></span><br><span class="line">awk <span class="string">&#x27;&#123;sum=0;for(c=2;c&lt;NF;c++)  sum+=$c;average[$1]=sum/(NF-1)&#125; END&#123;for(user in average) sum2+=average[user];print sum2/NR&#125;&#x27;</span> 1.txt <span class="comment">#求总数的平均值</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/commandawk6.png"><br><img src="/images/commandawk7.png"><br><img src="/images/commandawk8.png" alt="求每行的平均数"><br><img src="/images/commandawk9.png"></p>
+<blockquote>
+<p>命令行参数数组<br>ARGC 命令行参数的数目<br>ARGV 包含命令行参数的数组</p>
+</blockquote>
+<p><img src="/images/commandawk10.png"></p>
+<h1 id="Linux-sed-用法"><a href="#Linux-sed-用法" class="headerlink" title="Linux-sed 用法"></a>Linux-sed 用法</h1><h2 id="1-sed-和-vim-的区别"><a href="#1-sed-和-vim-的区别" class="headerlink" title="1.sed 和 vim 的区别"></a>1.sed 和 vim 的区别</h2><p>sed（Stream Editor）是一种非交互式的行编辑器<br>vim 是交互式的文本编辑器</p>
+<ul>
+<li>sed 是以换行符以分隔单位，对文本进行逐行的处理。处理时，把当前处理的行存储在临时缓冲区中，称为『模式空间』（pattern space），接着用 sed 命令处理缓冲区中的内容，处理完成后，把缓冲区的内容送往屏幕。接着处理下一行，这样不断重复，直到文件末尾。</li>
+<li>文件内容并没有改变，除非你使用重定向存储输出。</li>
+<li>sed 主要用来自动编辑一个或多个文件，简化对文件的反复操作，编写转换程序等。</li>
+</ul>
+<h2 id="2-sed-参数"><a href="#2-sed-参数" class="headerlink" title="2. sed 参数"></a>2. sed 参数</h2><h3 id="用法：sed-选项-动作-filename"><a href="#用法：sed-选项-动作-filename" class="headerlink" title="用法：sed [选项] [动作] [filename]"></a>用法：sed [选项] [动作] [filename]</h3><table>
+<thead>
+<tr>
+<th>选项</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-n</td>
+<td align="left">组织默认输出，一般和动作 p 一起使用打印模式空间的内容</td>
+</tr>
+<tr>
+<td>-e</td>
+<td align="left">多个操作</td>
+</tr>
+<tr>
+<td>-i</td>
+<td align="left">直接修改源文件</td>
+</tr>
+<tr>
+<td>-r</td>
+<td align="left">动作中支持扩展正则表达式</td>
+</tr>
+<tr>
+<td>-f</td>
+<td align="left">将 sed 脚本卸载一个文件中， sed -f sedscript filename 可以加载执行 sed 命令</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>动作</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>s</td>
+<td align="left">直接进行替换（搭配正则表达式），例如 1,20s&#x2F;old&#x2F;new&#x2F;g 一般是替换符合条件的字符串而不是整行</td>
+</tr>
+<tr>
+<td>a</td>
+<td align="left">append 后面接字串，在下面新增一行</td>
+</tr>
+<tr>
+<td>i</td>
+<td align="left">insert 后面接字串，在上面插入一行</td>
+</tr>
+<tr>
+<td>d</td>
+<td align="left">delete,删除行，后面不接任何参数，直接删除地址表示的行</td>
+</tr>
+<tr>
+<td>c</td>
+<td align="left">取代行后面接字串</td>
+</tr>
+<tr>
+<td>p</td>
+<td align="left">print，打印模式空间的内容，通常和选项 <code>-n </code>一起使用</td>
+</tr>
+<tr>
+<td>w</td>
+<td align="left">write，将模式空间的内容写入到文件</td>
+</tr>
+</tbody></table>
+<h2 id="3-sed-使用"><a href="#3-sed-使用" class="headerlink" title="3.sed 使用"></a>3.sed 使用</h2><h3 id="1-替换行内部分内容"><a href="#1-替换行内部分内容" class="headerlink" title="1.替换行内部分内容"></a>1.替换行内部分内容</h3><ol>
+<li><code> sed  &#39;s/old/new/【参数】 &#39;  filename</code></li>
+</ol>
+<blockquote>
+<p>替换命令中一般用<code>/</code>作为分隔符，也可以用其他符号替代，s 后面就是分隔符，例如<code>sed -i &#39;s#11#99#&#39; 1.txt  </code></p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -i 选项是直接修改了源文件</span></span><br><span class="line">sed -i <span class="string">&#x27;s/af/bbbb&#x27;</span> 1.txt  <span class="comment">#每一行中只替换第1个af，该行后面的af不替换</span></span><br><span class="line">sed -i <span class="string">&#x27;s/af/bbbb/2&#x27;</span> 1.txt <span class="comment">#每一行中只替换第2个af，该行后面的af和第一个不替换</span></span><br><span class="line">sed -i <span class="string">&#x27;s/af/bbbb/g&#x27;</span> 1.txt <span class="comment"># 每一行中所有的af都将被替换成bbbb</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#替换中有普通元字符</span></span><br><span class="line">sed <span class="string">&#x27;s/^root//&#x27;</span> 1.txt <span class="comment">#匹配以root开头的那一行，并将root删掉</span></span><br><span class="line">sed <span class="string">&#x27;s/ab*/5555/&#x27;</span> 1.txt <span class="comment">#匹配一行中a开头后面的b出现0次或者多次，将其替换成5555</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#替换中有扩展元字符(+,?,管道符)，需要加上-r</span></span><br><span class="line">sed -r <span class="string">&#x27;s/ab+/5555/&#x27;</span> 1.txt <span class="comment">#匹配一行中a开头后面的b出现1次或者多次，将其替换成5555</span></span><br><span class="line">sed -r <span class="string">&#x27;s/ab？/5555/&#x27;</span> 1.txt <span class="comment">#匹配一行中a开头后面的b出现0次或者1次，将其替换成5555</span></span><br><span class="line">sed -r <span class="string">&#x27;s/a|b/5555/&#x27;</span> 1.txt <span class="comment">#匹配一行中的a或者b，将其替换成5555</span></span><br><span class="line">sed -r <span class="string">&#x27;s/(aa)|(bb)/5555/&#x27;</span> 1.txt <span class="comment">#匹配一行中的aa或者bb,要用括号括起来表示分组，将其替换成5555</span></span><br><span class="line">sed -r <span class="string">&#x27;s/(aa)|(bb)/\1\2/&#x27;</span> 1.txt <span class="comment">#分组还有个sed回调的功能，\1,\2就是再次引用aa和bb，放到被替换的位置</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/command1.png"></p>
+<ol start="2">
+<li>寻址匹配替换（默认是对每行进行操作，增加寻址后对匹配的行进行操作）<br><code>sed &#39;行号s/old/new/[参数]&#39;  filename</code><br><code>sed  &#39;/正则表达式/s/old/new/[参数] &#39;  filename</code></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">1.行号</span><br><span class="line">sed <span class="string">&#x27;1s/af/bbbb/&#x27;</span> 1.txt <span class="comment">#只在第1行匹配做替换</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#-n选项和标志位p,只打印替换成功的行</span></span><br><span class="line">sed -n <span class="string">&#x27;1,3s/af/bbbb/p&#x27;</span> 1.txt    <span class="comment">#第1至3行匹配做替换</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#标志位w将替换成功的行写入到a.txt中</span></span><br><span class="line">sed <span class="string">&#x27;1,$s/af/bbbb/w&#x27;</span> 1.txt /tmp/a.txt <span class="comment">#第1行到最后一行做匹配替换并将替换成功的行写入到 a.txt中</span></span><br><span class="line"></span><br><span class="line">2.正则表达式</span><br><span class="line">sed <span class="string">&#x27;/root/s/af/bbbb/&#x27;</span> 1.txt <span class="comment">#匹配有root的一行将改行的af替换成bbbb</span></span><br><span class="line">sed <span class="string">&#x27;/^bin/s/af/bbbb/&#x27;</span> 1.txt <span class="comment">#匹配以bin开头的那行，将该行的af替换成bbbb</span></span><br><span class="line">sed <span class="string">&#x27;/^bin/,$s/af/bbbb&#x27;</span> 1.txt <span class="comment">#匹配以bin开头到最后一行的，每一行第一个替换成bbbb</span></span><br><span class="line"></span><br><span class="line">3.寻址可以匹配多条命令</span><br><span class="line">sed <span class="string">&#x27;/bin/&#123;s/a/b/;s/1/2/;=&#125;&#x27;</span> 1.txt <span class="comment">#匹配有bin的行，将该行中a替换成b,1替换成2</span></span><br><span class="line"><span class="comment">#打印行号命令=</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/command2.png"><br><img src="/images/command3.png"></p>
+<h3 id="2-删除"><a href="#2-删除" class="headerlink" title="2.删除"></a>2.删除</h3><blockquote>
+<p>删除模式空间内容，改变脚本的控制流，读取新的输入行<br>意味着 d 后面的脚本不会被执行</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sed <span class="string">&#x27;[寻址]/d&#x27;</span> filename</span><br><span class="line">sed <span class="string">&#x27;/ab/d&#x27;</span> 1.txt  <span class="comment"># 删除的是有ab一整行，并不是删除ab两个字符</span></span><br><span class="line">sed <span class="string">&#x27;/ab/d;s/a/n/&#x27;</span> 1.txt</span><br><span class="line"><span class="comment">#删除有ab的一行后，后面的将改行的a替换成n这条命令是不会被执行的，</span></span><br><span class="line"><span class="comment">#因为d删除过后就读取了新的输入行，改变了脚本的控制流，后面的命令不会被执行</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-插入和改写"><a href="#3-插入和改写" class="headerlink" title="3.插入和改写"></a>3.插入和改写</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sed <span class="string">&#x27;/ab/i hello&#x27;</span> 1.txt  <span class="comment">#在匹配ab的行的上一行插入hello</span></span><br><span class="line">sed <span class="string">&#x27;/ab/a hello&#x27;</span> 1.txt  <span class="comment">#在匹配ab的行的下一行插入hello</span></span><br><span class="line">sed <span class="string">&#x27;/ab/c hello&#x27;</span> 1.txt  <span class="comment">#将匹配的ab那一行改写成hello</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-读文件，写文件，打印退出"><a href="#4-读文件，写文件，打印退出" class="headerlink" title="4.读文件，写文件，打印退出"></a>4.读文件，写文件，打印退出</h3><blockquote>
+<p>读文件命令 r<br>写文件命令 w<br>下一行命令 n<br>打印行号&#x3D;<br>打印命令 p<br>退出命令 q</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sed <span class="string">&#x27;/ab/r afile&#x27;</span> 1.txt  <span class="comment">#如果想要改写的字符串很长，可以写在afile里面，用r将匹配ab的那一行用afile的内容改写</span></span><br><span class="line">sed <span class="string">&#x27;/ab/r afile&#x27;</span> 1.txt &gt; /tmp/2.txt  <span class="comment">#读取afile的内容来改写1.txt中匹配的ab的那一行，并将结果追加到2.txt中</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 打印文件中1-10行，用p和q，谁的效率更高？？</span></span><br><span class="line">$ <span class="built_in">seq</span> 1 1000000 &gt; lines.txt     <span class="comment">#seq指令创建1-1000000并递增</span></span><br><span class="line">$ <span class="built_in">wc</span> -l lines.txt      <span class="comment">#wc看文件行数</span></span><br><span class="line">1000000 lines.txt</span><br><span class="line"></span><br><span class="line">$ <span class="keyword">time</span> sed -n <span class="string">&#x27;1,10p&#x27;</span> lines.txt    <span class="comment">#time查看运行时间  p打印1-10行，后面的还是会读入缓存区</span></span><br><span class="line">real	0m0.044s</span><br><span class="line"></span><br><span class="line">$ <span class="keyword">time</span> sed <span class="string">&#x27;10q&#x27;</span> lines.txt       <span class="comment">#time查看运行时间   q是到第10行就退出，后面就不会再读取了</span></span><br><span class="line">real	0m0.004s</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-sed-多行模式空间"><a href="#4-sed-多行模式空间" class="headerlink" title="4.sed 多行模式空间"></a>4.sed 多行模式空间</h2><blockquote>
+<p>为什么要有多行模式？<br>配置文件一般为单行出现，但是也有使用 XML 或者 JSON 格式的配置文件，为多行出现，例如 key 和 value，key 在一行，value 在另外一行。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>多行模式</th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>N</td>
+<td align="left">追加下一行到模式空间,同时将两行看做一行，但是两行之间依然含有\n 换行符，如果命令未执行成功,则放弃之后任何命令</td>
+</tr>
+<tr>
+<td>P</td>
+<td align="left">打印模式空间中的第一个字符到第一个换行符</td>
+</tr>
+<tr>
+<td>D</td>
+<td align="left">删除当前模式空间开端至\n 的内容，放弃之后的命令，但是对剩余模式空间重新执行 sed。</td>
+</tr>
+<tr>
+<td>n</td>
+<td align="left">提前读取下一行 ，覆盖模型空间前一行，如果命令未执行成功，则放弃之后的任何命令</td>
+</tr>
+<tr>
+<td>p</td>
+<td align="left">打印当前模式空间内容，追加到默认输出之后</td>
+</tr>
+<tr>
+<td>d</td>
+<td align="left">删除当前模式空间内容，并放弃之后的命令，并对新读取的内容，从头执行 sed。</td>
+</tr>
+<tr>
+<td>y</td>
+<td align="left">字符转换：y&#x2F;abcde&#x2F;ABCDE&#x2F; ：将字符转换成大写</td>
+</tr>
+</tbody></table>
+<p><img src="/images/command4.png"><br><img src="/images/command5.png"></p>
+<h3 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h3><ol>
+<li>从文件中读取偶数行 <code>sed -n &#39;n;p&#39; 1.txt</code></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cat</span> 1.txt</span><br><span class="line">111</span><br><span class="line">222</span><br><span class="line">333</span><br><span class="line">444</span><br><span class="line">555</span><br><span class="line"></span><br><span class="line">$ sed -n <span class="string">&#x27;n;p&#x27;</span> 1.txt</span><br><span class="line">222</span><br><span class="line">444</span><br><span class="line"><span class="comment">#读取第一行111，执行n命令提前读取下一行就是222，此时模式空间的值为222，再执行p，打印模式空间的222</span></span><br><span class="line"><span class="comment">#之后读取333，执行n命令，此时模式空间为444，p打印444</span></span><br><span class="line"><span class="comment">#之后读取555，执行n命令，没有下一行了，n命令未执行成功，后面的p命令就放弃执行了。</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>从文件中读取奇数行 <code>sed -n &#39;$!N;P&#39; 1.txt</code></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ sed -n <span class="string">&#x27;$!N;P&#x27;</span> 1.txt   <span class="comment">#大写的P哦</span></span><br><span class="line">111</span><br><span class="line">333</span><br><span class="line">555</span><br><span class="line"><span class="comment">#先读取111，$!(不是最后一行)条件满足，执行N命令此时模式空间值为111\n222，执行P命令，打印第一行到\n，结果为111</span></span><br><span class="line"><span class="comment">#再读取333，$!条件满足，执行N为333\n444，执行P，打印333</span></span><br><span class="line"><span class="comment">#再读取555为最后一行，$!条件不满足，跳过N命令，执行P，打印555</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">用d也可以实现读取奇数行</span><br><span class="line">$ sed <span class="string">&#x27;n;d&#x27;</span> 1.txt</span><br><span class="line">111</span><br><span class="line">333</span><br><span class="line">555</span><br><span class="line"><span class="comment">#先读取111，执行n，模式空间为222，执行d，删除此时模式空间的222</span></span><br><span class="line"><span class="comment">#再读取333，执行n，此时模式空间值为444，执行d，删除444</span></span><br><span class="line"><span class="comment">#再读取555，执行n命令，没有下一行了，n命令未执行成功，后面的d命令不执行</span></span><br><span class="line"><span class="comment">#因为没有-n参数，所以输入111\n333\n555</span></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>从文件中读取最后一行 <code>sed &#39;N;D&#39; 1.txt</code></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ sed <span class="string">&#x27;N;D&#x27;</span> 1.txt</span><br><span class="line">666</span><br><span class="line"><span class="comment">#N将下一行追加到模式空间中</span></span><br><span class="line"><span class="comment">#执行N，此时模式空间为111\n222，执行D得222，</span></span><br><span class="line"><span class="comment">#执行N，此时模式空间为222\n333，执行D得333，</span></span><br><span class="line"><span class="comment">#执行N，此时模式空间为333\n444，执行D得444，</span></span><br><span class="line"><span class="comment">#执行N，此时模式空间为444\n555，执行D得555，</span></span><br><span class="line"><span class="comment">#再执行N，没下一行追加了执行失败，后面D不执行，无-n选项，最后结果就是555</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="5-sed-保持空间"><a href="#5-sed-保持空间" class="headerlink" title="5.sed 保持空间"></a>5.sed 保持空间</h2><blockquote>
+<p>保持空间也是多行的一种操作方式<br>将内容暂存在保持空间，便于多行处理</p>
+<table>
+<thead>
+<tr>
+<th>保持空间</th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>h</td>
+<td align="left">将当前模式空间中内容覆盖至保持空间，原来模式空间的内容被清空</td>
+</tr>
+<tr>
+<td>H</td>
+<td align="left">将当前模式空间中的内容追加至保持空间</td>
+</tr>
+<tr>
+<td>g</td>
+<td align="left">将当前保持空间中内容覆盖至模式空间，原来模式空间的内容被清空</td>
+</tr>
+<tr>
+<td>G</td>
+<td align="left">将当前保持空间中的内容追加至模式空间</td>
+</tr>
+<tr>
+<td>x</td>
+<td align="left">换模式空间和保持空间内容</td>
+</tr>
+</tbody></table>
+</blockquote>
+<ol>
+<li>实现行数反转</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">head</span> -6 /etc/passwd | <span class="built_in">cat</span> -n | <span class="built_in">tac</span></span><br><span class="line"><span class="built_in">cat</span> -n /etc/passwd | head-6 |sed -n <span class="string">&#x27;1h;1!G;$!x;$p&#x27;</span></span><br><span class="line"><span class="built_in">cat</span> -n /etc/passwd | head-6 |sed -n <span class="string">&#x27;1!G;h;$p&#x27;</span></span><br><span class="line"><span class="built_in">cat</span> -n /etc/passwd | head-6 |sed <span class="string">&#x27;1!G;h;$!d&#x27;</span></span><br><span class="line"><span class="comment"># 1!G：第1行不执行“G”命令，从第2行开始执行</span></span><br><span class="line"><span class="comment"># $!d：最后一行不删除（保留最后1行）</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>行列转化</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cat</span> 1.txt</span><br><span class="line">111</span><br><span class="line">222</span><br><span class="line">333</span><br><span class="line">444</span><br><span class="line">555</span><br><span class="line">666</span><br><span class="line">$ sed -ne <span class="string">&#x27;H;$&#123;x;s/\n/ /g;p&#125;&#x27;</span> 1.txt</span><br><span class="line"> 111 222 333 444 555 666</span><br></pre></td></tr></table></figure>
+
+<h1 id="git-常用操作"><a href="#git-常用操作" class="headerlink" title="git 常用操作"></a>git 常用操作</h1><h2 id="1-配置-ssh"><a href="#1-配置-ssh" class="headerlink" title="1.配置 ssh"></a>1.配置 ssh</h2><h3 id="1-1-本地上生成公钥私钥"><a href="#1-1-本地上生成公钥私钥" class="headerlink" title="1.1 本地上生成公钥私钥"></a>1.1 本地上生成公钥私钥</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t ed25519 -C <span class="string">&quot;email&quot;</span> -f ~/.ssh/filename</span><br><span class="line">ssh-keygen -t rsa -b 4096 -C <span class="string">&quot;email&quot;</span> -f ~/.ssh/filename</span><br><span class="line">ssh-keygen -t rsa -b 4096 -C <span class="string">&quot;email&quot;</span></span><br><span class="line">ssh-keygen -t rsa -b 4096 -C <span class="string">&quot;email&quot;</span> -f <span class="string">&quot;/C/Users/.ssh/filename&quot;</span>  <span class="comment"># 自定义密钥位置和密钥文件名</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-公钥私钥放到对应-bucket-github-上"><a href="#1-2-公钥私钥放到对应-bucket-github-上" class="headerlink" title="1.2 公钥私钥放到对应 bucket&#x2F;github 上"></a>1.2 公钥私钥放到对应 bucket&#x2F;github 上</h3><h3 id="1-3-配置-config-文件"><a href="#1-3-配置-config-文件" class="headerlink" title="1.3 配置 config 文件"></a>1.3 配置 config 文件</h3><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#公司电脑host可以任意取名，但是拉取时要更改为git@name1Bitbucket.org，IdentityFile为私钥路径</span></span><br><span class="line">Host bitbucket</span><br><span class="line">HostName bitbucket.org</span><br><span class="line">IdentityFile C:/Users/.ssh/filename</span><br><span class="line">User email</span><br><span class="line"><span class="comment">#公司电脑</span></span><br><span class="line">Host github</span><br><span class="line">HostName github.com</span><br><span class="line">IdentityFile C:/Users/.ssh/id_rsa_custom</span><br><span class="line">User email</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-4-将私钥添加到本地-ssh-代理中"><a href="#1-4-将私钥添加到本地-ssh-代理中" class="headerlink" title="1.4 将私钥添加到本地 ssh 代理中"></a>1.4 将私钥添加到本地 ssh 代理中</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">ssh-add id_ed25519_bucket_name1</span><br><span class="line">ssh-add id_rsa_github_name2</span><br><span class="line">ssh-add C:\Users\.ssh\id_ed25519_bucket_name1</span><br><span class="line">ssh-add C:\Users\.ssh\id_rsa</span><br><span class="line"><span class="comment">#若提示Could not open a connection to your authentication agent.意味着SSH代理没有正确运行</span></span><br><span class="line"><span class="comment">#a. 运行以下命令来检查SSH代理正在运行，这会启动 SSH 代理并输出相应的环境变量：</span></span><br><span class="line"><span class="built_in">eval</span> <span class="string">&quot;<span class="subst">$(ssh-agent -s)</span>&quot;</span></span><br><span class="line"><span class="comment">#b. 如果 SSH 代理已经在运行，但仍然出现问题，可能是因为 SSH_AUTH_SOCK 环境变量没有设置正确。你可以手动设置该变量：</span></span><br><span class="line"><span class="built_in">export</span> SSH_AUTH_SOCK=$(find /tmp/ -maxdepth 2 -<span class="built_in">type</span> s -path <span class="string">&quot;/ssh-&quot;</span> -name <span class="string">&quot;agent*&quot;</span> 2&gt;/dev/null | <span class="built_in">head</span> -n 1)</span><br><span class="line"><span class="comment">#c. 如果上述步骤都没有解决问题，尝试重新启动 SSH 代理：</span></span><br><span class="line">ssh-agent -k</span><br><span class="line"><span class="built_in">eval</span> <span class="string">&quot;<span class="subst">$(ssh-agent -s)</span>&quot;</span></span><br><span class="line"><span class="comment">#最后再次尝试运行ssh-add 命令，应该可以成功添加私钥到 SSH 代理中。</span></span><br><span class="line"><span class="comment">#为了检验本地是否添加成功，可以使用ssh-add -l命令进行查看</span></span><br><span class="line">  <span class="comment">#d. 测试连通性，如果host任务取名得使用 ssh -T git@host</span></span><br><span class="line">ssh -T git@bitbucket</span><br><span class="line"><span class="built_in">eval</span> <span class="string">&quot;<span class="subst">$(ssh-agent -s)</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-5-配置全局-本地-name-email"><a href="#1-5-配置全局-本地-name-email" class="headerlink" title="1.5 配置全局&#x2F;本地 name&#x2F;email"></a>1.5 配置全局&#x2F;本地 name&#x2F;email</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#全局</span></span><br><span class="line">git config --global user.name <span class="string">&quot;name1&quot;</span></span><br><span class="line">git config --global user.email <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="comment">#本地</span></span><br><span class="line">git config --<span class="built_in">local</span> user.name <span class="string">&quot;name2&quot;</span></span><br><span class="line">git config --<span class="built_in">local</span> user.email <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="comment">#清理全局</span></span><br><span class="line">git config --global --unset-all user.name</span><br><span class="line">git config --global --unset-all user.email</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-6-通过配置文件配置指定目录使用-local-配置"><a href="#1-6-通过配置文件配置指定目录使用-local-配置" class="headerlink" title="1.6 通过配置文件配置指定目录使用 local 配置"></a>1.6 通过配置文件配置指定目录使用 local 配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">git config --show-origin --get user.name</span><br><span class="line"></span><br><span class="line"><span class="comment">#1.找到C:\Users\.gitconfig文件添加</span></span><br><span class="line">  <span class="comment">#配置name1目录</span></span><br><span class="line">  [includeIf <span class="string">&quot;gitdir:D:/name1/&quot;</span>]</span><br><span class="line">  path = D:/name1/.gitconfig</span><br><span class="line">  <span class="comment">#配置name2目录</span></span><br><span class="line">  [includeIf <span class="string">&quot;gitdir:D:/name2/&quot;</span>]</span><br><span class="line">  path = D:/name2/.gitconfig</span><br><span class="line"></span><br><span class="line"><span class="comment">#2.找到D:/name1/.gitconfig内容</span></span><br><span class="line">  [user]</span><br><span class="line">  name = name1</span><br><span class="line">  email = email</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-7-拉取代码的时候得用配置的-host"><a href="#1-7-拉取代码的时候得用配置的-host" class="headerlink" title="1.7 拉取代码的时候得用配置的 host"></a>1.7 拉取代码的时候得用配置的 host</h3><p><code>git clone [git@bitbucket.org](mailto:git@bitbucket.org):name1/reponame.git</code> &#x2F;&#x2F;原仓库地址<br><code>git clone [git@name1Bitbucket.org](mailto:git@name1Bitbucket.org):name1/reponame.git</code>  &#x2F;&#x2F; 使用时用别名</p>
+<h2 id="2-git-操作"><a href="#2-git-操作" class="headerlink" title="2. git 操作"></a>2. git 操作</h2><h3 id="2-1-合并最近两次-commit"><a href="#2-1-合并最近两次-commit" class="headerlink" title="2.1 合并最近两次 commit"></a>2.1 合并最近两次 commit</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git rebase -i HEAD~2</span><br><span class="line">pick</span><br><span class="line">s</span><br><span class="line">f   跳过 commit 修改</span><br><span class="line">git push origin -f 强制推送</span><br><span class="line">只修改 commit 的内容 改成 reword</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-版本打上-tag"><a href="#2-2-版本打上-tag" class="headerlink" title="2.2 版本打上 tag"></a>2.2 版本打上 tag</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git tag project-0.8.0 f3bef68</span><br><span class="line">git push origin project-0.8.0</span><br><span class="line">git tag | grep <span class="string">&quot;0.8&quot;</span>   查看已存在的 tag</span><br><span class="line">git tag -d 0.8.0     删除 tag</span><br><span class="line">git push origin :refs/tags/0.8.0   并删除远程仓库一推送的 tag</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-服务器上更新最新代码"><a href="#2-3-服务器上更新最新代码" class="headerlink" title="2.3 服务器上更新最新代码"></a>2.3 服务器上更新最新代码</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">git remote update</span><br><span class="line">git pull</span><br><span class="line">丢弃服务器上的的所有更改,这将重置仓库到最后一次的提交状态，并且删除所有未跟踪的文件和目录。</span><br><span class="line">git reset --hard</span><br><span class="line">git clean -fdx</span><br><span class="line">git pull origin main</span><br><span class="line">频繁需要这样的操作，您可以编写一个简单的 Git 别名或脚本来自动化这个过程。例如，您可以在 Git 配置中添加一个别名：</span><br><span class="line">git config --global alias.pull-reset <span class="string">&#x27;!git reset --hard HEAD &amp;&amp; git pull&#x27;</span></span><br><span class="line">之后，您可以通过 git pull-reset 命令来执行上述步骤。这个别名会先重置本地更改，然后拉取远程分支的最新内容。</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-4-解决冲突"><a href="#2-4-解决冲突" class="headerlink" title="2.4 解决冲突"></a>2.4 解决冲突</h3><p>1.保存本地修改：如果你希望保留这些本地修改的话，可以先将这些文件备份到其他目录中，然后再进行拉取操作。你可以使用如下命令将这些文件移动到其他目录：<br>mv Dockerfile &#x2F;path&#x2F;to&#x2F;backup&#x2F;location<br>mv docker-compose.yml &#x2F;path&#x2F;to&#x2F;backup&#x2F;location<br>2.丢弃本地修改：如果你不关心本地所做的修改，你可以直接丢弃它们。运行以下命令来清理未跟踪的文件并拉取最新代码：<br>git clean -f<br>git reset –hard HEAD<br>git pull</p>
+<h3 id="2-5-替换远程仓库-url"><a href="#2-5-替换远程仓库-url" class="headerlink" title="2.5 替换远程仓库 url"></a>2.5 替换远程仓库 url</h3><p>git remote set-url origin new_url.git<br>git remote -v</p>
+<h3 id="2-6-将-public-仓库提交自己-private-仓库并接收-public-仓库更新"><a href="#2-6-将-public-仓库提交自己-private-仓库并接收-public-仓库更新" class="headerlink" title="2.6 将 public 仓库提交自己 private 仓库并接收 public 仓库更新"></a>2.6 将 public 仓库提交自己 private 仓库并接收 public 仓库更新</h3><ol>
+<li>本地拉取 public 仓库，改名为 my-full-stack<br>git clone <a target="_blank" rel="noopener" href="https://github.com/tiangolo/full-stack-fastapi-template.git">https://github.com/tiangolo/full-stack-fastapi-template.git</a> my-full-stack</li>
+<li>设置 private 仓库为新存储库<br>git remote set-url origin <a href="mailto:git@github.com">git@github.com</a>:MyName&#x2F;my-full-stack.git</li>
+<li>查看是否关联 git remote -v</li>
+<li>将此存储库添加为另一个“远程”，以便稍后获取更新：<br>git remote add upstream <a target="_blank" rel="noopener" href="https://github.com/tiangolo/full-stack-fastapi-template.git">https://github.com/tiangolo/full-stack-fastapi-template.git</a></li>
+<li>将代码推送到新 private 存储库：<br>git push -u origin master</li>
+<li>一些搞好之后，在私有的 my-full-stack 上进行开发更改了模版之后，还希望从原始模板 public 仓库中获取更新，在不合并的情况下拉取最新更改：<br>git pull –no-commit upstream master<br>这将从此模板下载最新的更改而不提交它们，这样您就可以在提交之前检查一切是否正确<br>如果存在冲突，请在编辑器中解决。完成后，提交更改<br>git merge –continue</li>
+<li>本地仓库提交到远程仓库<br>git add.<br>git commit -m “commit message”<br>git remote add origin <a href="mailto:git@github.com">git@github.com</a>:MyName&#x2F;repo.git<br>git push -u origin main</li>
+</ol>
+<h3 id="2-7-分支管理"><a href="#2-7-分支管理" class="headerlink" title="2.7 分支管理"></a>2.7 分支管理</h3><p><code>git branch -a</code> 查看远程分支<br><code>git branch</code> 查看本地分支<br><code>git checkout 分支名</code> 切换分支名<br><code>git checkout -b 分支名</code> 创建并切换到分支<br><code>git branch -d 分支名</code> 删除分支名<br><code>git branch -D 分支名</code> 强行删除分支名<br><code>git merge 分支名</code> 合并某分支到当前分支</p>
+<p><img src="/images/gitmerge.png"></p>
+<h2 id="3-commit-规范"><a href="#3-commit-规范" class="headerlink" title="3. commit 规范"></a>3. commit 规范</h2><p><img src="/images/gitcommit.png"></p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt=" 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"><i class="fa fa-tag"></i> Linux</a>
+              <a href="/tags/Shell/" rel="tag"><i class="fa fa-tag"></i> Shell</a>
+              <a href="/tags/Redis/" rel="tag"><i class="fa fa-tag"></i> Redis</a>
+              <a href="/tags/Docker/" rel="tag"><i class="fa fa-tag"></i> Docker</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/post/python-0-venv.html" rel="next" title="python虚拟环境">
+      python虚拟环境 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux-%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4"><span class="nav-number">1.</span> <span class="nav-text">Linux 基础命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%89%93%E5%8C%85%E8%A7%A3%E5%8E%8B%E7%BC%A9"><span class="nav-number">1.1.</span> <span class="nav-text">1.打包解压缩</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-ls-%E7%9A%84%E5%8F%82%E6%95%B0"><span class="nav-number">1.2.</span> <span class="nav-text">2.ls 的参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E6%96%87%E4%BB%B6%E5%8F%8A%E6%96%87%E4%BB%B6%E5%A4%B9%E6%93%8D%E4%BD%9C"><span class="nav-number">1.3.</span> <span class="nav-text">3.文件及文件夹操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Vim-%E6%93%8D%E4%BD%9C"><span class="nav-number">1.4.</span> <span class="nav-text">4.Vim 操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%8F%92%E5%85%A5%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.4.1.</span> <span class="nav-text">1.插入模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%AD%A3%E5%B8%B8%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.4.2.</span> <span class="nav-text">2.正常模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.4.3.</span> <span class="nav-text">3.命令模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%8F%AF%E8%A7%86%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.4.4.</span> <span class="nav-text">4.可视模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E7%94%A8%E6%88%B7%E5%92%8C%E7%94%A8%E6%88%B7%E7%BB%84%E7%AE%A1%E7%90%86"><span class="nav-number">1.5.</span> <span class="nav-text">5.用户和用户组管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E6%96%87%E4%BB%B6%E5%92%8C%E7%9B%AE%E5%BD%95%E7%9A%84%E6%9D%83%E9%99%90"><span class="nav-number">1.6.</span> <span class="nav-text">6.文件和目录的权限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E8%BF%9B%E7%A8%8B%E5%92%8C%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.7.</span> <span class="nav-text">7.进程和文件系统</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#shell-%E8%84%9A%E6%9C%AC"><span class="nav-number">2.</span> <span class="nav-text">shell 脚本</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux-awk-%E7%94%A8%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">Linux-awk 用法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-awk-%E5%92%8C-sed-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">3.1.</span> <span class="nav-text">1.awk 和 sed 的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-awk-%E4%BD%BF%E7%94%A8"><span class="nav-number">3.2.</span> <span class="nav-text">2.awk 使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-awk-%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="nav-number">3.3.</span> <span class="nav-text">3.awk 基本用法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-awk-%E5%B8%B8%E7%94%A8%E7%B3%BB%E7%BB%9F%E5%8F%98%E9%87%8F"><span class="nav-number">3.4.</span> <span class="nav-text">4.awk 常用系统变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-awk-%E5%BE%AA%E7%8E%AF%E5%92%8C%E6%95%B0%E7%BB%84"><span class="nav-number">3.5.</span> <span class="nav-text">5.awk 循环和数组</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux-sed-%E7%94%A8%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">Linux-sed 用法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-sed-%E5%92%8C-vim-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">4.1.</span> <span class="nav-text">1.sed 和 vim 的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-sed-%E5%8F%82%E6%95%B0"><span class="nav-number">4.2.</span> <span class="nav-text">2. sed 参数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E6%B3%95%EF%BC%9Ased-%E9%80%89%E9%A1%B9-%E5%8A%A8%E4%BD%9C-filename"><span class="nav-number">4.2.1.</span> <span class="nav-text">用法：sed [选项] [动作] [filename]</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-sed-%E4%BD%BF%E7%94%A8"><span class="nav-number">4.3.</span> <span class="nav-text">3.sed 使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%9B%BF%E6%8D%A2%E8%A1%8C%E5%86%85%E9%83%A8%E5%88%86%E5%86%85%E5%AE%B9"><span class="nav-number">4.3.1.</span> <span class="nav-text">1.替换行内部分内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%88%A0%E9%99%A4"><span class="nav-number">4.3.2.</span> <span class="nav-text">2.删除</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%8F%92%E5%85%A5%E5%92%8C%E6%94%B9%E5%86%99"><span class="nav-number">4.3.3.</span> <span class="nav-text">3.插入和改写</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E8%AF%BB%E6%96%87%E4%BB%B6%EF%BC%8C%E5%86%99%E6%96%87%E4%BB%B6%EF%BC%8C%E6%89%93%E5%8D%B0%E9%80%80%E5%87%BA"><span class="nav-number">4.3.4.</span> <span class="nav-text">4.读文件，写文件，打印退出</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-sed-%E5%A4%9A%E8%A1%8C%E6%A8%A1%E5%BC%8F%E7%A9%BA%E9%97%B4"><span class="nav-number">4.4.</span> <span class="nav-text">4.sed 多行模式空间</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B"><span class="nav-number">4.4.1.</span> <span class="nav-text">案例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-sed-%E4%BF%9D%E6%8C%81%E7%A9%BA%E9%97%B4"><span class="nav-number">4.5.</span> <span class="nav-text">5.sed 保持空间</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#git-%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C"><span class="nav-number">5.</span> <span class="nav-text">git 常用操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E9%85%8D%E7%BD%AE-ssh"><span class="nav-number">5.1.</span> <span class="nav-text">1.配置 ssh</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E6%9C%AC%E5%9C%B0%E4%B8%8A%E7%94%9F%E6%88%90%E5%85%AC%E9%92%A5%E7%A7%81%E9%92%A5"><span class="nav-number">5.1.1.</span> <span class="nav-text">1.1 本地上生成公钥私钥</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E5%85%AC%E9%92%A5%E7%A7%81%E9%92%A5%E6%94%BE%E5%88%B0%E5%AF%B9%E5%BA%94-bucket-github-%E4%B8%8A"><span class="nav-number">5.1.2.</span> <span class="nav-text">1.2 公钥私钥放到对应 bucket&#x2F;github 上</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E9%85%8D%E7%BD%AE-config-%E6%96%87%E4%BB%B6"><span class="nav-number">5.1.3.</span> <span class="nav-text">1.3 配置 config 文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-%E5%B0%86%E7%A7%81%E9%92%A5%E6%B7%BB%E5%8A%A0%E5%88%B0%E6%9C%AC%E5%9C%B0-ssh-%E4%BB%A3%E7%90%86%E4%B8%AD"><span class="nav-number">5.1.4.</span> <span class="nav-text">1.4 将私钥添加到本地 ssh 代理中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-5-%E9%85%8D%E7%BD%AE%E5%85%A8%E5%B1%80-%E6%9C%AC%E5%9C%B0-name-email"><span class="nav-number">5.1.5.</span> <span class="nav-text">1.5 配置全局&#x2F;本地 name&#x2F;email</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-6-%E9%80%9A%E8%BF%87%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E9%85%8D%E7%BD%AE%E6%8C%87%E5%AE%9A%E7%9B%AE%E5%BD%95%E4%BD%BF%E7%94%A8-local-%E9%85%8D%E7%BD%AE"><span class="nav-number">5.1.6.</span> <span class="nav-text">1.6 通过配置文件配置指定目录使用 local 配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-7-%E6%8B%89%E5%8F%96%E4%BB%A3%E7%A0%81%E7%9A%84%E6%97%B6%E5%80%99%E5%BE%97%E7%94%A8%E9%85%8D%E7%BD%AE%E7%9A%84-host"><span class="nav-number">5.1.7.</span> <span class="nav-text">1.7 拉取代码的时候得用配置的 host</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-git-%E6%93%8D%E4%BD%9C"><span class="nav-number">5.2.</span> <span class="nav-text">2. git 操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E5%90%88%E5%B9%B6%E6%9C%80%E8%BF%91%E4%B8%A4%E6%AC%A1-commit"><span class="nav-number">5.2.1.</span> <span class="nav-text">2.1 合并最近两次 commit</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E7%89%88%E6%9C%AC%E6%89%93%E4%B8%8A-tag"><span class="nav-number">5.2.2.</span> <span class="nav-text">2.2 版本打上 tag</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E6%9B%B4%E6%96%B0%E6%9C%80%E6%96%B0%E4%BB%A3%E7%A0%81"><span class="nav-number">5.2.3.</span> <span class="nav-text">2.3 服务器上更新最新代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-%E8%A7%A3%E5%86%B3%E5%86%B2%E7%AA%81"><span class="nav-number">5.2.4.</span> <span class="nav-text">2.4 解决冲突</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-%E6%9B%BF%E6%8D%A2%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93-url"><span class="nav-number">5.2.5.</span> <span class="nav-text">2.5 替换远程仓库 url</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-%E5%B0%86-public-%E4%BB%93%E5%BA%93%E6%8F%90%E4%BA%A4%E8%87%AA%E5%B7%B1-private-%E4%BB%93%E5%BA%93%E5%B9%B6%E6%8E%A5%E6%94%B6-public-%E4%BB%93%E5%BA%93%E6%9B%B4%E6%96%B0"><span class="nav-number">5.2.6.</span> <span class="nav-text">2.6 将 public 仓库提交自己 private 仓库并接收 public 仓库更新</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-7-%E5%88%86%E6%94%AF%E7%AE%A1%E7%90%86"><span class="nav-number">5.2.7.</span> <span class="nav-text">2.7 分支管理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-commit-%E8%A7%84%E8%8C%83"><span class="nav-number">5.3.</span> <span class="nav-text">3. commit 规范</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description">Fake it till you make it!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="mailto:tishaqin@gmail.com" title="E-Mail → mailto:tishaqin@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/TishaQin" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;TishaQin" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/weixin_43623871" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;weixin_43623871" rel="noopener" target="_blank"><i class="fab fa-cuttlefish fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzkwODY2OTc2MQ==" title="微信公众号 → https:&#x2F;&#x2F;mp.weixin.qq.com&#x2F;mp&#x2F;profile_ext?action&#x3D;home&amp;__biz&#x3D;MzkwODY2OTc2MQ&#x3D;&#x3D;" rel="noopener" target="_blank"><i class="fab fa-weixin fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">TISHA@HD</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">126k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:55</span>
+</div>
+
+<div>
+  <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+  <script>
+      var now = new Date();
+      function createtime() {
+          var grt= new Date("08/24/2024 00:00:00");
+          now.setTime(now.getTime()+250);
+          days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+          hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+          if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+          mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+          seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+          snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+          document.getElementById("timeDate").innerHTML = "建站 "+dnum+" 天 ";
+          document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+      }
+  setInterval("createtime()",250);
+  </script>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'Ya3zOA5Mu8o4wbWCkMJooFOx-gzGzoHsz',
+      appKey     : 'qp2hI1mmbcy43clW5ONpT3Z8',
+      placeholder: "Just go go",
+      avatar     : 'monsterid',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-CN' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // 查找所有 div.table-container 元素
+    const tableContainers = document.querySelectorAll(".table-container");
+
+    // 遍历所有 div.table-container 元素
+    tableContainers.forEach(function(tableContainer) {
+      // 获取 div.table-container 内的行数（假设每行对应一个 <span>）
+      const lineCount = tableContainer.querySelectorAll("tbody > tr > td.code > pre > span").length;
+
+      // 检查行数是否大于 5
+      if (lineCount > 5) {
+        // 默认添加 "code-hidden" 类
+        tableContainer.classList.add("code-hidden");
+      }
+
+      // 检查 div.table-container 前面是否有 figcaption 元素，如果没有则添加一个
+      const prevElement = tableContainer.previousElementSibling;
+      let figcaption;
+      let iElement;
+      if (!prevElement || prevElement.tagName.toLowerCase() !== "figcaption") {
+        // 在 div.table-container 前插入一个 figcaption 元素
+        figcaption = document.createElement("figcaption");
+
+        // 将 figcaption 插入到 DOM 中
+        tableContainer.parentNode.insertBefore(figcaption, tableContainer);
+      } else {
+        figcaption = prevElement;
+      }
+
+      // 创建一个 <i> 标签并添加功能
+      iElement = document.createElement("i");
+      iElement.className = "fas fa-angle-down";
+      // 插入一点空格
+      iElement.innerHTML = "&nbsp;&nbsp;&nbsp;";
+      figcaption.insertBefore(iElement, figcaption.firstChild);
+
+      // 为 <i> 标签添加点击事件
+      iElement.addEventListener("click", function() {
+        // 切换 tableContainer 的 "code-hidden" 类
+        tableContainer.classList.toggle("code-hidden");
+
+        // 切换 <i> 标签的类名
+        if (iElement.classList.contains("fa-angle-down")) {
+          iElement.classList.remove("fa-angle-down");
+          iElement.classList.add("fa-angle-right");
+        } else {
+          iElement.classList.remove("fa-angle-right");
+          iElement.classList.add("fa-angle-down");
+        }
+      });
+    });
+  });
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":200,"height":350},"mobile":{"show":true},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
